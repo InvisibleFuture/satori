@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview"
+  },
+  "devDependencies": {
+    "nuxt": "3.0.0-rc.1",
+    "nuxt-windicss": "^2.3.1",
+    "pug": "^3.0.2"
+  },
+  "dependencies": {
+    "config": "^3.3.7",
+    "formidable": "^2.0.1",
+    "highlight.js": "^11.5.1",
+    "mariadb": "^3.0.0",
+    "marked": "^4.0.14",
+    "md5": "^2.3.0",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.19.0",
+    "string-random": "^0.1.3"
+  }
+}
