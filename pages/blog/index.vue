@@ -1,9 +1,9 @@
 <template lang="pug">
-div.text-white.pt-24
-  header.container.mx-auto.bg-slate-500.mb-8
-    NuxtLink.bg-green-600.px-4.py-2.font-bold(to="/blog/create") create
-  section.container.mx-auto.my-4.p-8.rounded-xl.text-center(v-if="pending") Loading...
-  section.container.mx-auto.my-4.p-8.bg-opacity-20.bg-dark-900.rounded-xl(v-else v-for="item in data.list")
+div.container.mx-auto.text-white.pt-24
+  header.m-2.p-4.bg-slate-500.rounded-xl
+    NuxtLink.rounded-md.bg-green-600.px-4.py-2.font-bold(to="/blog/create") create
+  section.m-2.p-4.rounded-xl.text-center(v-if="pending") Loading...
+  section.m-2.p-4.bg-opacity-20.bg-dark-900.rounded-xl(v-else v-for="item in data.list")
     NuxtLink(:to="`/blog/${item.id}`")
       h2.text-2xl.font-bold {{ item.name }}
     p.text-sm.mb-4
@@ -13,7 +13,7 @@ div.text-white.pt-24
     div(v-if="account.online")
       button.bg-indigo-600.px-4.py-2.font-bold.mt-4.mr-4(@click="removeItem(item.id)") delete
       button.bg-indigo-600.px-4.py-2.font-bold.mt-4.mr-4 editor
-  section.container.mx-auto.my-4.rounded-xl.p-8.text-center 加载更多..
+  section.my-4.rounded-xl.p-8.text-center 加载更多..
 </template>
 
 <script>
