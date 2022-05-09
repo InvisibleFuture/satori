@@ -4,15 +4,6 @@ import random from 'string-random'
 
 export default defineEventHandler(async event => {
 
-  // 接收数据
-  const body = function() {
-    return new Promise(resolve => {
-      let data = ''
-      event.req.on('data', (chunk) => data += chunk)
-      event.req.on('end', () => resolve(decodeURI(data)))
-    })
-  }
-
   if (event.req.method === 'GET') {
     // 先解密 cookie 为 sid
     // 使用 sid 查询用户 id
@@ -21,13 +12,12 @@ export default defineEventHandler(async event => {
   }
 
   if (event.req.method === 'POST') {
-    let data = JSON.parse(await body())
-    const user = await db.model('user').findOne({where: { name: data.name }})
+    const user = await db.model('user').findOne({where: { name: event.req.body.name }})
     if (!user) {
       event.res.statusCode = 400
       return '账户不存在'
     }
-    if (user.password !== md5(data.password + user.salt)) {
+    if (user.password !== md5(event.req.body.password + user.salt)) {
       event.res.statusCode = 400
       return '密码不匹配'
     }
