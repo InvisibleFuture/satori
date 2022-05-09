@@ -30,15 +30,15 @@ export const User = db.define('user', {
   password: { type: DataTypes.STRING },
 })
 
-// 定义课题表
-export const Project = db.define('project', {
+// 定义博客表
+export const Blog = db.define('blog', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING },
   data: { type: DataTypes.STRING },
 })
 
-// 定义博客表
-export const Blog = db.define('blog', {
+// 定义课题表
+export const Project = db.define('project', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING },
   data: { type: DataTypes.STRING },
@@ -88,11 +88,14 @@ export const Blog_Tag = db.define('blog_tag', {}, { timestamps: false })
 Blog.belongsToMany(Tag, { through: Blog_Tag })
 Tag.belongsToMany(Blog, { through: Blog_Tag })
 
-// 定义表关联
-Blog.belongsTo(User) // blog 附属于 user
-Blog.hasMany(File)
-//File.belongsTo(Blog) // file 附属于 blog
+// 定义表关联(所有用户发布的表都归属于user)
+File.belongsTo(User)    // file    归属于 user
+Blog.belongsTo(User)    // blog    归属于 user
+Project.belongsTo(User) // Project 归属于 user
+Gallery.belongsTo(User) // Gallery 归属于 user
 
+// 包含关系
+Blog.hasMany(File)      // Blog 有多个 File
 
 // 初始化数据库 (alter 更新表字段, force 强制删除表重建)
 User.sync({alter: true})
