@@ -4,14 +4,16 @@ div.pt-24
     NuxtLink.bg-green-600.px-4.py-2.text-white.font-bold(to="/user/create") create
   .container.mx-auto
     div(v-if="pending") Loading...
-    ul.bg-white.p-12.m-2(v-else)
-      li.my-2(v-for="item in data.list")
-        img.bg-dark-100.rounded-full.text-white.w-24.h-24(v-if="item.avatar" :src="item.avatar" :title="item.name")
-        div.bg-dark-100.rounded-full.text-white.w-24.h-24(v-else)
-        span.mr-2 {{ item.name }}
-        span.mr-2 {{ item.age }}
-        p {{ rwdate(item.createdAt) }}
-        p {{ item }}
+    ul.text-white(v-else)
+      li.flex.bg-dark-900.bg-opacity-20.p-12.my-4.rounded-md(v-for="item in data.list")
+        div.felx.flex-col.justify-center.items-center.text-center.mr-4
+          img.bg-dark-500.rounded-full.text-white.w-24.h-24(v-if="item.avatar" :src="item.avatar" :title="item.name")
+          div.bg-dark-500.rounded-full.text-white.w-24.h-24(v-else)
+          div.mr-2.font-bold.text-2xl {{ item.name }}
+          div.mr-2 {{ item.age }}
+        div.flex-1
+          p {{ rwdate(item.createdAt) }}
+          p {{ item }}
 </template>
 
 <script>

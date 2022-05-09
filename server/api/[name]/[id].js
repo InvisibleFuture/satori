@@ -7,8 +7,9 @@ import { db, User, Blog, Tag, File } from '../../model'
 export default defineEventHandler(async event => {
 
   // 验证 cookie
+  console.log('验证 cookie')
   let sid = useCookie(event.req, 'sid')
-  console.log('验证 cookie', sid)
+  console.log(sid)
   if (sid) {
     console.log('获取对应 id')
     let id  = await useStorage().getItem('session:' + sid)
@@ -25,7 +26,9 @@ export default defineEventHandler(async event => {
     } else {
       // 有cookie却已失效, 注销此 cookie(没有存储对应id)
       console.log('remove cookie')
-      setCookie(event.res, 'sid', 'xxx')
+      setCookie(event.res, 'sid', '', {
+        maxAge: -1
+      })
     }
   } else {
     // 没有cookie, 不可以使用身份验证要求的内容
