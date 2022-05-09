@@ -1,3 +1,4 @@
+import { db } from '../model.js'
 export default defineEventHandler(async event => {
   let sid = useCookie(event.req, 'sid')
   if (sid) {
