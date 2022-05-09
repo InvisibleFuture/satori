@@ -11,8 +11,6 @@ export default defineEventHandler(async event => {
     return '对象类型不存在'
   }
 
-  // TODO: 确认对象存在
-
   // 增删改查标准操作(查询)
   if (event.req.method === 'GET') {
     // 整理支持的查询条件
@@ -45,6 +43,15 @@ export default defineEventHandler(async event => {
     return data
   }
 
+  // 确认对象存在(GET 以外都需要确认目标存在, 而GET需要附加额外信息)
+  let object = await db.model(event.context.params.name).findOne({
+    where:{id:event.context.params.id}
+  })
+  if (!object) {
+    event.res.statusCode = 404
+    return '目标对象不存在'
+  }
+
   // 增删改查标准操作(覆写)
   if (event.req.method === 'SET') {
     return await db.model(event.context.params.name).update(event.req.body, {
@@ -54,7 +61,13 @@ export default defineEventHandler(async event => {
 
   // 增删改查标准操作(创建)
   if (event.req.method === 'POST') {
+    if (!event.req.account) {
+      event.res.statusCode = 400
+      return '尚未登录'
+    }
+
     // TODO: 如果是上传图片, 检查是否有权限
+    // TODO: 验证挂载目标是否有权限写
     const list = await (new Promise(resolve => {
       formidable({
         multiples: true,
@@ -66,6 +79,7 @@ export default defineEventHandler(async event => {
         for (let key in files) {
           (Array.isArray(files[key]) ? files[key] : [files[key]]).map(item => {
             let ipx = {
+              userId: event.req.account.id,
               name: item.originalFilename,
               size: item.size,
               path: item.filepath,
@@ -74,7 +88,9 @@ export default defineEventHandler(async event => {
             if (event.context.params.name === 'blog') {
               ipx.blogId = event.context.params.id
             }
-            //if (event.context.params.name === '') {}
+            if (event.context.params.name === 'gallery') {
+              ipx.galleryId = event.context.params.id
+            }
             list.push(ipx)
           })
         }

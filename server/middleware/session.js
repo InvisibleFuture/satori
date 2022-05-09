@@ -1,5 +1,6 @@
 import { db } from '../model.js'
 export default defineEventHandler(async event => {
+  // TODO: 为不必验证的对象跳过验证
   let sid = useCookie(event.req, 'sid')
   if (sid) {
     let id  = await useStorage().getItem('session:' + sid)

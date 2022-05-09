@@ -72,11 +72,7 @@ export const File = db.define('file', {
 })
 
 // 定义标签表(blog | project 查询时使用tag=参数)
-// 删除则检查所有列
-// 每个表各自存储标签
-// 标签不使用id, name直接调用, 标签查询展示所有列
-// 标签没有引用时自动移除
-// 构建对象生命周期
+// 标签没有引用时自动移除, 每个表各自存储标签
 export const Tag = db.define('tag', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING },
@@ -95,7 +91,8 @@ Project.belongsTo(User) // Project 归属于 user
 Gallery.belongsTo(User) // Gallery 归属于 user
 
 // 包含关系
-Blog.hasMany(File)      // Blog 有多个 File
+Blog.hasMany(File)      // Blog    有多个 File
+Gallery.hasMany(File)   // Gallery 有多个 File
 
 // 初始化数据库 (alter 更新表字段, force 强制删除表重建)
 User.sync({alter: true})
@@ -104,7 +101,7 @@ Comment.sync({alter: true})
 File.sync({alter: true})
 Tag.sync({alter: true})
 Project.sync({alter: true})
-
+Gallery.sync({alter: true})
 Blog_Tag.sync({alter: true})
 
 // ---
