@@ -4,7 +4,7 @@ div.h-screen.overflow-x-scroll.pt-24.flex.flex-row-reverse.px-8
     label.w-64.h-64.bg-green-600.rounded-md
       input.hidden(type="file", accept="image/*", multiple, @change="upload($event)")
   section.bg-red-300.rounded-md.p-12.m-2.w-128(v-for="item in gallery.list") {{ item }}
-  //section.bg-red-300.rounded-md.p-12.m-2.w-64(v-for="i in 24") Gallery
+  //section.bg-red-300.rounded-md.p-12.m-2.w-64(v-for="i in 24") Gallery ✨
   //button.bg-yellow-400.rounded-md.p-4.text-white.font-bold(@click="add()") +
 </template>
 

@@ -2,7 +2,7 @@
 div.container.mx-auto.pt-32.text-white
   div(v-if="pending")
   div(v-else)
-    button.bg-green-700.p-4(@click="edit()") edit {{ project.edit }}
+    button.bg-green-700.p-4(v-if="account.online" @click="edit()") edit {{ project.edit }}
     template(v-if="!project.edit")
       //h1.font-bold.text-2xl.my-4 # {{ data.name }}
       //p {{ data.data }}
@@ -17,13 +17,16 @@ import { marked } from "marked"
 export default {
   setup() {
     const route = useRoute()
+    const account = useState('account')
+
     const { data, pending } = useFetch(`/api/project/${route.params.id}`)
     const project = useState('edit', () => {
       return {data:'', edit: false}
     })
 
     return {
-      data, pending, project,
+      data, pending,
+      project, account,
       marked,
 
       submit() {

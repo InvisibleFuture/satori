@@ -2,8 +2,12 @@
 .container.mx-auto.h-screen.flex.items-center.justify-center
   div.flex.flex-col.bg-white.bg-opacity-5.px-8.py-12.mx-auto.rounded-md
     div.text-white.text-emerald-600.text-4xl.font-bold.mb-4 SIGNIN
-    input.box-border.p-4.mb-2.rounded-md(v-model="account.name" placeholder="name")
-    input.box-border.p-4.mb-2.rounded-md(v-model="account.password" placeholder="password")
+    label.relative
+      span.absolute.left-3.top-3.bg-green-600.text-transparent.bg-clip-text 🌱
+      input.box-border.p-4.pl-12.mb-2.rounded-md.bg-white.bg-opacity-70.font-bold(v-model="account.name" placeholder="name")
+    label.relative
+      span.absolute.left-3.top-3.bg-green-600.text-transparent.bg-clip-text 🔒
+      input.box-border.p-4.pl-12.mb-2.rounded-md.bg-white.bg-opacity-70.font-bold(v-model="account.password" placeholder="password" type="password")
     button.font-bold.text-white.p-4.bg-green-600.rounded-md(@click="signin") signin
 </template>
 
