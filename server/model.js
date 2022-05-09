@@ -44,6 +44,14 @@ export const Blog = db.define('blog', {
   data: { type: DataTypes.STRING },
 })
 
+// gallery
+export const Gallery = db.define('gallery', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  name: { type: DataTypes.STRING },
+  data: { type: DataTypes.STRING },
+  list: { type: DataTypes.STRING },
+})
+
 // 定义评论表
 export const Comment = db.define('comment', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },

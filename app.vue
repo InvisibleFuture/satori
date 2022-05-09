@@ -4,7 +4,7 @@
     nav.container.mx-auto.flex.text-gray-400.text-xl.font-bold
       NuxtLink.p-6(to="/", :class="{'text-white': route.path==='/' }") Home
       NuxtLink.p-6(to="/blog", :class="{'text-white': route.path==='/blog' }") Blog
-      NuxtLink.p-6(to="/") Gallery
+      NuxtLink.p-6(to="/gallery" :class="{'text-white': route.path==='/gallery' }") Gallery
       NuxtLink.p-6(to="/user", :class="{'text-white': route.path==='/user' }") User
       NuxtLink.p-6.ml-auto(v-if="!account.online", to="/account/signin", :class="{'text-white': route.path==='/account/signin' }") signin
       NuxtLink.p-6.ml-auto(v-else, to="/account", :class="{'text-white': route.path==='/account' }") account
@@ -36,3 +36,12 @@ export default defineComponent({
   }
 })
 </script>
+
+<style>
+::-webkit-scrollbar {
+  display: none;
+}
+.markdown img {
+  border-radius: .25rem;
+}
+</style>
