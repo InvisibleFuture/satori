@@ -119,7 +119,6 @@ export default defineEventHandler(async event => {
           })
         }
         db.model('file').bulkCreate(list, { returning:true }).then(result => {
-          console.log(result)
           resolve(result)
         })
       })

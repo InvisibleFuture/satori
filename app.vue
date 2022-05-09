@@ -28,7 +28,6 @@ export default defineComponent({
   mounted() {
     $fetch('/api/account').then(data => {
       if (data) {
-        console.log(data)
         this.account.name = data.name
         this.account.online = true        
       }

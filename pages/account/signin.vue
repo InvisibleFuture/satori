@@ -1,6 +1,6 @@
 <template lang="pug">
-.py-24
-  div.mx-auto.rounded-md.w-md.p-12.flex.flex-col.bg-white.bg-opacity-5.mt-48
+.container.mx-auto.h-screen.flex.items-center.justify-center
+  div.flex.flex-col.bg-white.bg-opacity-5.px-8.py-12.mx-auto.rounded-md
     div.text-white.text-emerald-600.text-4xl.font-bold.mb-4 SIGNIN
     input.box-border.p-4.mb-2.rounded-md(v-model="account.name" placeholder="name")
     input.box-border.p-4.mb-2.rounded-md(v-model="account.password" placeholder="password")
