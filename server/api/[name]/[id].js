@@ -16,8 +16,8 @@ export default defineEventHandler(async event => {
     if (id) {
       let userinfo = await db.model('user').findOne({where: { id }})
       if (userinfo) {
-        console.log('userinfo cookie')
-        console.log(userinfo)
+        // console.log('userinfo cookie')
+        // console.log(userinfo)
         // 通过验证以允许使用登录状态的 id
       } else {
         // 会话仍有效, 但用户已不存在, error
