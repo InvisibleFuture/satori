@@ -8,10 +8,15 @@ export default defineEventHandler(async event => {
   // sequelize.isDefined() - 检查模型是否定义
   // sequelize.model() - 获取模型
 
+  if (event.method === 'POST') {
+    // create user
+  }
+
   let sid = useCookie(event.req, 'sid') || 0
   let key = 'session:' + sid
   let id  = await useStorage().getItem(key)
-  return await db.model('user').findOne({where: { id }})
+  let user = await db.model('user').findOne({where: { id }})
+  return user
 
   // 接收数据
   // const body = function() {
@@ -28,5 +33,4 @@ export default defineEventHandler(async event => {
   //  list.push({name, count: rest.count})
   //}
   //return { list }
-  
 })

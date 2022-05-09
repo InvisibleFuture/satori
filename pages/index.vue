@@ -2,25 +2,18 @@
 div.bg-fixed.bg-cover.bg-no-repeat.bg-center(:style="`background-image:url(${background})`")
   div.flex.flex-col.justify-center.items-center.text-white.min-h-screen.bg-black.bg-opacity-50
     h1.text-4xl.my-8 {{ kotoba() }}
-    //div(v-if="pending") Loading..
-    //ul.flex(v-else)
-    //  li.mx-4(v-for="item in data.list")
-    //    span.mr-2 {{ item.name }}
-    //    span {{ item.count }}
-    //  li.mx-4
-    //    span.mr-2 views
-    //    span 0
     div.felx.mt-4(v-if="!pending")
       NuxtLink.p-8(v-for="item in data.list" :to="`/project/${item.id}`") # {{ item.name }}
-      NuxtLink.p-8(to="/project/create") +
+      NuxtLink.p-8(v-if="session" to="/project/create") +
 </template>
 
 <script>
 import background from '@/assets/image/background.jpg'
-export default {
+export default defineComponent({
   setup() {
-    const { data, pending } = useFetch('/api/project') // counts
-    return { data, pending, background }
+    const session = useCookie('sid')
+    const { data, pending } = useFetch('/api/project')
+    return { data, pending, background, session }
     //const router = useRouter()
     //const arr = [
     //  "魔を封じ。あの日、出会いは唐突に。",
@@ -61,5 +54,5 @@ export default {
       return arr[Math.floor(Math.random() * arr.length)]
     }
   }
-}
+})
 </script>

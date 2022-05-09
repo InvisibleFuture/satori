@@ -5,12 +5,32 @@ import { db, User, Blog, Tag, File } from '../../model'
 
 // 获取对象
 export default defineEventHandler(async event => {
-  // sequelize.isDefined() - 检查模型是否定义
-  // sequelize.model() - 获取模型
-  // [attributes.column.onDelete]	String	当被引用的键删除时的操作，可选值是：CASCADE, RESTRICT, SET DEFAULT, SET NULL 或 NO ACTION 之一
 
-  // 不需要验证是否存在的目标: POST(位于上一级)
-  // 所以全部都需要验证是否存在
+  // 验证 cookie
+  let sid = useCookie(event.req, 'sid')
+  console.log('验证 cookie', sid)
+  if (sid) {
+    console.log('获取对应 id')
+    let id  = await useStorage().getItem('session:' + sid)
+    if (id) {
+      let userinfo = await db.model('user').findOne({where: { id }})
+      if (userinfo) {
+        console.log('userinfo cookie')
+        console.log(userinfo)
+        // 通过验证以允许使用登录状态的 id
+      } else {
+        // 会话仍有效, 但用户已不存在, error
+        console.log('会话仍有效, 但用户已不存在, error')
+      }
+    } else {
+      // 有cookie却已失效, 注销此 cookie(没有存储对应id)
+      console.log('remove cookie')
+      setCookie(event.res, 'sid', 'xxx')
+    }
+  } else {
+    // 没有cookie, 不可以使用身份验证要求的内容
+    console.log('没有cookie, 不可以使用身份验证要求的内容')
+  }
 
   // 确认表存在
   if (!db.isDefined(event.context.params.name)) {
@@ -39,6 +59,7 @@ export default defineEventHandler(async event => {
       query.include = [
         { model: User, attributes: ['name', 'age'] },
         { model: Tag, attributes: ['id', 'name'], through: { attributes: [] }},
+        { model: File, attributes: ['id','name','type', 'size'] },
       ]
     }
 
@@ -81,12 +102,17 @@ export default defineEventHandler(async event => {
         let list = []
         for (let key in files) {
           (Array.isArray(files[key]) ? files[key] : [files[key]]).map(item => {
-            list.push({
+            let ipx = {
               name: item.originalFilename,
               size: item.size,
               path: item.filepath,
-              type: item.mimetype
-            })
+              type: item.mimetype,
+            }
+            if (event.context.params.name === 'blog') {
+              ipx.blogId = event.context.params.id
+            }
+            //if (event.context.params.name === '') {}
+            list.push(ipx)
           })
         }
         db.model('file').bulkCreate(list, { returning:true }).then(result => {
@@ -116,7 +142,6 @@ export default defineEventHandler(async event => {
         data.password = md5(data.password + data.salt)
       }
     }
-
 
     // 为 blog 作额外处理
     //if (event.context.params.name === 'blog') {

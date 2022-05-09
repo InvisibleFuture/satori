@@ -57,12 +57,12 @@ export default defineEventHandler(async event => {
     return user
   }
 
-  const list = []
 
-  for (let name of Object.keys(db.models)) {
-    let rest = await db.models[name].findAndCountAll()
-    list.push({name, count: rest.count})
-  }
-
-  return { list }
+  //const list = []
+  //for (let name of Object.keys(db.models)) {
+  //  let rest = await db.models[name].findAndCountAll()
+  //  list.push({name, count: rest.count})
+  //}
+  //return { list }
+  return '未支持的操作方法'
 })

@@ -63,7 +63,12 @@ export const File = db.define('file', {
   size: { type: DataTypes.INTEGER },
 })
 
-// 定义标签表
+// 定义标签表(blog | project 查询时使用tag=参数)
+// 删除则检查所有列
+// 每个表各自存储标签
+// 标签不使用id, name直接调用, 标签查询展示所有列
+// 标签没有引用时自动移除
+// 构建对象生命周期
 export const Tag = db.define('tag', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING },
@@ -77,7 +82,9 @@ Tag.belongsToMany(Blog, { through: Blog_Tag })
 
 // 定义表关联
 Blog.belongsTo(User) // blog 附属于 user
-File.belongsTo(Blog) // file 附属于 blog
+Blog.hasMany(File)
+//File.belongsTo(Blog) // file 附属于 blog
+
 
 // 初始化数据库 (alter 更新表字段, force 强制删除表重建)
 User.sync({alter: true})
