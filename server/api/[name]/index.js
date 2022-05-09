@@ -9,36 +9,6 @@ export default defineEventHandler(async event => {
   // sequelize.isDefined() - 检查模型是否定义
   // sequelize.model() - 获取模型
 
-  // 验证 cookie
-  console.log('验证 cookie')
-  let sid = useCookie(event.req, 'sid')
-  console.log(sid)
-  if (sid) {
-    console.log('获取对应 id')
-    let id  = await useStorage().getItem('session:' + sid)
-    if (id) {
-      let userinfo = await db.model('user').findOne({where: { id }})
-      if (userinfo) {
-        console.log('userinfo cookie')
-        console.log(userinfo)
-        // 通过验证以允许使用登录状态的 id
-      } else {
-        // 会话仍有效, 但用户已不存在, error
-        console.log('会话仍有效, 但用户已不存在, error')
-      }
-    } else {
-      // 有cookie却已失效, 注销此 cookie(没有存储对应id)
-      console.log('remove cookie')
-      setCookie(event.res, 'sid', '', {
-        maxAge: -1
-      })
-    }
-  } else {
-    // 没有cookie, 不可以使用身份验证要求的内容
-    console.log('没有cookie, 不可以使用身份验证要求的内容')
-  }
-
-
   if (!db.isDefined(event.context.params.name)) {
     event.res.statusCode = 404
     return '类型不存在'
