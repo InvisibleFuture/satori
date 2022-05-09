@@ -1,12 +1,11 @@
-export default defineEventHandler(async (req, res) => {
-  console.log('middleware session')
-  let sid = useCookie(req, 'sid')
+export default defineEventHandler(async event => {
+  let sid = useCookie(event.req, 'sid')
   if (sid) {
     let id  = await useStorage().getItem('session:' + sid)
     if (id) {
       let userinfo = await db.model('user').findOne({where: { id }})
       if (userinfo) {
-        req.account = userinfo
+        event.req.account = userinfo
       } else {
         console.log('会话仍有效, 但用户已不存在, 注销此会话')
         setCookie(res, 'sid', '', {maxAge: -1})

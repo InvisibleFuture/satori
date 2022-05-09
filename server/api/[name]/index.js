@@ -14,15 +14,6 @@ export default defineEventHandler(async event => {
     return '类型不存在'
   }
 
-  // 接收数据
-  const body = function() {
-    return new Promise(resolve => {
-      let data = ''
-      event.req.on('data', (chunk) => data += chunk)
-      event.req.on('end', () => resolve(decodeURI(data)))
-    })
-  }
-
   // 增删改查标准操作(查询)
   if (event.req.method === 'GET') {
     // 先整理支持的查询条件 raw: false
@@ -57,11 +48,10 @@ export default defineEventHandler(async event => {
 
   // 增删改查标准操作(创建)
   if (event.req.method === 'POST') {
-    let data = JSON.parse(await body())
     // TODO: 检查危险的属性, 放行管理员
     // TODO: 如果是创建用户, 对用户名检查占用
     // TODO: 如果是创建用户, 对密码作盐处理
-    return await db.model(event.context.params.name).create(data)
+    return await db.model(event.context.params.name).create(event.req.body)
   }
 
   // 增删改查标准操作(修改)

@@ -5,52 +5,13 @@ import { db, User, Blog, Tag, File } from '../../model'
 
 // 获取对象
 export default defineEventHandler(async event => {
-
-  // 验证 cookie
-  console.log('验证 cookie')
-  let sid = useCookie(event.req, 'sid')
-  console.log(sid)
-  if (sid) {
-    console.log('获取对应 id')
-    let id  = await useStorage().getItem('session:' + sid)
-    if (id) {
-      let userinfo = await db.model('user').findOne({where: { id }})
-      if (userinfo) {
-        // console.log('userinfo cookie')
-        // console.log(userinfo)
-        // 通过验证以允许使用登录状态的 id
-      } else {
-        // 会话仍有效, 但用户已不存在, error
-        console.log('会话仍有效, 但用户已不存在, error')
-      }
-    } else {
-      // 有cookie却已失效, 注销此 cookie(没有存储对应id)
-      console.log('remove cookie')
-      setCookie(event.res, 'sid', '', {
-        maxAge: -1
-      })
-    }
-  } else {
-    // 没有cookie, 不可以使用身份验证要求的内容
-    console.log('没有cookie, 不可以使用身份验证要求的内容')
-  }
-
-  // 确认表存在
+  // 检查目标对象类型是否存在
   if (!db.isDefined(event.context.params.name)) {
     event.res.statusCode = 404
-    return '对象不存在'
+    return '对象类型不存在'
   }
 
   // TODO: 确认对象存在
-
-  // 接收数据
-  const body = function() {
-    return new Promise(resolve => {
-      let data = ''
-      event.req.on('data', (chunk) => data += chunk)
-      event.req.on('end', () => resolve(decodeURI(data)))
-    })
-  }
 
   // 增删改查标准操作(查询)
   if (event.req.method === 'GET') {
@@ -86,8 +47,7 @@ export default defineEventHandler(async event => {
 
   // 增删改查标准操作(覆写)
   if (event.req.method === 'SET') {
-    let data = JSON.parse(await body())
-    return await db.model(event.context.params.name).update(data, {
+    return await db.model(event.context.params.name).update(event.req.body, {
       where:{ id: event.context.params.id }
     })
   }
@@ -128,31 +88,27 @@ export default defineEventHandler(async event => {
 
   // 增删改查标准操作(修改)
   if (event.req.method === 'PATCH') {
-    let data = JSON.parse(await body())
     let query = { where:{ id: event.context.params.id } }
 
     // 为 user 作额外处理
     if (event.context.params.name === 'user') {
-      // 禁止单独修改 salt
-      delete data.salt
-      
-      // TODO: 也不可以为空, 必须是 null
-      if (data.password) {
-        if (typeof(data.password) !== 'string') return '密码必须是字符串'
-        if (data.password === '') return '密码不能为空' // TODO: 密码最小长度
-        data.salt = random(32)
-        data.password = md5(data.password + data.salt)
+      delete event.req.body.salt     // 禁止单独修改 salt
+      if (event.req.body.password) { // TODO: 也不可以为空, 必须是 null
+        if (typeof(event.req.body.password) !== 'string') return '密码必须是字符串'
+        if (event.req.body.password === '') return '密码不能为空' // TODO: 密码最小长度
+        event.req.body.salt = random(32)
+        event.req.body.password = md5(event.req.body.password + event.req.body.salt)
       }
     }
 
     // 为 blog 作额外处理
     //if (event.context.params.name === 'blog') {
-    //  // data.tags = []
+    //  // event.req.body.tags = []
     //  query.include = [ Tag ]
     //}
 
     // TODO: 检查危险的属性, 放行管理员
-    return await db.model(event.context.params.name).update(data, query)
+    return await db.model(event.context.params.name).update(event.req.body, query)
   }
 
   // 增删改查标准操作(删除)
