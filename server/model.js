@@ -16,7 +16,7 @@ export const db = new Sequelize({
   dialect: 'mariadb',
   database: 'satori',
   username: 'satori',
-  password: 'satori',
+  password: '123456',
   timezone: '+08:00',
   logging: false
 })
