@@ -2,16 +2,29 @@
 div.container.mx-auto.pt-32.text-white.py-32
   div(v-if="pending")
   div.bg-white.bg-opacity-5.px-16.py-12.rounded-md(v-else)
-    template(v-if="!blog.edit")
+    div(v-if="blog.edit")
       div.markdown(v-html="marked.parse(data.data, { breaks: true })")
       div.flex.flex-row-reverse
         button.bg-green-700.py-2.px-4.rounded-md(v-if="account.online" @click="edit_mode()") edit {{ blog.edit }}
-    template(v-else)
-      textarea.w-full.min-h-64.bg-opacity-10.bg-dark-200.p-4(v-model="blog.data",v-focus,tabindex="0",@keyup.ctrl.enter="edit_submit()",@keydown.esc="edit_mode()")
-      input(type="file", accept="image/*", multiple, @change="edit_upload($event)")
-      button.absolute.right-2.bottom-2.z-10.bg-teal-600.px-6.py-4.font-bold.text-white.rounded-md(
-        @click="edit_submit()"
-      ) Submit (Ctrl + Enter)
+    div.flex(v-else)
+      textarea.flex-auto.w-full.min-h-64.bg-opacity-10.bg-dark-200.p-4(v-model="blog.data",v-focus,tabindex="0",@keyup.ctrl.enter="edit_submit()",@keydown.esc="edit_mode()")
+      div.ml-4.w-64
+        ul
+          li.flex.relative.bg-dark-800.bg-opacity-20.my-1.rounded-md.p-2.cursor-pointer(v-for="file in data.files")
+            div.w-12.h-12.mr-2.bg-cover.rounded-md(v-if="file.type.indexOf('image/') !== -1" :style="`background-image:url(/api/image/${file.id})`")
+            div.flex-1.overflow-hidden
+              p.whitespace-nowrap.text-ellipsis.text-md.font-bold {{ file.name }}
+              p.whitespace-nowrap.text-ellipsis.text-slate-400.text-sm {{ fileSize(file.size) }}
+            button.rounded-full.w-8.h-8.bg-black.font-bold.bg-opacity-20.transition-all(
+              class="hover:bg-opacity-40 absolute top-0 right-0"
+              @click="removeFile(file.id)"
+            ) x
+          li.flex.bg-dark-800.bg-opacity-20.my-1.rounded-md.overflow-hidden.cursor-pointer
+            label.font-bold.text-center.block.w-full.p-2 +
+              input.hidden(type="file", accept="image/*", multiple, @change="edit_upload($event)")
+        button.absolute.right-2.bottom-2.z-10.bg-teal-600.px-6.py-4.font-bold.text-white.rounded-md(
+          @click="edit_submit()"
+        ) Submit (Ctrl + Enter)
 </template>
 
 <script>
@@ -29,6 +42,20 @@ export default {
     return { data, pending, blog, marked, route, account }
   },
   methods: {
+    fileSize(size) {
+      let kb = (size / 1024).toFixed(2)
+      if (kb < 1024) return `${kb} KB`
+      let mb = (kb / 1024).toFixed(2)
+      if (mb < 1024) return `${mb} MB`
+      let gb = (mb / 1024).toFixed(2)
+      return `${gb} GB`
+    },
+    removeFile(id) {
+      this.data.files = this.data.files.filter(item => item.id !== id)
+      $fetch(`/api/file/${id}`, { method: 'DELETE' }).then(data => {
+        console.log(data)
+      })
+    },
     // 编辑模式
     edit_mode() {
       this.blog.edit = !this.blog.edit

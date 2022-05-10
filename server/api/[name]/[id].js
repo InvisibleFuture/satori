@@ -1,3 +1,4 @@
+import fs from 'fs'
 import md5 from 'md5'
 import random from 'string-random'
 import formidable from 'formidable'
@@ -149,6 +150,11 @@ export default defineEventHandler(async event => {
       event.res.statusCode = 401
       return '必须登录才可以删除此对象'
     }
+
+    if (event.context.params.name === 'file') {
+      fs.unlinkSync(object.path) // 则先移除文件
+    }
+
     // 判断目标资源是否属于此用户, 以决定其是否有权限操作
     return await db.model(event.context.params.name).destroy({
       where: { id: event.context.params.id }
