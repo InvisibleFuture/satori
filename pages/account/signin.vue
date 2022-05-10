@@ -3,14 +3,14 @@ div.bg-fixed.bg-cover.bg-no-repeat.bg-center(:style="`background-image:url(${bac
   div.flex.flex-col.justify-center.items-center.min-h-screen.bg-black.bg-opacity-50
     //.container.mx-auto.h-screen.flex.items-center.justify-center
     div.flex.flex-col.bg-white.bg-opacity-5.px-8.py-12.mx-auto.rounded-md
-      div.text-emerald-500.text-4xl.font-bold.mb-4.transition-all.duration-350(class="hover:text-green-600") SIGNIN
+      div.text-red-500.text-4xl.font-bold.mb-4.transition-all.duration-450(class="hover:text-red-700") SIGNIN
       label.relative
-        span.absolute.left-3.top-3.bg-green-600.text-transparent.bg-clip-text 🌱
+        span.absolute.left-3.top-3.bg-red-700.text-transparent.bg-clip-text 🌱
         input.box-border.p-4.pl-12.mb-2.rounded-md.bg-white.bg-opacity-70.font-bold(v-model="account.name" placeholder="name")
       label.relative
-        span.absolute.left-3.top-3.bg-green-600.text-transparent.bg-clip-text 🔒
+        span.absolute.left-3.top-3.bg-red-700.text-transparent.bg-clip-text 🔒
         input.box-border.p-4.pl-12.mb-2.rounded-md.bg-white.bg-opacity-70.font-bold(v-model="account.password" placeholder="password" type="password")
-      button.font-bold.text-white.p-4.bg-green-600.rounded-md.transition-all.duration-250.relative.bottom-0.right-0(@click="signin" class="hover:(bg-green-500 bottom-1 right-1)") signin
+      button.font-bold.text-white.p-4.bg-red-800.rounded-md.transition-all.duration-450.relative.bottom-0.right-0(@click="signin" class="hover:(bg-red-700 bottom-1 right-1)") signin
 </template>
 
 <script>
