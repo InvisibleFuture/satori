@@ -40,6 +40,9 @@ export default defineComponent({
 ::-webkit-scrollbar {
   display: none;
 }
+html, body {
+  background-color: darkred;
+}
 .markdown img {
   border-radius: .25rem;
 }
