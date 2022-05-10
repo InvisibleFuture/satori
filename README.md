@@ -40,3 +40,6 @@ npm run preview
 ```
 
 Checkout the [deployment documentation](https://v3.nuxtjs.org/docs/deployment) for more information.
+
+新 BUG, 生产模式目录位置在 .output 内
+path":"/root/satori/.output/data/file/48eff3675fd07dcfb9c011b00.jpg"
