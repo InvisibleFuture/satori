@@ -48,6 +48,14 @@ export default defineEventHandler(async event => {
 
   // 增删改查标准操作(创建)
   if (event.req.method === 'POST') {
+    if (isInArray(['blog', 'project'], event.context.params.name)) {
+      if (!event.req.account) {
+        event.res.statusCode = 400
+        return '必须登录才可以创建此对象'
+      }
+      event.req.body.userId = event.req.account.id
+    }
+
     // TODO: 检查危险的属性, 放行管理员
     // TODO: 如果是创建用户, 对用户名检查占用
     // TODO: 如果是创建用户, 对密码作盐处理

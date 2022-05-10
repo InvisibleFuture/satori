@@ -54,6 +54,10 @@ export default defineEventHandler(async event => {
 
   // 增删改查标准操作(覆写)
   if (event.req.method === 'SET') {
+    if (!event.req.account) {
+      event.res.statusCode = 401
+      return '必须登录才可以重写此对象'
+    }
     return await db.model(event.context.params.name).update(event.req.body, {
       where:{ id: event.context.params.id }
     })
@@ -62,8 +66,8 @@ export default defineEventHandler(async event => {
   // 增删改查标准操作(创建)
   if (event.req.method === 'POST') {
     if (!event.req.account) {
-      event.res.statusCode = 400
-      return '尚未登录'
+      event.res.statusCode = 401
+      return '必须登录才可以创建子对象'
     }
 
     // TODO: 如果是上传图片, 检查是否有权限
@@ -104,17 +108,29 @@ export default defineEventHandler(async event => {
 
   // 增删改查标准操作(修改)
   if (event.req.method === 'PATCH') {
+
+    if (!event.req.account) {
+      event.res.statusCode = 401
+      return '必须登录才可以修改此对象'
+    }
+
     let query = { where:{ id: event.context.params.id } }
 
     // 为 user 作额外处理
     if (event.context.params.name === 'user') {
-      delete event.req.body.salt     // 禁止单独修改 salt
-      if (event.req.body.password) { // TODO: 也不可以为空, 必须是 null
+      if (event.context.params.id !== event.req.account.id) {
+        event.res.statusCode = 403
+        return '只允许修改自己的账户'
+      }
+      delete event.req.body.salt            // 禁止手动修改 salt
+      if (event.req.body.password) {        // TODO: 也不可以为空, 必须是 null
         if (typeof(event.req.body.password) !== 'string') return '密码必须是字符串'
         if (event.req.body.password === '') return '密码不能为空' // TODO: 密码最小长度
         event.req.body.salt = random(32)
         event.req.body.password = md5(event.req.body.password + event.req.body.salt)
       }
+    } else {
+      // 判断对象是否属于此用户
     }
 
     // 为 blog 作额外处理
@@ -129,6 +145,11 @@ export default defineEventHandler(async event => {
 
   // 增删改查标准操作(删除)
   if (event.req.method === 'DELETE') {
+    if (!event.req.account) {
+      event.res.statusCode = 401
+      return '必须登录才可以删除此对象'
+    }
+    // 判断目标资源是否属于此用户, 以决定其是否有权限操作
     return await db.model(event.context.params.name).destroy({
       where: { id: event.context.params.id }
     })
