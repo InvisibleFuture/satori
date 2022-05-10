@@ -1,12 +1,12 @@
 import fs from 'fs'
 import { Sequelize, DataTypes } from 'sequelize'
 
-fs.stat('data', (err,stats) => {
-  if (!stats) fs.mkdirSync('data')
+fs.stat('~/data', (err,stats) => {
+  if (!stats) fs.mkdirSync('~/data')
 })
 
-fs.stat('data/file', (err,stats) => {
-  if (!stats) fs.mkdirSync('data/file')
+fs.stat('~/data/file', (err,stats) => {
+  if (!stats) fs.mkdirSync('~/data/file')
 })
 
 // 连接数据库

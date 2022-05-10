@@ -76,7 +76,7 @@ export default defineEventHandler(async event => {
     const list = await (new Promise(resolve => {
       formidable({
         multiples: true,
-        uploadDir: 'data/file',
+        uploadDir: '~/data/file',
         keepExtensions: true,
         maxFieldsSize: 200 * 1024 * 1024
       }).parse(event.req, function (err, fields, files) {
