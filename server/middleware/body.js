@@ -6,7 +6,6 @@ export default defineEventHandler(async event => {
         event.req.on('data', (chunk) => data += chunk)
         event.req.on('end', () => resolve(JSON.parse(decodeURI(data))))
       })
-      console.log(event.req.body)
     }
     // else if (event.req.headers['content-type'].indexOf('multipart/form-data') != -1) {
     //  // 向指定目标的指定字段上传图像, 不同字段对图像接收后的处理方式不同

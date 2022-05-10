@@ -9,11 +9,11 @@ export default defineEventHandler(async event => {
       if (userinfo) {
         event.req.account = userinfo
       } else {
-        console.log('会话仍有效, 但用户已不存在, 注销此会话')
+        // 会话仍有效, 但用户已不存在, 注销此会话
         setCookie(event.res, 'sid', '', {maxAge: -1})
       }
     } else {
-      console.log('有cookie却已失效, 注销此 cookie(没有存储对应id)')
+      // 有cookie却已失效, 注销此 cookie(没有存储对应id)
       setCookie(event.res, 'sid', '', {maxAge: -1})
     }
   }

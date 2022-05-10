@@ -18,9 +18,6 @@ export default defineEventHandler(async event => {
       event.res.statusCode = 400
       return '账户不存在'
     }
-    console.log(event.req.body.password, user.salt)
-    console.log(md5(event.req.body.password + user.salt))
-    console.log(user.password)
     if (user.password !== md5(event.req.body.password + user.salt)) {
       event.res.statusCode = 400
       return '密码不匹配'
