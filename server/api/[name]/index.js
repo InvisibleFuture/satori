@@ -66,6 +66,7 @@ export default defineEventHandler(async event => {
     // TODO: 检查危险的属性, 放行管理员
     // TODO: 如果是创建用户, 对用户名检查占用
     // TODO: 如果是创建用户, 对密码作盐处理
+    // TODO: 新建即添加 files 等字段
     return await db.model(event.context.params.name).create(event.req.body)
   }
 

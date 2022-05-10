@@ -15,6 +15,7 @@ div.flex.flex-col.pt-16.pb-4(
     label.w-32.h-16.bg-dark-600.bg-opacity-20.rounded-md.absolute.bottom-8.left-192.flex.justify-center.items-center
       span.font-bold.text-3xl.text-dark-800
       input.hidden(type="file", accept="image/*", multiple, @change="upload($event, item)")
+    button.bg-dark-600(@click="remove(item.id)") remove
 </template>
 
 <script>
@@ -32,9 +33,11 @@ export default {
       })
     },
     async upload(event, item) {
-      if (!item) item = await this.create()
-      console.log(item)
-
+      if (!item) {
+        item = await this.create()
+        item.files = []
+        this.data.list.push(item)
+      }
       // 上传, 目标位置如果是new则先创建获得id, 否则目标位置本就有id ✨
       let data = new FormData();
       let files = event.target.files
@@ -43,9 +46,17 @@ export default {
         method: 'POST',
         body: data
       }).then(res => res.json()).then(data => {
-        data.forEach(it => item.files.push(it))
+        this.data.list.forEach(x => {
+          if (x.id === item.id) {
+            data.forEach(it => x.files.push(it))
+          }
+        })
       })
     },
+    remove(id) {
+      this.data.list = this.data.list.filter(item => item.id !== id)
+      $fetch(`/api/gallery/${id}`, { method: 'DELETE' })
+    }
   }
 }
 </script>
