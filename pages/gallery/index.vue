@@ -44,20 +44,6 @@ export default {
         body: data
       }).then(res => res.json()).then(data => {
         data.forEach(it => item.files.push(it))
-        //let value = '\n'
-        //data.forEach(item => {
-        //  // TODO: type image?
-        //  value += `![${item.name}](/api/image/${item.id})\n`
-        //})
-        //let tclen = this.blog.data.length
-        //let tc = document.querySelector('textarea') // this.$refs.message
-        //tc.focus()
-        //if (typeof document.selection !== "undefined") {
-        //  document.selection.createRange().text = value
-        //} else {
-        //  this.blog.data = tc.value.substr(0, tc.selectionStart) + value +
-        //  tc.value.substring(tc.selectionStart, tclen);
-        //}
       })
     },
   }
