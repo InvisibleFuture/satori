@@ -2,7 +2,7 @@
 div.flex.flex-col.pt-16.pb-4(
   class="xl:(flex-row h-screen overflow-x-scroll) md:(px-12) lg:(px-12)"
 )
-  section.bg-dark-800.bg-opacity-20.rounded-md.p-12.m-2.min-w-64.flex.items-center.justify-center
+  section.bg-dark-800.bg-opacity-20.rounded-md.p-12.m-2.min-w-64.flex.items-center.justify-center(v-if="account.online")
     label.w-24.h-24.bg-dark-600.bg-opacity-20.rounded-md
       input.hidden(type="file", accept="image/*", multiple, @change="upload($event, null)")
   section(v-if="pending") Loading..
@@ -12,17 +12,18 @@ div.flex.flex-col.pt-16.pb-4(
     v-for="item in data.list"
   )
     img.rounded-md.m-1(v-for="file in item.files" :src="`/api/image/${file.id}`")
-    label.w-32.h-16.bg-dark-600.bg-opacity-20.rounded-md.absolute.bottom-8.left-192.flex.justify-center.items-center
-      span.font-bold.text-3xl.text-dark-800
+    label.w-32.h-16.bg-dark-600.bg-opacity-20.rounded-md.flex.justify-center.items-center(v-if="account.online")
+      span.font-bold.text-3xl.text-dark-800 upload
       input.hidden(type="file", accept="image/*", multiple, @change="upload($event, item)")
-    button.bg-dark-600(@click="remove(item.id)") remove
+    button.w-16.h-16.bg-dark-600.bg-opacity-20(v-if="account.online" @click="remove(item.id)") remove
 </template>
 
 <script>
 export default {
   setup() {
+    const account = useState('account')
     const { data, pending } = useFetch('/api/gallery')
-    return { data, pending }
+    return { data, pending, account }
   },
   methods: {
     async create() {
