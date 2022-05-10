@@ -41,9 +41,10 @@ export default {
     },
 
     // Remove title 第一行开始的, 行首是 # 号且间隔一个空格后是字符串的, 且直到结尾不再有 # 号
-    removeTitle(data = "") {
-      let reg = new RegExp("(?<=^# ).*?(?=\n)|(?<=\n# ).*?(?=\n)", 'i');
-      return data.replace(reg, '')
+    removeTitle(data="未命名档") {
+      return data
+      //let reg = new RegExp("(?<=^# ).*?(?=\n)|(?<=\n# ).*?(?=\n)", 'i');
+      //return data.replace(reg, '')
     },
   }
 }

@@ -1,9 +1,12 @@
 <template lang="pug">
-div.h-screen.overflow-x-scroll.flex.flex-row-reverse.px-8.pt-16.pb-4
+div.h-screen.overflow-x-scroll.flex.flex-col.px-8.pt-16.pb-4(
+  class="xl:flex-row-reverse"
+)
   section.bg-dark-800.bg-opacity-20.rounded-md.p-12.m-2.min-w-64.flex.items-center.justify-center
     label.w-24.h-24.bg-dark-600.bg-opacity-20.rounded-md
       input.hidden(type="file", accept="image/*", multiple, @change="upload($event, null)")
-  section.bg-dark-800.bg-opacity-20.rounded-md.p-12.m-2.min-w-400.flex.flex-wrap.justify-center.items-center.relative(
+  section.bg-dark-800.bg-opacity-20.rounded-md.p-12.m-2.flex.flex-col.justify-center.items-center.relative(
+    class="xl:(flex-wrap)"
     v-for="item in data.list"
   )
     img.rounded-md.m-1(v-for="file in item.files" :src="`/api/image/${file.id}`")
