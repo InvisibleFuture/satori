@@ -9,7 +9,6 @@ div.bg-fixed.bg-cover.bg-no-repeat.bg-center(:style="`background-image:url(${bac
 
 <script>
 import background from '@/assets/image/background.jpg'
-
 export default defineComponent({
   setup() {
     const session = useCookie('sid')
