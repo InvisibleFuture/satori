@@ -1,7 +1,7 @@
 <template lang="pug">
-div.container.mx-auto.pt-32.text-white
-  div(v-if="pending")
-  div(v-else)
+div.container.mx-auto.pt-48.text-white
+  section(v-if="pending") Loading..
+  section.m-2.p-4.bg-opacity-0.bg-dark-800.rounded-xl(v-else class="md:p-12")
     template(v-if="!project.edit")
       //h1.font-bold.text-2xl.my-4 # {{ data.name }}
       //p {{ data.data }}
