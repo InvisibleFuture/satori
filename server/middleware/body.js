@@ -1,6 +1,6 @@
 export default defineEventHandler(async event => {
   if (event.req.method === 'POST' || event.req.method === 'PATCH' || event.req.method === 'PUT') {
-    if (event.req.headers['content-type'].indexOf('application/json') != -1) {
+    if (event.req.headers['content-type'].indexOf('application/json') !== -1) {
       event.req.body = await new Promise(resolve => {
         let data = ''
         event.req.on('data', (chunk) => data += chunk)

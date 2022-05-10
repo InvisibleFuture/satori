@@ -1,4 +1,4 @@
-import { db, User } from '../../model'
+import { db, User, File } from '../../model'
 
 // 获取列表
 export default defineEventHandler(async event => {
@@ -25,11 +25,17 @@ export default defineEventHandler(async event => {
     // 排序条件 (sort desc)
 
     // 对 blog 特别附加
-    if (event.context.params.name === 'blog') {
-      query.include = [{
-        model: User,
-        attributes: ['name', 'age'],
-      }]
+    // if (event.context.params.name === 'blog') {
+    //   query.include = [{
+    //     model: User,
+    //     attributes: ['name', 'age'],
+    //   }]
+    // }
+    if (['blog', 'project', 'gallery'].find(item => item === event.context.params.name)) {
+      query.include = [{model: User, attributes: ['name', 'age']}]
+      if (event.context.params.name === 'gallery') { // 对 gallery 特别附加
+        query.include.push({model: File, attributes: ['id','name','type', 'size']})
+      }
     }
 
     return {
@@ -49,7 +55,7 @@ export default defineEventHandler(async event => {
   // 增删改查标准操作(创建)
   if (event.req.method === 'POST') {
 
-    if (['blog', 'project'].find(item => item === event.context.params.name)) {
+    if (['blog', 'project', 'gallery'].find(item => item === event.context.params.name)) {
       if (!event.req.account) {
         event.res.statusCode = 400
         return '必须登录才可以创建此对象'
