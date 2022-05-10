@@ -2,9 +2,10 @@
 div.container.mx-auto.pt-32.text-white.py-32
   div(v-if="pending")
   div.bg-white.bg-opacity-5.px-16.py-12.rounded-md(v-else)
-    button.bg-green-700.p-4(v-if="account.online" @click="edit_mode()") edit {{ blog.edit }}
     template(v-if="!blog.edit")
       div.markdown(v-html="marked.parse(data.data, { breaks: true })")
+      div.flex.flex-row-reverse
+        button.bg-green-700.py-2.px-4.rounded-md(v-if="account.online" @click="edit_mode()") edit {{ blog.edit }}
     template(v-else)
       textarea.w-full.min-h-64.bg-opacity-10.bg-dark-200.p-4(v-model="blog.data",v-focus,tabindex="0",@keyup.ctrl.enter="edit_submit()",@keydown.esc="edit_mode()")
       input(type="file", accept="image/*", multiple, @change="edit_upload($event)")

@@ -1,5 +1,5 @@
 <template lang="pug">
-div.h-screen.overflow-x-scroll.pt-24.flex.flex-row-reverse.px-8
+div.h-screen.overflow-x-scroll.flex.flex-row-reverse.px-8.pt-16.pb-4
   section.bg-dark-800.bg-opacity-20.rounded-md.p-12.m-2.min-w-64.flex.items-center.justify-center
     label.w-64.h-64.bg-green-600.rounded-md
       input.hidden(type="file", accept="image/*", multiple, @change="upload($event)")
