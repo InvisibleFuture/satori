@@ -2,7 +2,7 @@
 div.container.mx-auto.pt-32.text-white.py-32
   div(v-if="pending")
   div.bg-white.bg-opacity-5.px-16.py-12.rounded-md(v-else)
-    button.bg-green-700.p-4(@click="edit_mode()") edit {{ blog.edit }}
+    button.bg-green-700.p-4(v-if="account.online" @click="edit_mode()") edit {{ blog.edit }}
     template(v-if="!blog.edit")
       div.markdown(v-html="marked.parse(data.data, { breaks: true })")
     template(v-else)
@@ -18,13 +18,14 @@ import { marked } from "marked"
 export default {
   setup() {
     const route = useRoute()
+    const account = useState('account')
     const blog = useState('blog', () => ({
       edit: false,
       data: '',
       name: ''
     }))
     const { data, pending } = useFetch(`/api/blog/${route.params.id}`)
-    return { data, pending, blog, marked, route }
+    return { data, pending, blog, marked, route, account }
   },
   methods: {
     // 编辑模式

@@ -1,8 +1,8 @@
 <template lang="pug">
 div.pt-24
-  section.container.mx-auto.bg-white.p-12.flex.flex-col
-    textarea.auto.p-8.mb-2(v-model="blog.data", @input="input")
-    button.bg-green-600.px-4.py-2.text-white.font-bold(@click="create") Submit
+  section.container.mx-auto.bg-white.bg-opacity-5.rounded-md.p-12.flex.flex-col
+    textarea.auto.p-8.mb-2.min-h-120.rounded-md(v-model="blog.data", @input="input" @keyup.ctrl.enter="create()")
+    button.bg-green-600.px-4.py-2.text-white.font-bold.rounded-md(@click="create()") Submit
 </template>
 
 <script>
@@ -11,8 +11,8 @@ export default {
     const router = useRouter()
 
     const blog = {
-      name: 'default',
-      data: 'default',
+      name: '# title',
+      data: '# title\ndefault',
     }
 
     const input = function(e) {
