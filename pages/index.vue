@@ -2,9 +2,9 @@
 div.bg-fixed.bg-cover.bg-no-repeat.bg-center(:style="`background-image:url(${background})`")
   div.flex.flex-col.justify-center.items-center.text-white.min-h-screen.bg-black.bg-opacity-50
     h1.text-4xl.m-8 {{ kotoba() }}
-    div.felx.mt-4(v-if="!pending")
-      NuxtLink.p-8(v-for="item in data.list" :to="`/project/${item.id}`") # {{ item.name }}
-      NuxtLink.p-8(v-if="session" to="/project/create") +
+    div.flex.flex-row.flex-wrap.mt-4.px-8(v-if="!pending")
+      NuxtLink.p-2.m-1(v-for="item in data.list" :to="`/project/${item.id}`") # {{ item.name }}
+      NuxtLink.p-2.m-1(v-if="session" to="/project/create") +
 </template>
 
 <script>

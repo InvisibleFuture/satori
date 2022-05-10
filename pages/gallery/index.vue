@@ -1,12 +1,12 @@
 <template lang="pug">
-div.h-screen.overflow-x-scroll.flex.flex-col.px-8.pt-16.pb-4(
-  class="xl:flex-row-reverse"
+div.flex.flex-col.pt-16.pb-4(
+  class="xl:(flex-row h-screen overflow-x-scroll) md:(px-12) lg:(px-12)"
 )
   section.bg-dark-800.bg-opacity-20.rounded-md.p-12.m-2.min-w-64.flex.items-center.justify-center
     label.w-24.h-24.bg-dark-600.bg-opacity-20.rounded-md
       input.hidden(type="file", accept="image/*", multiple, @change="upload($event, null)")
   section(v-if="pending") Loading..
-  section.bg-dark-800.bg-opacity-20.rounded-md.p-12.m-2.flex.flex-col.justify-center.items-center.relative(
+  section.m-2.p-4.bg-opacity-20.bg-dark-800.rounded-md.flex.flex-col.justify-center.items-center.relative(
     class="xl:(flex-wrap)"
     v-else
     v-for="item in data.list"

@@ -1,7 +1,7 @@
 <template lang="pug">
 div.container.mx-auto.pt-32.text-white.py-32
-  div(v-if="pending")
-  div.bg-white.bg-opacity-5.px-16.py-12.rounded-md(v-else)
+  section(v-if="pending") Loading..
+  section.m-2.p-4.bg-opacity-20.bg-dark-800.rounded-xl(v-else class="md:p-12")
     div(v-if="!blog.edit")
       div.markdown(v-html="marked.parse(data.data, { breaks: true })")
       ul.flex.overflow-hidden.rounded-md.max-w-max.my-4

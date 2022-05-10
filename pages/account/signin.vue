@@ -2,8 +2,8 @@
 div.bg-fixed.bg-cover.bg-no-repeat.bg-center(:style="`background-image:url(${background})`")
   div.flex.flex-col.justify-center.items-center.min-h-screen.bg-black.bg-opacity-50
     //.container.mx-auto.h-screen.flex.items-center.justify-center
-    div.flex.flex-col.bg-white.bg-opacity-5.px-8.py-12.mx-auto.rounded-md
-      div.text-red-500.text-4xl.font-bold.mb-4.transition-all.duration-450(class="hover:text-red-700") SIGNIN
+    div.flex.flex-col.bg-white.bg-opacity-10.px-8.py-12.mx-auto.rounded-md
+      div.text-red-800.text-4xl.font-bold.mb-4.transition-all.duration-450(class="hover:text-red-600") SIGNIN
       label.relative
         span.absolute.left-3.top-3.bg-red-700.text-transparent.bg-clip-text 🌱
         input.box-border.p-4.pl-12.mb-2.rounded-md.bg-white.bg-opacity-70.font-bold(v-model="account.name" placeholder="name")

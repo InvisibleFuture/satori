@@ -41,7 +41,7 @@ export default defineComponent({
   display: none;
 }
 html, body {
-  background-color: darkred;
+  background-color: rgba(55,65,81, 1);
   /**background-image: url(/assets/image/background.jpg);**/
 }
 .markdown img {
