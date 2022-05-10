@@ -34,7 +34,8 @@ export default {
         console.log(data)
         if (data) {
           console.log(data)
-          this.account.name = data.name
+          this.account.id     = data.id
+          this.account.name   = data.name
           this.account.online = true
           router.push({path:'/account'})
         }
