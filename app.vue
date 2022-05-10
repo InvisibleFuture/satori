@@ -1,5 +1,6 @@
 <template lang="pug">
-.min-h-screen.bg-gray-700
+.min-h-screen
+  //.bg-gray-700
   header.absolute.left-0.top-0.right-0
     nav.container.mx-auto.flex.text-gray-400.text-xl.font-bold
       NuxtLink.p-4(to="/", :class="{'text-white': route.path==='/' }") Home
@@ -42,6 +43,7 @@ export default defineComponent({
 }
 html, body {
   background-color: darkred;
+  background-image: url(/assets/image/background.jpg);
 }
 .markdown img {
   border-radius: .25rem;
