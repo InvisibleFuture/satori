@@ -34,28 +34,28 @@ export const User = db.define('user', {
 export const Blog = db.define('blog', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING },
-  data: { type: DataTypes.STRING },
+  data: { type: DataTypes.TEXT('long') },
 })
 
 // 定义课题表
 export const Project = db.define('project', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING },
-  data: { type: DataTypes.STRING },
+  data: { type: DataTypes.TEXT('long') },
 })
 
 // gallery
 export const Gallery = db.define('gallery', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING },
-  data: { type: DataTypes.STRING },
+  data: { type: DataTypes.TEXT('long') },
   list: { type: DataTypes.STRING },
 })
 
 // 定义评论表
 export const Comment = db.define('comment', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  data: { type: DataTypes.STRING },
+  data: { type: DataTypes.TEXT('long') },
   name: { type: DataTypes.STRING },
   mail: { type: DataTypes.STRING },
   avatar: { type: DataTypes.STRING },

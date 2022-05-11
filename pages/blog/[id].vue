@@ -51,6 +51,7 @@ div.container.mx-auto.pt-32.text-white.py-32
 </template>
 
 <script>
+import "highlight.js/styles/agate.css"
 import { marked } from "marked"
 export default {
   setup() {

@@ -12,11 +12,11 @@
     "pug": "^3.0.2"
   },
   "dependencies": {
+    "formidable": "^2.0.1",
     "highlight.js": "^11.5.1",
+    "mariadb": "^3.0.0",
     "marked": "^4.0.14",
     "md5": "^2.3.0",
-    "formidable": "^2.0.1",
-    "mariadb": "^3.0.0",
     "mysql2": "^2.3.3",
     "sequelize": "^6.19.0",
     "string-random": "^0.1.3"
