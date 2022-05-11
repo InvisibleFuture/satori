@@ -9,7 +9,7 @@ div.container.mx-auto.text-white.pt-24
     p.text-sm.mb-4
       span.mr-4 {{ rwdate(item.createdAt) }}
       span.mr-4 {{ item.user.name }}
-    div.markdown(v-html="marked.parse(removeTitle(item.data), { breaks: true })")
+    div.overflow-hidden.markdown(v-html="marked.parse(removeTitle(item.data), { breaks: true })")
     div(v-if="account.online")
       button.bg-indigo-600.px-4.py-2.font-bold.mt-4.mr-4(@click="removeItem(item.id)") delete
       button.bg-indigo-600.px-4.py-2.font-bold.mt-4.mr-4 editor
@@ -17,11 +17,22 @@ div.container.mx-auto.text-white.pt-24
 </template>
 
 <script>
+import "highlight.js/styles/agate.css"
+import hljs from "highlight.js"
 import { marked } from 'marked'
 export default {
   setup() {
     const account = useState('account')
     const { data, pending } = useFetch('/api/blog')
+
+    onMounted(() => {
+      setTimeout(() => {
+        for (let block of document.querySelectorAll("pre code")) {
+          hljs.highlightBlock(block);
+        }
+      }, 100);
+    })
+
     return { data, pending, account, marked }
   },
   methods: {
