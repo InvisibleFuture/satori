@@ -66,11 +66,10 @@ export default {
       //  })
       //}
       // 数据
-      const 可视区域 = { 宽度:0, 高度:0, 变化:false, 灵敏:100, 快照:NaN, 元素:null, 列数:1, 列宽:320, 边距: 0 }
+      const 可视区域 = { 宽度:0, 高度:0, 变化:false, 灵敏:100, 快照:NaN, 元素:null, 列数:1, 列宽:320, 边距: 0, 间距: 8 }
       const 数据列表 = []
       const 热区元素 = []
       const 各列高度 = []
-
       //// 方法们
       //// 流程们
       ////const 加载数据 = function(src, index) {数据列表.forEach()} // 提前加载每个图片
@@ -91,23 +90,23 @@ export default {
         let 缩放比例 = 信息.宽度 / 可视区域.列宽
         let 建议图高 = 信息.高度 / 缩放比例
         let 最小列位置 = 取当前最小列()
-        let 位置 = 可视区域.列宽 * 最小列位置.列号 + 可视区域.边距
+        let 位置 = (可视区域.列宽 + 可视区域.间距) * 最小列位置.列号 + 可视区域.边距
         元素.style.top    = 最小列位置.高度 + 'px'
         元素.style.left   = 位置 + 'px'
         元素.style.width  = 可视区域.列宽 + 'px'
         元素.style.height = 建议图高 + 'px'
         元素.innerHTML    = `${最小列位置.列号}`
-        各列高度[最小列位置.列号] = 最小列位置.高度 + 建议图高
+        各列高度[最小列位置.列号] = 最小列位置.高度 + 建议图高 + 可视区域.间距
       }
       const 热区添加元素 = function(信息) {
         let 元素 = document.createElement('div')
         元素.style.padding         = '1rem'
-        元素.style.color           = '#FFFFFF'
+        元素.style.color           = 'rgba(24,24,24,.25)'
         元素.style.fontWeight      = 'bold' 
-        元素.style.backgroundColor = '#ff1414'
+        元素.style.backgroundColor = 'rgba(24,24,24,.05)'
         元素.style.position        = 'absolute'
-        元素.style.borderRadius    = '1rem'
-        元素.style.border          = 'solid 1px #fff'
+        元素.style.borderRadius    = '.25rem'
+        元素.style.border          = 'solid 1px rgba(24,24,24,.25)'
         元素.style.transition      = 'all .75s'
         设置元素位置(元素, 信息)
         可视区域.元素.appendChild(元素)
@@ -117,19 +116,20 @@ export default {
         if (!可视区域.元素) {
           可视区域.元素 = document.body
         }
-        console.log('window.devicePixelRatio', window.devicePixelRatio, 可视区域.元素.clientWidth)
         if (window.devicePixelRatio === 1 && 可视区域.元素.clientWidth > 1280) {
           可视区域.列宽 = 480
+          可视区域.间距 = 16
         } else {
           可视区域.列宽 = 320
+          可视区域.间距 = 8
         }
         if (各列高度.length) {
           各列高度.length = 0
         }
         可视区域.宽度 = 可视区域.元素.clientWidth
         可视区域.高度 = 可视区域.元素.clientHeight
-        可视区域.列数 = parseInt(可视区域.宽度 / 可视区域.列宽) || 1
-        可视区域.边距 = (可视区域.宽度 - (可视区域.列数 * 可视区域.列宽)) / 2
+        可视区域.列数 = parseInt(可视区域.宽度 / (可视区域.列宽 + 可视区域.间距)) || 1
+        可视区域.边距 = (可视区域.宽度 - (可视区域.列数 * 可视区域.列宽) - ((可视区域.列数 - 1) * 可视区域.间距)) / 2
         // 热区重排(热区尚未优化, 先直接重排全部)
         热区元素.forEach(({元素, 信息}) => {
           设置元素位置(元素, 信息)
@@ -145,7 +145,6 @@ export default {
       }
 
       window.onresize = function() {
-        console.log('屏幕宽高重置')
         屏幕宽高重置()
       }
 
