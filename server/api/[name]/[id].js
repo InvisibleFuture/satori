@@ -2,6 +2,7 @@ import fs from 'fs'
 import md5 from 'md5'
 import random from 'string-random'
 import formidable from 'formidable'
+import imageSize from 'image-size'
 import { db, User, Blog, Tag, File } from '../../model'
 
 // 获取对象
@@ -83,12 +84,16 @@ export default defineEventHandler(async event => {
         let list = []
         for (let key in files) {
           (Array.isArray(files[key]) ? files[key] : [files[key]]).map(item => {
+            let img = imageSize(item.filepath)
+            console.log(img)
             let ipx = {
               userId: event.req.account.id,
               name: item.originalFilename,
               size: item.size,
               path: item.filepath,
               type: item.mimetype,
+              width: img.width || 0,
+              height: img.height || 0
             }
             if (event.context.params.name === 'blog') {
               ipx.blogId = event.context.params.id

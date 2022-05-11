@@ -69,6 +69,8 @@ export const File = db.define('file', {
   type: { type: DataTypes.STRING },
   path: { type: DataTypes.STRING },
   size: { type: DataTypes.INTEGER },
+  width: { type: DataTypes.INTEGER },
+  height: { type: DataTypes.INTEGER },
 })
 
 // 定义标签表(blog | project 查询时使用tag=参数)

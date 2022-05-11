@@ -34,7 +34,7 @@ export default defineEventHandler(async event => {
     if (['blog', 'project', 'gallery'].find(item => item === event.context.params.name)) {
       query.include = [{model: User, attributes: ['name', 'age']}]
       if (event.context.params.name === 'gallery') { // 对 gallery 特别附加
-        query.include.push({model: File, attributes: ['id','name','type', 'size']})
+        query.include.push({model: File, attributes: ['id','name','type', 'size', 'width', 'height']})
       }
     }
 
