@@ -1,6 +1,6 @@
 <template lang="pug">
 div.flex.flex-col.pt-16.pb-4
-  p 瀑布流
+  #PUBULIUBOX.relative
   //div.flex.flex-col.pt-16.pb-4(
   //  class="xl:(flex-row h-screen overflow-x-scroll) md:(px-12) lg:(px-12)"
   //)
@@ -66,7 +66,7 @@ export default {
       //  })
       //}
       // 数据
-      const 可视区域 = { 宽度:0, 高度:0, 变化:false, 灵敏:100, 快照:NaN, 元素:null, 列数:1, 列宽:320 }
+      const 可视区域 = { 宽度:0, 高度:0, 变化:false, 灵敏:100, 快照:NaN, 元素:null, 列数:1, 列宽:320, 边距: 0 }
       const 数据列表 = []
       const 热区元素 = []
       const 各列高度 = []
@@ -80,7 +80,7 @@ export default {
       const 取当前最小列 = function() {
         if (各列高度.length === 0) {
           for (let i=0; i<可视区域.列数; i++) {
-            各列高度.push(12)
+            各列高度.push(120)
           }
         }
         let min = Math.min(...各列高度)
@@ -91,7 +91,7 @@ export default {
         let 缩放比例 = 信息.宽度 / 可视区域.列宽
         let 建议图高 = 信息.高度 / 缩放比例
         let 最小列位置 = 取当前最小列()
-        let 位置 = 可视区域.列宽 * 最小列位置.列号
+        let 位置 = 可视区域.列宽 * 最小列位置.列号 + 可视区域.边距
         元素.style.top    = 最小列位置.高度 + 'px'
         元素.style.left   = 位置 + 'px'
         元素.style.width  = 可视区域.列宽 + 'px'
@@ -110,12 +110,18 @@ export default {
         元素.style.border          = 'solid 1px #fff'
         元素.style.transition      = 'all .75s'
         设置元素位置(元素, 信息)
-        document.body.appendChild(元素)
+        可视区域.元素.appendChild(元素)
         热区元素.push({元素, 信息})
       }
       const 屏幕宽高重置 = function() {
         if (!可视区域.元素) {
           可视区域.元素 = document.body
+        }
+        console.log('window.devicePixelRatio', window.devicePixelRatio, 可视区域.元素.clientWidth)
+        if (window.devicePixelRatio === 1 && 可视区域.元素.clientWidth > 1280) {
+          可视区域.列宽 = 480
+        } else {
+          可视区域.列宽 = 320
         }
         if (各列高度.length) {
           各列高度.length = 0
@@ -123,6 +129,7 @@ export default {
         可视区域.宽度 = 可视区域.元素.clientWidth
         可视区域.高度 = 可视区域.元素.clientHeight
         可视区域.列数 = parseInt(可视区域.宽度 / 可视区域.列宽) || 1
+        可视区域.边距 = (可视区域.宽度 - (可视区域.列数 * 可视区域.列宽)) / 2
         // 热区重排(热区尚未优化, 先直接重排全部)
         热区元素.forEach(({元素, 信息}) => {
           设置元素位置(元素, 信息)
@@ -141,14 +148,18 @@ export default {
         console.log('屏幕宽高重置')
         屏幕宽高重置()
       }
-      屏幕宽高重置()
-      // 模拟触发滚动事件
-      for (let i=0; i<32; i++) {
-        热区添加元素({
-          宽度: 生成随机尺寸(120, 600),
-          高度: 生成随机尺寸(240, 800)
-        })
-      }
+
+      setTimeout(() => {
+        可视区域.元素 = document.querySelector('#PUBULIUBOX')
+        屏幕宽高重置()
+        // 模拟触发滚动事件
+        for (let i=0; i<32; i++) {
+          热区添加元素({
+            宽度: 生成随机尺寸(120, 600),
+            高度: 生成随机尺寸(240, 800)
+          })
+        }
+      },"100")
       
     })
 

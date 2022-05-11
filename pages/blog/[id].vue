@@ -52,6 +52,7 @@ div.container.mx-auto.pt-32.text-white.py-32
 
 <script>
 import "highlight.js/styles/agate.css"
+import hljs from "highlight.js"
 import { marked } from "marked"
 export default {
   setup() {
@@ -63,6 +64,15 @@ export default {
       name: ''
     }))
     const { data, pending } = useFetch(`/api/blog/${route.params.id}`)
+
+    onMounted(() => {
+      setTimeout(() => {
+        for (let block of document.querySelectorAll("pre code")) {
+          hljs.highlightBlock(block);
+        }
+      }, 100);
+    })
+
     return { data, pending, blog, marked, route, account }
   },
   methods: {
