@@ -120,6 +120,10 @@ export default {
       元素.style.overflow        = 'hidden'
       元素.style.border          = 'solid 1px rgba(24,24,24,.25)'
       元素.style.transition      = 'all .75s'
+      元素.onclick = function() {
+        window.open('/api/image/'+信息.id)
+        return false
+      }
       //元素.innerHTML    = `${最小列位置.列号}`
       if (信息.网址) {
         let del = document.createElement('div')
@@ -140,6 +144,7 @@ export default {
           console.log(下标)
           热区元素.splice(下标, 1)
           屏幕宽高重置()
+          return false
         }
         元素.appendChild(del)
         let img = document.createElement('img')
