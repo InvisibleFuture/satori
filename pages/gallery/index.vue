@@ -73,10 +73,15 @@ export default {
     //    }
     //  })
     //}
+    const 从服务器删除文件 = function(id) {
+      fetch(`/api/file/${id}`, {method:'DELETE'}).then(res => res.json()).then(data=>{
+        console.log(data)
+      })
+    }
     ///// 数据们
     const 可视区域 = { 宽度:0, 高度:0, 变化:false, 灵敏:100, 快照:NaN, 元素:null, 列数:1, 列宽:320, 边距: 0, 间距: 8 }
     const 数据列表 = []
-    const 热区元素 = []
+    var 热区元素 = []
     const 各列高度 = []
     ///// 方法们
     ///// 流程们
@@ -103,12 +108,10 @@ export default {
       元素.style.left   = 位置 + 'px'
       元素.style.width  = 可视区域.列宽 + 'px'
       元素.style.height = 建议图高 + 'px'
-      //元素.innerHTML    = `${最小列位置.列号}`
       各列高度[最小列位置.列号] = 最小列位置.高度 + 建议图高 + 可视区域.间距
     }
     const 热区添加元素 = function(信息) {
       let 元素 = document.createElement('div')
-      //元素.style.padding         = '2rem'
       元素.style.color           = 'rgba(24,24,24,.25)'
       元素.style.fontWeight      = 'bold' 
       元素.style.backgroundColor = 'rgba(24,24,24,.05)'
@@ -117,7 +120,28 @@ export default {
       元素.style.overflow        = 'hidden'
       元素.style.border          = 'solid 1px rgba(24,24,24,.25)'
       元素.style.transition      = 'all .75s'
+      //元素.innerHTML    = `${最小列位置.列号}`
       if (信息.网址) {
+        let del = document.createElement('div')
+        del.style.cssText = 'position:absolute;background:rgba(24,24,24,.25)'
+        del.innerHTML = 'DEL'
+        del.onclick = function() {
+          var 下标 = 0 // 移除热列表中的, 然后触发重新排序
+          热区元素.forEach((item, index) => {
+            console.log(index, item.信息.id, 信息.id)
+            if (item.信息.id === 信息.id) {
+              下标 = index
+              // 移除元素本身
+              item.元素.parentNode.removeChild(item.元素)
+              // 从服务器移除文件对象
+              从服务器删除文件(item.信息.id)
+            }
+          })
+          console.log(下标)
+          热区元素.splice(下标, 1)
+          屏幕宽高重置()
+        }
+        元素.appendChild(del)
         let img = document.createElement('img')
         img.src = 信息.网址
         元素.appendChild(img)
@@ -168,7 +192,8 @@ export default {
           热区添加元素({
             宽度: img.width  || 480,
             高度: img.height || 600,
-            网址: '/api/image/' + img.id
+            网址: '/api/image/' + img.id + '.webp',
+            id: img.id
           })
         })
       })

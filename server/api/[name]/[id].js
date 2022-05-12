@@ -3,6 +3,7 @@ import md5 from 'md5'
 import random from 'string-random'
 import formidable from 'formidable'
 import imageSize from 'image-size'
+import webp from 'webp-converter'
 import { db, User, Blog, Tag, File } from '../../model'
 
 // 获取对象
@@ -85,7 +86,6 @@ export default defineEventHandler(async event => {
         for (let key in files) {
           (Array.isArray(files[key]) ? files[key] : [files[key]]).map(item => {
             let img = imageSize(item.filepath)
-            console.log(img)
             let ipx = {
               userId: event.req.account.id,
               name: item.originalFilename,
@@ -109,6 +109,12 @@ export default defineEventHandler(async event => {
         })
       })
     }))
+    list.forEach(item => {
+      const result = webp.cwebp(item.path, `../data/webp/${item.id}.webp`, "-q 80")
+      result.then((response) => {
+        console.log(response)
+      })
+    })
     return list
   }
 

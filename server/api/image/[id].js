@@ -7,6 +7,16 @@ export default defineEventHandler(async event => {
     event.res.statusCode = 404
     return '资源不存在'
   }
+
+  if (event.context.params.id.match(new RegExp(/.webp$/))) {
+    let file = await new Promise(resolve => {
+      fs.readFile(`../data/webp/${event.context.params.id}`, (err, data) => {
+        resolve(data)
+      })
+    })
+    return file
+  }
+
   // TODO: image size
   let file = await new Promise(resolve => {
     fs.readFile(data.path, (err, data) => {

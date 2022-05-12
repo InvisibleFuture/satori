@@ -9,6 +9,10 @@ fs.stat('../data/file', (err,stats) => {
   if (!stats) fs.mkdirSync('../data/file')
 })
 
+fs.stat('../data/webp', (err,stats) => {
+  if (!stats) fs.mkdirSync('../data/webp')
+})
+
 // 连接数据库
 export const db = new Sequelize({
   host: 'localhost',
