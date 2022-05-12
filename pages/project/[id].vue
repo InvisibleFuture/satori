@@ -21,7 +21,7 @@ export default {
     const account = useState('account')
 
     const { data, pending } = useFetch(`/api/project/${route.params.id}`)
-    const project = useState('edit', () => {
+    const project = useState('editProject', () => {
       return {data:'', edit: false}
     })
 
@@ -31,9 +31,9 @@ export default {
       marked,
 
       submit() {
-        const reg     = new RegExp("(?<=^# ).*?(?=\n)|(?<=\n# ).*?(?=\n)")
+        const reg     = new RegExp("^# .*\n")
         const list    = this.project.data.match(reg)
-        const name    = list ? list[0] : "default"
+        const name    = list ? list[0].replace('# ', '').replace('\n', '') : "default"
         const data    = this.project.data
         fetch(`/api/project/${route.params.id}`, {
           method:  'PATCH',
