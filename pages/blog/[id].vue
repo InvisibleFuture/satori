@@ -3,7 +3,7 @@ div.container.mx-auto.pt-32.text-white.py-32
   section(v-if="pending") Loading..
   section.m-2.p-4.bg-opacity-20.bg-dark-800.rounded-xl(v-else class="md:p-12")
     div(v-if="!blog.edit")
-      div.markdown(v-html="marked.parse(data.data, { breaks: true })")
+      div.markdown(v-html="marked.parse(data?.data || '', { breaks: true })")
       ul.flex.overflow-hidden.rounded-md.max-w-max.my-4
         li.bg-pink-400.w-12.h-12
         li.bg-pink-500.w-12.h-12
@@ -58,7 +58,7 @@ export default {
   setup() {
     const route = useRoute()
     const account = useState('account')
-    const blog = useState('blog', () => ({
+    const blog = useState('editBlog', () => ({
       edit: false,
       data: '',
       name: ''

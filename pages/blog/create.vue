@@ -10,25 +10,32 @@ export default {
   setup() {
     const router = useRouter()
 
-    const blog = {
-      name: '# title',
-      data: '# title\ndefault',
-    }
+    const blog = useState('createBlog', () => ({
+      name: '',
+      data: ''
+    }))
 
     const input = function(e) {
       e.srcElement.style.height = '400px'
       e.srcElement.style.height = e.target.scrollHeight + 'px'
     }
 
-    const create = () => {
-      if (!blog.data) return console.log('输入为空')
+    const create = function() {
+      if (!this.blog.data) return console.log("输入不能为空");
+      const reg  = new RegExp("(?<=^# ).*?(?=\n)|(?<=\n# ).*?(?=\n)")
+      const list = this.blog.data.match(reg)
+      this.blog.name = list ? list[0] : "default"
       fetch('/api/blog', {
         method: 'POST',
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(blog)
-      }).then(Response => Response.text()).then(data => {
+        body: JSON.stringify(this.blog)
+      }).then(Response => {
+        if (Response.status === 200) {
+          router.push({path:'/blog'})
+        }
+        return Response.text()
+      }).then(data => {
         console.log(data)
-        router.push({path:'/blog'})
       })
     }
 
