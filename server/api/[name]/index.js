@@ -1,6 +1,6 @@
 import md5 from 'md5'
-import request from 'request'
-import { createWriteStream, existsSync, mkdirSync } from 'fs'
+import https from 'https'
+import { createWriteStream, existsSync } from 'fs'
 import { db, User, File } from '../../model'
 
 function getGravatar(email, size) {
@@ -8,7 +8,8 @@ function getGravatar(email, size) {
   let 本地路径 = '../data/avatar/' + str + '.jpg'
   let 网络路径 = `https://secure.gravatar.com/avatar/${str}.jpg?s=${size}&d=mm&r=g`
   if (!existsSync(本地路径)) {
-    request(网络路径).pipe(createWriteStream(本地路径))
+    //request(网络路径).pipe(createWriteStream(本地路径))
+    https.get(网络路径).pipe(createWriteStream(本地路径))
   }
   return '/api/avatar/' + str + '.jpg'
 }
