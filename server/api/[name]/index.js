@@ -1,4 +1,17 @@
+import md5 from 'md5'
+import request from 'request'
+import { createWriteStream, existsSync, mkdirSync } from 'fs'
 import { db, User, File } from '../../model'
+
+function getGravatar(email, size) {
+  let str = email ? md5(email.toLowerCase()) : 'default'
+  let 本地路径 = '../data/avatar/' + str + '.jpg'
+  let 网络路径 = `https://secure.gravatar.com/avatar/${str}.jpg?s=${size}&d=mm&r=g`
+  if (!existsSync(本地路径)) {
+    request(网络路径).pipe(createWriteStream(本地路径))
+  }
+  return '/api/avatar/' + str + '.jpg'
+}
 
 // 获取列表
 export default defineEventHandler(async event => {
@@ -81,6 +94,7 @@ export default defineEventHandler(async event => {
         event.res.statusCode = 400
         return '必须依附了 data 才可以发表'
       }
+      event.req.body.avatar = getGravatar(event.req.body.mail, 128)
     }
 
     // TODO: 检查危险的属性, 放行管理员

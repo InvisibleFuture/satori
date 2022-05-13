@@ -13,6 +13,10 @@ fs.stat('../data/webp', (err,stats) => {
   if (!stats) fs.mkdirSync('../data/webp')
 })
 
+fs.stat('../data/avatar', (err,stats) => {
+  if (!stats) fs.mkdirSync('../data/avatar')
+})
+
 // 连接数据库
 export const db = new Sequelize({
   host: 'localhost',
