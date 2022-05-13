@@ -54,5 +54,24 @@ html, body {
   border-radius: 2rem;
   padding-top: 2rem;
 }
+.markdown input[type=checkbox] {
+  background-color: #ff1414;
+  position: relative;
+}
+.markdown input[type=checkbox]::before {
+  position: absolute;
+  content: "\a0";
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border-radius: .3em;
+  background-color: grey;
+  text-indent: .15em;
+  line-height: .65;
+  left: -.2em
+}
+input[type="checkbox"]:checked::before {
+    content: "\2713";
+    background-color: #EC4899;
+}
 </style>
-
