@@ -26,16 +26,16 @@ div.container.mx-auto.pt-32.text-white.py-32
             span {{ rwdate(item.createdAt) }}
       .flex.flex-col.my-12
         label.my-1
-          input.rounded-lg.bg-dark-800.opacity-20.p-1(v-model="comments.name")
+          input.rounded-lg.bg-dark-800.opacity-20.px-4.py-2(v-model="comments.name")
           span.ml-2.text-gray-500 name
         label.my-1
-          input.rounded-lg.bg-dark-800.opacity-20.p-1(v-model="comments.mail")
+          input.rounded-lg.bg-dark-800.opacity-20.px-4.py-2(v-model="comments.mail")
           span.ml-2.text-gray-500 mail(不会被公开)
         label.my-1
-          input.rounded-lg.bg-dark-800.opacity-20.p-1(v-model="comments.home")
+          input.rounded-lg.bg-dark-800.opacity-20.px-4.py-2(v-model="comments.home")
           span.ml-2.text-gray-500 home
         label.my-1
-          textarea.rounded-xl.p-1.w-xl.min-h-xs.bg-dark-800.opacity-20(v-model="comments.data")
+          textarea.rounded-xl.p-4.w-full.min-h-xs.bg-dark-800.opacity-20(v-model="comments.data")
           span.ml-2.text-gray-500 comments
         div
           button.bg-slate-600.px-4.py-2.font-bold.rounded-md(@click="comment_submit()") 发表评论
