@@ -35,15 +35,20 @@ div.container.mx-auto.pt-32.text-white.py-32
           input.rounded-lg.bg-dark-800.opacity-20.px-4.py-2(v-model="comments.home")
           span.ml-2.text-gray-500 home
         label.my-1
-          textarea.rounded-xl.p-4.w-full.min-h-xs.bg-dark-800.opacity-20(v-model="comments.data")
+          textarea.rounded-xl.p-4.w-full.min-h-xs.bg-dark-800.opacity-20(
+            v-model="comments.data"
+            @input="input"
+            @keyup.ctrl.enter="comment_submit()"
+          )
           span.ml-2.text-gray-500 comments
         div
-          button.bg-slate-600.px-4.py-2.font-bold.rounded-md(@click="comment_submit()") 发表评论
+          button.bg-slate-600.px-4.py-2.font-bold.rounded-md(@click="comment_submit()") 发表评论 (Ctrl + Enter)
     div.flex(v-else)
       textarea.flex-auto.w-full.min-h-64.bg-opacity-10.bg-dark-200.p-4(
-        v-model="blog.data",
-        v-focus,tabindex="0",
-        @keyup.ctrl.enter="edit_submit()",
+        v-model="blog.data"
+        v-focus,tabindex="0"
+        @input="input"
+        @keyup.ctrl.enter="edit_submit()"
         @keydown.esc="edit_mode()"
       )
       div.ml-4.w-64
@@ -141,6 +146,10 @@ export default {
         }
         console.log('未知')
       })
+    },
+    input(e) {
+      e.srcElement.style.height = '300px'
+      e.srcElement.style.height = e.target.scrollHeight + 'px'
     },
     // 编辑模式
     edit_mode() {
