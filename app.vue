@@ -47,4 +47,9 @@ html, body {
 .markdown img {
   border-radius: .25rem;
 }
+.markdown .hljs {
+  border-radius: 2rem;
+  padding-top: 2rem;
+}
 </style>
+

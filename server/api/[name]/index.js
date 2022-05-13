@@ -63,6 +63,27 @@ export default defineEventHandler(async event => {
       event.req.body.userId = event.req.account.id
     }
 
+    // comment 无须登录 (作一些额外处理, 如将头像缓存到本地)
+    if (event.context.params.name === 'comment') {
+      console.log(event.req.body)
+      if (!event.req.body.blogId) {
+        event.res.statusCode = 400
+        return '必须依附了 blogId 才可以发表'
+      }
+      if (!event.req.body.name) {
+        event.res.statusCode = 400
+        return '必须依附了 name 才可以发表'
+      }
+      if (!event.req.body.mail) {
+        event.res.statusCode = 400
+        return '必须依附了 email 才可以发表'
+      }
+      if (!event.req.body.data) {
+        event.res.statusCode = 400
+        return '必须依附了 data 才可以发表'
+      }
+    }
+
     // TODO: 检查危险的属性, 放行管理员
     // TODO: 如果是创建用户, 对用户名检查占用
     // TODO: 如果是创建用户, 对密码作盐处理

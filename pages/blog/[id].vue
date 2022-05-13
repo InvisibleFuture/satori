@@ -13,17 +13,32 @@ div.container.mx-auto.pt-32.text-white.py-32
         li.bg-pink-900.w-12.h-12
       div.flex.flex-row-reverse
         button.bg-green-700.py-2.px-4.rounded-md(v-if="account.online" @click="edit_mode()") edit {{ blog.edit }}
-      //.flex.my-12(v-for="item in postlist", :key="item._id")
-      //  img.rounded-full.w-16.h-16.mr-4(:src="item.user.avatar")
-      //  div
-      //    .pb-2
-      //      span.font-bold.mr-2 {{ item.user.name }}
-      //      span.font-bold.bg-pink-600.px-2.py-1.text-white.rounded-md.text-xs(
-      //        v-if="item.user.gid === 1"
-      //      ) admin
-      //    div(v-html="marked.parse(item.data, { breaks: true })")
-      //    .text-rose-300.font-bold.text-sm.my-2
-      //      span {{ rwdate(item.createdAt) }}
+      .flex.my-12(v-for="item in comments.list", :key="item._id")
+        img.rounded-full.w-16.h-16.mr-4(:src="item.avatar")
+        div
+          .pb-2
+            span.font-bold.mr-2 {{ item.name }}
+            //span.font-bold.bg-pink-600.px-2.py-1.text-white.rounded-md.text-xs(
+            //  v-if="item.user.gid === 1"
+            //) admin
+          div(v-html="marked.parse(item.data, { breaks: true })")
+          .text-rose-300.font-bold.text-sm.my-2
+            span {{ rwdate(item.createdAt) }}
+      .flex.flex-col.my-12
+        label.my-1
+          input.rounded-lg.bg-dark-800.opacity-20.p-1(v-model="comments.name")
+          span.ml-2.text-gray-500 name
+        label.my-1
+          input.rounded-lg.bg-dark-800.opacity-20.p-1(v-model="comments.mail")
+          span.ml-2.text-gray-500 mail(不会被公开)
+        label.my-1
+          input.rounded-lg.bg-dark-800.opacity-20.p-1(v-model="comments.home")
+          span.ml-2.text-gray-500 home
+        label.my-1
+          textarea.rounded-xl.p-1.w-xl.min-h-xs.bg-dark-800.opacity-20(v-model="comments.data")
+          span.ml-2.text-gray-500 comments
+        div
+          button.bg-slate-600.px-4.py-2.font-bold.rounded-md(@click="comment_submit()") 发表评论
     div.flex(v-else)
       textarea.flex-auto.w-full.min-h-64.bg-opacity-10.bg-dark-200.p-4(
         v-model="blog.data",
@@ -63,17 +78,26 @@ export default {
       data: '',
       name: ''
     }))
+    const comments = useState('comments', () => ({
+      list: [],
+      data: '',
+      name: '',
+      mail: '',
+      home: '',
+    }))
+
     const { data, pending } = useFetch(`/api/blog/${route.params.id}`)
-
-    onMounted(() => {
-      setTimeout(() => {
-        for (let block of document.querySelectorAll("pre code")) {
-          hljs.highlightBlock(block);
-        }
-      }, 100);
+    return { data, pending, blog, marked, route, account, comments }
+  },
+  mounted() {
+    setTimeout(() => {
+      for (let block of document.querySelectorAll("pre code")) {
+        hljs.highlightBlock(block);
+      }
+    }, 100);
+    fetch('/api/comment?blogId='+this.route.params.id).then(res=>res.json()).then(data=>{
+      this.comments.list = data.list
     })
-
-    return { data, pending, blog, marked, route, account }
   },
   methods: {
     rwdate(utc) {
@@ -92,6 +116,30 @@ export default {
       this.data.files = this.data.files.filter(item => item.id !== id)
       $fetch(`/api/file/${id}`, { method: 'DELETE' }).then(data => {
         console.log(data)
+      })
+    },
+    comment_submit() {
+      console.log('commentSubmit')
+      fetch('/api/comment', {
+        method: 'POST',
+        headers: {"Content-Type": "application/json"},
+        body:    JSON.stringify({
+          name: this.comments.name,
+          mail: this.comments.mail,
+          home: this.comments.home,
+          data: this.comments.data,
+          blogId: this.route.params.id,
+        }),
+      }).then(async Response => {
+        if (Response.status === 200) {
+          this.comments.list.push(await Response.json())
+          return
+        }
+        if (Response.status === 400) {
+          console.log(await Response.text())
+          return
+        }
+        console.log('未知')
       })
     },
     // 编辑模式

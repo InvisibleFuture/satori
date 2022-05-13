@@ -68,6 +68,7 @@ export default defineEventHandler(async event => {
 
   // 增删改查标准操作(创建)
   if (event.req.method === 'POST') {
+
     if (!event.req.account) {
       event.res.statusCode = 401
       return '必须登录才可以创建子对象'

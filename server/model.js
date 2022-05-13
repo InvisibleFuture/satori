@@ -96,6 +96,9 @@ Blog.belongsTo(User)    // blog    归属于 user
 Project.belongsTo(User) // Project 归属于 user
 Gallery.belongsTo(User) // Gallery 归属于 user
 
+// 归属于 Blog
+Comment.belongsTo(User) // Comment 归属于 blog
+
 // 包含关系
 Blog.hasMany(File)      // Blog    有多个 File
 Gallery.hasMany(File)   // Gallery 有多个 File
