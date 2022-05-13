@@ -65,7 +65,6 @@ export default defineEventHandler(async event => {
 
     // comment 无须登录 (作一些额外处理, 如将头像缓存到本地)
     if (event.context.params.name === 'comment') {
-      console.log(event.req.body)
       if (!event.req.body.blogId) {
         event.res.statusCode = 400
         return '必须依附了 blogId 才可以发表'
