@@ -1,27 +1,21 @@
-import md5 from 'md5'
-import https from 'https'
-import { createWriteStream, existsSync } from 'fs'
+import fs     from 'fs'
+import https  from 'https'
+import crypto from 'crypto'
 import { db, User, File } from '../../model'
 
 function getGravatar(email, size) {
-  let str = email ? md5(email.toLowerCase()) : 'default'
+  let md5 = crypto.createHash('md5')
+  let str = email ? md5.update(email.toLowerCase()).digest('hex') : 'default'
   let 本地路径 = '../data/avatar/' + str + '.jpg'
   let 网络路径 = `https://secure.gravatar.com/avatar/${str}.jpg?s=${size}&d=mm&r=g`
-  if (!existsSync(本地路径)) {
-    //request(网络路径).pipe(createWriteStream(本地路径))
-    https.get(网络路径).pipe(createWriteStream(本地路径))
+  if (!fs.existsSync(本地路径)) {
+    https.get(网络路径, res => res.pipe(fs.createWriteStream(本地路径)))
   }
   return '/api/avatar/' + str + '.jpg'
 }
 
 // 获取列表
 export default defineEventHandler(async event => {
-  // await User.create({name: 'Last', age:11})
-  // await useStorage().setItem('test:foo', { hello: 'world' })
-  // const aaax = await useStorage().getItem('test:foo')
-  // sequelize.models - 实例中已定义的模型
-  // sequelize.isDefined() - 检查模型是否定义
-  // sequelize.model() - 获取模型
 
   if (!db.isDefined(event.context.params.name)) {
     event.res.statusCode = 404
