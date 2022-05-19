@@ -25,7 +25,10 @@ div.container.mx-auto.pt-32.text-white.py-32
           .text-rose-300.font-bold.text-sm.my-2
             span {{ rwdate(item.createdAt) }}
           div
-            button.font-bold.bg-pink-600.px-2.py-1.text-white.rounded-md.text-xs(@click="comment_remove(item.id)") delete
+            button.font-bold.bg-pink-600.px-2.py-1.text-white.rounded-md.text-xs(
+              @click="comment_remove(item.id)"
+              v-if="account.online"
+            ) delete
       .flex.flex-col.my-12
         label.my-1
           input.rounded-lg.bg-dark-800.opacity-20.px-4.py-2(v-model="comments.name")
