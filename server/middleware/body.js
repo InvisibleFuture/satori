@@ -1,4 +1,8 @@
+import url from 'url'
 export default defineEventHandler(async event => {
+  if (event.req.method === 'GET') {
+    event.context.query = url.parse(event.req.url, true).query
+  }
   if (event.req.method === 'POST' || event.req.method === 'PATCH' || event.req.method === 'PUT') {
     if (event.req.headers['content-type'].indexOf('application/json') !== -1) {
       event.req.body = await new Promise(resolve => {

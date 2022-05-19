@@ -46,6 +46,10 @@ export default defineEventHandler(async event => {
       }
     }
 
+    if (event.context.params.name === 'comment') {
+      query.where = event.context.query
+    }
+
     return {
       name: event.context.params.name,
       list: await db.model(event.context.params.name).findAll(query),

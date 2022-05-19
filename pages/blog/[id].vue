@@ -19,11 +19,13 @@ div.container.mx-auto.pt-32.text-white.py-32
           .pb-2
             span.font-bold.mr-2 {{ item.name }}
             //span.font-bold.bg-pink-600.px-2.py-1.text-white.rounded-md.text-xs(
-            //  v-if="item.user.gid === 1"
+            //  v-if="true || item.user.gid === 1"
             //) admin
           div(v-html="marked.parse(item.data, { breaks: true })")
           .text-rose-300.font-bold.text-sm.my-2
             span {{ rwdate(item.createdAt) }}
+          div
+            button.font-bold.bg-pink-600.px-2.py-1.text-white.rounded-md.text-xs(@click="comment_remove(item.id)") delete
       .flex.flex-col.my-12
         label.my-1
           input.rounded-lg.bg-dark-800.opacity-20.px-4.py-2(v-model="comments.name")
@@ -120,6 +122,12 @@ export default {
     removeFile(id) {
       this.data.files = this.data.files.filter(item => item.id !== id)
       $fetch(`/api/file/${id}`, { method: 'DELETE' }).then(data => {
+        console.log(data)
+      })
+    },
+    comment_remove(id) {
+      this.comments.list = this.comments.list.filter(item => item.id !== id)
+      fetch('/api/comment/'+ id, {method:'DELETE'}).then(res => res.json()).then(data => {
         console.log(data)
       })
     },
