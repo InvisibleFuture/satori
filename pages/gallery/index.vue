@@ -27,16 +27,16 @@ div.flex.flex-col.pt-16.pb-4
 
 <script>
 export default {
-  setup() {
+  async setup() {
     const account = useState('account')
-    const { data, pending } = useFetch('/api/gallery')
+    //const { data, pending } = useFetch('/api/gallery')
     const gallery = useState('gallery', () => ({
       editMode: false
     }))
-
-    return { data, pending, account, gallery }
+    // data, pending,
+    return { account, gallery }
   },
-  mounted() {
+  async mounted() {
     //var count = ''
     //var srcKey = 0
     //const list = []
@@ -186,6 +186,14 @@ export default {
       const rand  = Math.random()
       return min + Math.floor(rand * range)
     }
+
+    // 初始载入元素
+    await fetch('/api/gallery').then(res => res.json()).then(data => {
+      console.log(data)
+      this.data = {}
+      this.data.list = data.list
+    })
+
     window.onresize = function() {
       屏幕宽高重置()
     }
