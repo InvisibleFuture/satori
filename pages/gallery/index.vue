@@ -199,6 +199,7 @@ export default {
     }
     setTimeout(() => {
       可视区域.元素 = document.querySelector('#PUBULIUBOX')
+      可视区域.元素.innerHTML  = '' // 清除可能存在的旧元素
       屏幕宽高重置()
       this.data.list.forEach(item => {
         item.files.forEach(img => {
