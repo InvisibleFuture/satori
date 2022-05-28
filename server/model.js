@@ -81,6 +81,11 @@ export const File = db.define('file', {
   height: { type: DataTypes.INTEGER },
 })
 
+// 定义会话表
+export const Session = db.define('session', {
+  id: { type: DataTypes.STRING, primaryKey: true }
+})
+
 // 定义标签表(blog | project 查询时使用tag=参数)
 // 标签没有引用时自动移除, 每个表各自存储标签
 export const Tag = db.define('tag', {
@@ -99,6 +104,7 @@ File.belongsTo(User)    // file    归属于 user
 Blog.belongsTo(User)    // blog    归属于 user
 Project.belongsTo(User) // Project 归属于 user
 Gallery.belongsTo(User) // Gallery 归属于 user
+Session.belongsTo(User) // Session 归属于 user
 
 // 归属于 Blog
 Comment.belongsTo(Blog) // Comment 归属于 blog
@@ -115,6 +121,7 @@ File.sync({alter: true})
 Tag.sync({alter: true})
 Project.sync({alter: true})
 Gallery.sync({alter: true})
+Session.sync({alter: true})
 Blog_Tag.sync({alter: true})
 
 // ---

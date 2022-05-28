@@ -1,4 +1,14 @@
-import { db } from '../model.js'
+import { db, Session } from '../model.js'
+
+// 先初始化 session (设定session时入库)
+Session.findAll().then(list => {
+  list.forEach(({id:sid, userId:id}) => {
+    const key = 'session:' + sid
+    useStorage().setItem(key, id)
+    console.log(key, id)
+  })
+})
+
 export default defineEventHandler(async event => {
   // TODO: 为不必验证的对象跳过验证
   let sid = useCookie(event.req, 'sid')

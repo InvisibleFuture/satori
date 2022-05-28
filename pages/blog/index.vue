@@ -21,11 +21,11 @@ div.container.mx-auto.text-white.pt-24
         span.block.bg-white.absolute.rounded-sm.w-1.h-9.top-4.left-8
         span.block.bg-white.absolute.rounded-sm.w-9.h-1.top-8.left-4
       button.bg-green-600.px-4.py-2.text-white.font-bold.rounded-md(@click="create()") Submit(Ctrl+Enter)
-  // 内容加载状态
+  // 内容加载状态  class="md:p-12"
   section.m-2.p-4.rounded-xl.text-center(v-if="pending") Loading...
-  section.m-2.p-4.bg-opacity-20.bg-dark-800.rounded-xl(v-else v-for="item in data.list" class="md:p-12")
+  section.m-2.p-4.bg-opacity-20.bg-dark-800.rounded-xl(v-else v-for="item in data.list")
     NuxtLink(:to="`/blog/${item.id}`")
-      h2.text-2xl.font-bold {{ item.name }}
+      h2.text-xl.font-bold {{ item.name }}
     p.text-sm.mb-4
       span.mr-4 {{ rwdate(item.createdAt) }}
       span.mr-4 {{ item.user.name }}

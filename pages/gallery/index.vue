@@ -1,28 +1,9 @@
 <template lang="pug">
-div.flex.flex-col.pt-16.pb-4
+div.flex.flex-col
   .container.flex.flex-row-reverse.mx-auto
     label.w-24.h-24.bg-dark-600.bg-opacity-20.rounded-md.cursor-pointer(v-if="account.online")
       input.hidden(type="file", accept="image/*", multiple, @change="upload($event, null)")
   #PUBULIUBOX.relative
-  //button(v-if="account.online" @click="gallery.editMode = !gallery.editMode") RF
-  //div.flex.flex-col.pt-16.pb-4(
-  //  v-else
-  //  class="xl:(flex-row h-screen overflow-x-scroll) md:(px-12) lg:(px-12)"
-  //)
-  //  section.bg-dark-800.bg-opacity-20.rounded-md.p-12.m-2.min-w-64.flex.items-center.justify-center(v-if="account.online")
-  //    label.w-24.h-24.bg-dark-600.bg-opacity-20.rounded-md
-  //      input.hidden(type="file", accept="image/*", multiple, @change="upload($event, null)")
-  //  section(v-if="pending") Loading..
-  //  section.m-2.p-4.bg-opacity-20.bg-dark-800.rounded-md.flex.flex-col.justify-center.items-center.relative(
-  //    class="xl:(flex-wrap)"
-  //    v-else
-  //    v-for="item in data.list"
-  //  )
-  //    img.rounded-md.m-1(v-for="file in item.files" :src="`/api/image/${file.id}`")
-  //    label.w-32.h-16.bg-dark-600.bg-opacity-20.rounded-md.flex.justify-center.items-center(v-if="account.online")
-  //      span.font-bold.text-3xl.text-dark-800 upload
-  //      input.hidden(type="file", accept="image/*", multiple, @change="upload($event, item)")
-  //    button.w-16.h-16.bg-dark-600.bg-opacity-20(v-if="account.online" @click="remove(item.id)") remove
 </template>
 
 <script>

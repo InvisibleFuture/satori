@@ -1,4 +1,4 @@
-import { db } from '../model'
+import { db, Session } from '../model'
 import md5 from 'md5'
 import random from 'string-random'
 
@@ -28,10 +28,12 @@ export default defineEventHandler(async event => {
       if (await useStorage().getItem(key)) {
         return await setSession(id)
       }
-      await useStorage().setItem(key, id)
+      useStorage().setItem(key, id)
+      Session.create({id: sid, userId: id})
       setCookie(event.res, 'sid', sid)
     }
     setSession(user.id) // 发放不重复的 sid
+
     return user
   }
   
