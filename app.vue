@@ -37,6 +37,9 @@ export default defineComponent({
 </script>
 
 <style>
+/*
+ * 默认样式
+ */
 ::-webkit-scrollbar {
   display: none;
 }
@@ -72,5 +75,25 @@ html, body {
 input[type="checkbox"]:checked::before {
     content: "\2713";
     background-color: #EC4899;
+}
+
+/*
+ * Button
+ */
+button {
+  color: #FFFFFF;
+  background-color: #00AB55;
+  padding: .4em 1.1em;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 700;
+  border-radius: .5em;
+  box-shadow: 0 .5em 1.1em 0 rgb(0 171 85 / 24%);
+  transition: all .25s;
+}
+button:hover {
+  color: #EEEEEE;
+  background-color: #008855;
+  box-shadow: none;
 }
 </style>

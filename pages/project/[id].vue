@@ -3,11 +3,9 @@ div.container.mx-auto.pt-48.text-white
   section(v-if="pending") Loading..
   section.m-2.p-4.bg-opacity-0.bg-dark-800.rounded-xl(v-else class="md:p-12")
     template(v-if="!project.edit")
-      //h1.font-bold.text-2xl.my-4 # {{ data.name }}
-      //p {{ data.data }}
       div.markdown(v-html="marked.parse(data.data, { breaks: true })")
       div.flex.flex-row-reverse
-        button.bg-green-700.py-2.px-4.rounded-md(v-if="account.online" @click="edit()") edit {{ project.edit }}
+        button(v-if="account.online" @click="edit()") edit
     template(v-else)
       textarea.w-full.min-h-64.bg-opacity-10.bg-dark-200.p-4(v-model="project.data")
       button.bg-green-700.p-4(@click="submit()") submit

@@ -1,4 +1,4 @@
-import { db, Session } from '../model'
+import { db, Session } from '@/server/model.js'
 import md5 from 'md5'
 import random from 'string-random'
 
@@ -35,6 +35,10 @@ export default defineEventHandler(async event => {
     setSession(user.id) // 发放不重复的 sid
 
     return user
+  }
+
+  if (event.req.method === 'DELETE') {
+    return '注销当前会话'
   }
   
   return '未支持的操作方法'

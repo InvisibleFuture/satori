@@ -2,7 +2,7 @@
 div.container.mx-auto.text-white.pt-24
   header.flex.flex-row-reverse.p-4
     //NuxtLink.rounded-md.bg-green-600.px-4.py-2.font-bold(to="/blog/create") create
-    button.rounded-md.bg-green-600.px-4.py-2.font-bold(v-if="account.online" @click="edit.mode = !edit.mode") create
+    button(v-if="account.online" @click="edit.mode = !edit.mode") create
   // 弹出层编辑器
   section.absolute.bg-dark-800.bg-opacity-80.top-0.left-0.right-0.bottom-0.flex.flex-col(v-if="edit.mode")
       textarea.container.mx-auto.flex-1.bg-opacity-0.bg-dark-800.text-xl.p-12(
@@ -30,8 +30,8 @@ div.container.mx-auto.text-white.pt-24
       span.mr-4 {{ rwdate(item.createdAt) }}
       span.mr-4 {{ item.user.name }}
     div(v-if="account.online")
-      button.bg-indigo-600.px-4.py-2.font-bold.mt-4.mr-4(@click="removeItem(item.id)") delete
-      button.bg-indigo-600.px-4.py-2.font-bold.mt-4.mr-4 editor
+      button.mt-2.mr-2(@click="removeItem(item.id)") delete
+      button.mt-2.mr-2 editor
   section.rounded-xl.py-12.text-center 加载更多..
 </template>
 
