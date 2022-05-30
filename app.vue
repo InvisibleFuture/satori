@@ -96,4 +96,31 @@ button:hover {
   background-color: #008855;
   box-shadow: none;
 }
+/**
+ul li {
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+ */
+
+
+@keyframes example {
+  from {top:2em}
+  to {top:0;}
+}
+section, .list .item, .homelist {
+  position: relative;
+  animation: example .75s ease 0s 1 normal both;
+  /* 变化 持续时间 动画曲线 延迟执行 执行次数 运行方向 覆盖默认状态 */
+}
+/*section+section {animation-delay: .05s;}
+section+section+section {animation-delay: .15s;}
+section+section+section+section {animation-delay: .25s;}
+section+section+section+section+section {animation-delay: .35s;}
+section+section+section+section+section+section {animation-delay: .45s;}
+section+section+section+section+section+section+section {animation-delay: .55s;}
+section+section+section+section+section+section+section+section {animation-delay: .65s;}
+section+section+section+section+section+section+section+section+section {animation-delay: .75s;}
+section+section+section+section+section+section+section+section+section+section {animation-delay: .85s;}
+section+section+section+section+section+section+section+section+section+section+section {animation-delay: .95s;}
+*/
 </style>

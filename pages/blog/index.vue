@@ -23,7 +23,10 @@ div.container.mx-auto.text-white.pt-24
       button.bg-green-600.px-4.py-2.text-white.font-bold.rounded-md(@click="create()") Submit(Ctrl+Enter)
   // 内容加载状态  class="md:p-12"
   section.m-2.p-4.rounded-xl.text-center(v-if="pending") Loading...
-  section.m-2.p-4.bg-opacity-20.bg-dark-800.rounded-xl(v-else v-for="item in data.list")
+  section.m-2.p-4.bg-opacity-20.bg-dark-800.rounded-xl(
+    v-else v-for="(item, index) in data.list"
+    :style="`animation-delay: .${index}s`"
+  )
     NuxtLink(:to="`/blog/${item.id}`")
       h2.text-xl.font-bold {{ item.name }}
     p.text-sm.mb-4
