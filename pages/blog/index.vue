@@ -4,7 +4,7 @@ div.container.mx-auto.text-white.pt-24
     //NuxtLink.rounded-md.bg-green-600.px-4.py-2.font-bold(to="/blog/create") create
     button(v-if="account.online" @click="edit.mode = !edit.mode") create
   // 弹出层编辑器
-  section.absolute.bg-dark-800.bg-opacity-80.top-0.left-0.right-0.bottom-0.flex.flex-col(v-if="edit.mode")
+  section.absolute.bg-dark-800.bg-opacity-80.z-10.top-0.left-0.right-0.bottom-0.flex.flex-col(v-if="edit.mode")
       textarea.container.mx-auto.flex-1.bg-opacity-0.bg-dark-800.text-xl.p-12(
         class="focus:(outline outline-transparent)"
         v-focus
@@ -13,7 +13,7 @@ div.container.mx-auto.text-white.pt-24
         @keyup.ctrl.enter="create()"
         @keyup.esc="edit.mode = !edit.mode"
       )
-      button.absolute.top-8.right-8.bg-white.bg-opacity-0.w-16.h-16.transform.rotate-45.transition-all(
+      button.absolute.top-8.right-8.bg-white.bg-opacity-0.w-16.h-16.transform.rotate-45.transition-all.shadow-none(
         class="hover:(bg-opacity-20 rotate-15 rounded-full)"
         title="Esc"
         @click.stop="edit.mode = !edit.mode"

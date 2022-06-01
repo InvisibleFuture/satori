@@ -1,8 +1,9 @@
 <template lang="pug">
 div.flex.flex-col
-  .container.flex.flex-row-reverse.mx-auto
-    label.w-24.h-24.bg-dark-600.bg-opacity-20.rounded-md.cursor-pointer(v-if="account.online")
+  .container.flex.justify-center.mx-auto.relative.top-24(v-if="account.online")
+    label.w-48.h-24.bg-dark-600.bg-opacity-20.rounded-xl.cursor-pointer.flex.justify-center.items-center
       input.hidden(type="file", accept="image/*", multiple, @change="upload($event, null)")
+      span.text-4xl.text-white +
   #PUBULIUBOX.relative
 </template>
 
@@ -16,6 +17,11 @@ export default {
     }))
     // data, pending,
     return { account, gallery }
+  },
+  beforeRouteLeave(to, form, next) {
+    // 清除可能存在的旧元素
+    document.querySelector('#PUBULIUBOX').innerHTML  = ''
+    next()
   },
   async mounted() {
     //var count = ''
@@ -170,7 +176,7 @@ export default {
 
     // 初始载入元素
     await fetch('/api/gallery').then(res => res.json()).then(data => {
-      console.log(data)
+      //console.log(data)
       this.data = {}
       this.data.list = data.list
     })

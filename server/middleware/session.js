@@ -5,7 +5,7 @@ Session.findAll().then(list => {
   list.forEach(({id:sid, userId:id}) => {
     const key = 'session:' + sid
     useStorage().setItem(key, id)
-    console.log(key, id)
+    //console.log(key, id)
   })
 })
 

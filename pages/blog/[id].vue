@@ -1,9 +1,9 @@
 <template lang="pug">
 div.container.mx-auto.pt-32.text-white.py-32
   section(v-if="pending") Loading..
-  section.m-2.p-4.bg-opacity-20.bg-dark-800.rounded-xl(v-else class="md:p-12")
+  section.m-2.p-4.rounded-xl(v-else class="md:p-12")
     div(v-if="!blog.edit")
-      div.markdown(v-html="marked.parse(data?.data || '', { breaks: true })")
+      article(v-html="marked.parse(data?.data || '', { breaks: true })")
       ul.flex.overflow-hidden.rounded-md.max-w-max.my-4
         li.bg-pink-400.w-12.h-12
         li.bg-pink-500.w-12.h-12
@@ -12,7 +12,7 @@ div.container.mx-auto.pt-32.text-white.py-32
         li.bg-pink-800.w-12.h-12
         li.bg-pink-900.w-12.h-12
       div.flex.flex-row-reverse
-        button.bg-green-700.py-2.px-4.rounded-md(v-if="account.online" @click="edit_mode()") edit {{ blog.edit }}
+        button(v-if="account.online" @click="edit_mode()") edit
       .flex.my-12(v-for="item in comments.list", :key="item._id")
         img.rounded-full.w-16.h-16.mr-4(:src="item.avatar")
         div

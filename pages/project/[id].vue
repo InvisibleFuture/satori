@@ -53,10 +53,3 @@ export default {
   }
 }
 </script>
-
-<style>
-div.markdown h1 {
-  font-weight: bold;
-  font-size: 2rem;
-}
-</style>
