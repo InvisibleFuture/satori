@@ -1,8 +1,32 @@
 <template lang="pug">
-div.container.mx-auto.text-white.pt-24
-  header.flex.flex-row-reverse.p-4
+div.container.mx-auto.text-white.pt-24.flex
+  main.flex-1.mr-2
+    section.m-2.p-4.rounded-xl.text-center(v-if="pending") Loading...
+    section.m-2.p-4.bg-opacity-20.bg-dark-800.rounded-xl(
+      v-else v-for="(item, index) in data.list"
+      :style="`animation-delay: .${index}s`"
+    )
+      NuxtLink(:to="`/blog/${item.id}`")
+        h2.text-xl.font-bold {{ item.name }}
+      p.text-sm.mb-4
+        span.mr-4 {{ rwdate(item.createdAt) }}
+        span.mr-4 {{ item.user.name }}
+      div(v-if="account.online")
+        button.mt-2.mr-2(@click="removeItem(item.id)") delete
+        button.mt-2.mr-2 editor
+    section.rounded-xl.py-12.text-center 加载更多..
+  aside.w-64.py-2.flex.flex-col.gap-8(class="<sm:hidden")
     //NuxtLink.rounded-md.bg-green-600.px-4.py-2.font-bold(to="/blog/create") create
-    button(v-if="account.online" @click="edit.mode = !edit.mode") create
+    button.w-full(v-if="account.online" @click="edit.mode = !edit.mode") create
+    div.tags(v-if="!tagpeding")
+      span.font-bold # TAG
+      ul.flex.flex-wrap.gap-2.py-1
+        li.bg-dark-800.bg-opacity-20.px-2.rounded-md(v-for="item in tag.list") {{ item.name }}
+    div
+      span.font-bold # 归档
+      ul
+        li(v-for="index in 12") 2022 12 title
+  
   // 弹出层编辑器
   section.absolute.bg-dark-800.bg-opacity-80.z-10.top-0.left-0.right-0.bottom-0.flex.flex-col(v-if="edit.mode")
       textarea.container.mx-auto.flex-1.bg-opacity-0.bg-dark-800.text-xl.p-12(
@@ -21,21 +45,6 @@ div.container.mx-auto.text-white.pt-24
         span.block.bg-white.absolute.rounded-sm.w-1.h-9.top-4.left-8
         span.block.bg-white.absolute.rounded-sm.w-9.h-1.top-8.left-4
       button.bg-green-600.px-4.py-2.text-white.font-bold.rounded-md(@click="create()") Submit(Ctrl+Enter)
-  // 内容加载状态  class="md:p-12"
-  section.m-2.p-4.rounded-xl.text-center(v-if="pending") Loading...
-  section.m-2.p-4.bg-opacity-20.bg-dark-800.rounded-xl(
-    v-else v-for="(item, index) in data.list"
-    :style="`animation-delay: .${index}s`"
-  )
-    NuxtLink(:to="`/blog/${item.id}`")
-      h2.text-xl.font-bold {{ item.name }}
-    p.text-sm.mb-4
-      span.mr-4 {{ rwdate(item.createdAt) }}
-      span.mr-4 {{ item.user.name }}
-    div(v-if="account.online")
-      button.mt-2.mr-2(@click="removeItem(item.id)") delete
-      button.mt-2.mr-2 editor
-  section.rounded-xl.py-12.text-center 加载更多..
 </template>
 
 <script>
@@ -78,7 +87,8 @@ export default {
     }
 
     const { data, pending, refresh } = useFetch('/api/blog')
-    return { data, pending, account, edit, input, create, refresh }
+    const { data: tag, pending:tagpeding } = useFetch('/api/tag')
+    return { data, pending, account, edit, input, create, refresh, tag, tagpeding }
   },
   methods: {
     // 将 UTC 时间转换成阅读格式
