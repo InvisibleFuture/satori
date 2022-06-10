@@ -64,16 +64,17 @@ export default {
 
     const create = function() {
       if (!this.edit.data) return console.log("输入不能为空");
-      const reg  = new RegExp("(?<=^# ).*?(?=\n)|(?<=\n# ).*?(?=\n)")
+      //const reg  = new RegExp("(?<=^# ).*?(?=\n)|(?<=\n# ).*?(?=\n)")
+      //const list = this.edit.data.match(reg)
+      //this.edit.name = list ? list[0] : "default"
+      const reg  = new RegExp("^# .*\n")
       const list = this.edit.data.match(reg)
-      this.edit.name = list ? list[0] : "default"
+      const name = list ? list[0].replace('# ', '').replace('\n', '') : "default"
+      const data = this.edit.data
       fetch('/api/blog', {
         method: 'POST',
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-          name: this.edit.name,
-          data: this.edit.data
-        })
+        body: JSON.stringify({ name, data })
       }).then(Response => {
         if (Response.status === 200) {
           console.log(Response.status)
