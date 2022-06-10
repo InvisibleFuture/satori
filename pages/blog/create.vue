@@ -22,9 +22,12 @@ export default {
 
     const create = function() {
       if (!this.blog.data) return console.log("输入不能为空");
-      const reg  = new RegExp("(?<=^# ).*?(?=\n)|(?<=\n# ).*?(?=\n)")
+      //const reg  = new RegExp("(?<=^# ).*?(?=\n)|(?<=\n# ).*?(?=\n)")
+      //const list = this.blog.data.match(reg)
+      //this.blog.name = list ? list[0] : "default"
+      const reg  = new RegExp("^# .*\n")
       const list = this.blog.data.match(reg)
-      this.blog.name = list ? list[0] : "default"
+      this.blog.name = list ? list[0].replace('# ', '').replace('\n', '') : "default"
       fetch('/api/blog', {
         method: 'POST',
         headers: {"Content-Type": "application/json"},
