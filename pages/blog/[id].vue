@@ -1,7 +1,23 @@
 <template lang="pug">
-div.container.mx-auto.pt-32.text-white.py-32
+div.container.mx-auto.pt-42
+  header.flex.w-3xl.mx-auto
+    div.h-14.w-14.rounded-full.bg-pink-500.overflow-hidden(v-if="pending")
+    NuxtLink.block.h-14.w-14.rounded-full.bg-pink-500.overflow-hidden(v-else :to="'/user/'+data.userId")
+        img(v-if="!pending" :src="data.user.avatar")
+    div.px-4.flex.flex-col.flex-1
+      p.font-bold.text-black {{ pending ? '' : data.name }}
+      div.flex.text-gray-600
+        div.bg-pink-500.rounded-lg.w-24.mr-2(v-if="pending")
+        NuxtLink.mr-2(v-else :to="'/user/'+data.userId") {{ data.user.name }}
+        span.mr-2.text-gray-400 for
+        span.mr-2 Oniex™ • 跟隨 • 
+        div.bg-pink-500.rounded-lg.w-12(v-if="pending")
+        a.text-pink-500(v-else) 僱用我們
+    div.py-2
+      button.mr-2 Save
+      button.mr-2 Like
   section(v-if="pending") Loading..
-  section.m-2.p-4.rounded-xl(v-else class="md:p-12")
+  section.w-3xl.mx-auto.my-8(v-else)
     div(v-if="!blog.edit")
       article(v-html="marked.parse(data?.data || '', { breaks: true })")
       ul.flex.overflow-hidden.rounded-md.max-w-max.my-4
@@ -29,25 +45,6 @@ div.container.mx-auto.pt-32.text-white.py-32
               @click="comment_remove(item.id)"
               v-if="account.online"
             ) delete
-      .flex.flex-col.my-12
-        label.my-1
-          input.rounded-lg.bg-dark-800.opacity-20.px-4.py-2(v-model="comments.name")
-          span.ml-2.text-gray-500 name
-        label.my-1
-          input.rounded-lg.bg-dark-800.opacity-20.px-4.py-2(v-model="comments.mail")
-          span.ml-2.text-gray-500 mail(不会被公开)
-        label.my-1
-          input.rounded-lg.bg-dark-800.opacity-20.px-4.py-2(v-model="comments.home")
-          span.ml-2.text-gray-500 home
-        label.my-1
-          textarea.rounded-xl.p-4.w-full.min-h-xs.bg-dark-800.opacity-20(
-            v-model="comments.data"
-            @input="input"
-            @keyup.ctrl.enter="comment_submit()"
-          )
-          span.ml-2.text-gray-500 comments
-        div
-          button.bg-slate-600.px-4.py-2.font-bold.rounded-md(@click="comment_submit()") 发表评论 (Ctrl + Enter)
     div.flex(v-else)
       textarea.flex-auto.w-full.min-h-64.bg-opacity-10.bg-dark-200.p-4(
         v-model="blog.data"
@@ -73,6 +70,25 @@ div.container.mx-auto.pt-32.text-white.py-32
         button.absolute.right-2.bottom-2.z-10.bg-teal-600.px-6.py-4.font-bold.text-white.rounded-md(
           @click="edit_submit()"
         ) Submit (Ctrl + Enter)
+  .flex.flex-col.my-12.w-3xl.mx-auto
+    label.my-1
+      input.rounded-lg.bg-gray-100.px-4.py-2(v-model="comments.name")
+      span.ml-2.text-gray-500 name
+    label.my-1
+      input.rounded-lg.bg-gray-100.px-4.py-2(v-model="comments.mail")
+      span.ml-2.text-gray-500 mail(不会被公开)
+    label.my-1
+      input.rounded-lg.bg-gray-100.px-4.py-2(v-model="comments.home")
+      span.ml-2.text-gray-500 link
+    label.my-1
+      textarea.rounded-xl.bg-gray-100.p-4.w-full.min-h-xs(
+        v-model="comments.data"
+        placeholder="comments"
+        @input="input"
+        @keyup.ctrl.enter="comment_submit()"
+      )
+    div
+      button.px-4.py-2.font-bold.rounded-md(@click="comment_submit()") 发表评论 (Ctrl + Enter)
 </template>
 
 <script>

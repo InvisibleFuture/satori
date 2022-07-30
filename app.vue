@@ -1,13 +1,13 @@
 <template lang="pug">
-.min-h-screen.bg-gray-700
-  header.absolute.left-0.top-0.right-0
-    nav.container.mx-auto.flex.text-gray-400.text-xl.font-bold
-      NuxtLink.p-4(to="/", :class="{'text-white': route.path==='/' }") Home
-      NuxtLink.p-4(to="/blog", :class="{'text-white': route.path==='/blog' }") Blog
-      NuxtLink.p-4(to="/gallery" :class="{'text-white': route.path==='/gallery' }") Gallery
-      //NuxtLink.p-4(to="/user", :class="{'text-white': route.path==='/user' }") User
-      NuxtLink.p-4.ml-auto(v-if="!account.online", to="/account/signin", :class="{'text-white': route.path==='/account/signin' }") signin
-      NuxtLink.p-4.ml-auto(v-else, to="/account", :class="{'text-white': route.path==='/account' }") account
+.min-h-screen.bg-white.text-gray-800
+  header.absolute.left-0.top-0.right-0.border-gray-100(:class="{'border-b-1' : route.path!=='/' && route.path!=='/account/signin'}")
+    nav.container.mx-auto.flex.text-gray-400.text-lg.font-bold
+      NuxtLink.px-4.py-6(to="/", :class="{'text-white': route.path==='/' }") Home
+      NuxtLink.px-4.py-6(to="/blog", :class="{'text-pink-500': route.path==='/blog' }") Blog
+      NuxtLink.px-4.py-6(to="/gallery" :class="{'text-pink-500': route.path==='/gallery' }") Gallery
+      NuxtLink.px-4.py-6(to="/project" :class="{'text-pink-500': route.path==='/project' }") Project
+      NuxtLink.px-4.py-6.ml-auto(v-if="!account.online", to="/account/signin", :class="{'text-pink-500': route.path==='/account/signin' }") signin
+      NuxtLink.px-4.py-6.ml-auto(v-else, to="/account", :class="{'text-pink-500': route.path==='/account' }") account
   NuxtChild
 </template>
 
@@ -44,8 +44,8 @@ export default defineComponent({
   display: none;
 }
 html, body {
-  background-color: rgba(55,65,81, 1);
-  /*background-color: rgba(255,255,255, 1);*/
+  /*background-color: rgba(55,65,81, 1);*/
+  background-color: rgba(255,255,255, 1);
   /**background-image: url(/assets/image/background.jpg);**/
 }
 /*
@@ -91,20 +91,28 @@ article input[type="checkbox"]:checked::before {
  */
 button {
   color: #FFFFFF;
-  background-color: #00AB55;
+  background-color: #EC4899;
   padding: .4em 1.1em;
   cursor: pointer;
   user-select: none;
   font-weight: 700;
   border-radius: .5em;
-  box-shadow: 0 .5em 1.1em 0 rgb(0 171 85 / 24%);
+  box-shadow: 0 .5em 1.1em 0 #EC4899;
   transition: all .25s;
 }
 button:hover {
   color: #EEEEEE;
-  background-color: #008855;
+  background-color: #EC4899;
   box-shadow: none;
 }
+
+/*
+ * A link
+ */
+a:hover {
+  color: #EC4899;
+}
+
 
 @keyframes example {
   from {top:2em}

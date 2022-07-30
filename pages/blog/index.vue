@@ -1,8 +1,8 @@
 <template lang="pug">
-div.container.mx-auto.text-white.pt-24.flex
+div.container.mx-auto.pt-24.flex
   main.flex-1.mr-2
     section.m-2.p-4.rounded-xl.text-center(v-if="pending") Loading...
-    section.m-2.p-4.bg-opacity-20.bg-dark-800.rounded-xl(
+    section.m-2.p-4.rounded-xl(
       v-else v-for="(item, index) in data.list"
       :style="`animation-delay: .${index}s`"
     )
@@ -16,12 +16,11 @@ div.container.mx-auto.text-white.pt-24.flex
         button.mt-2.mr-2 editor
     section.rounded-xl.py-12.text-center 加载更多..
   aside.w-64.py-2.flex.flex-col.gap-8(class="<sm:hidden")
-    //NuxtLink.rounded-md.bg-green-600.px-4.py-2.font-bold(to="/blog/create") create
     button.w-full(v-if="account.online" @click="edit.mode = !edit.mode") create
     div.tags(v-if="!tagpeding")
       span.font-bold # TAG
       ul.flex.flex-wrap.gap-2.py-1
-        li.bg-dark-800.bg-opacity-20.px-2.rounded-md(v-for="item in tag.list") {{ item.name }}
+        li.bg-gray-400.bg-opacity-10.px-2.rounded-md(v-for="item in tag.list" class="hover:text-pink-500") {{ item.name }}
     div
       span.font-bold # 归档
       ul

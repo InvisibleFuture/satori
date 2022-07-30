@@ -1,5 +1,5 @@
 <template lang="pug">
-div.container.mx-auto.pt-48.text-white
+div.container.mx-auto.pt-48
   section(v-if="pending") Loading..
   section.m-2.p-4.bg-opacity-0.bg-dark-800.rounded-xl(v-else class="md:p-12")
     template(v-if="!project.edit")

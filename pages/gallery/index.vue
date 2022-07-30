@@ -105,7 +105,7 @@ export default {
       元素.style.position        = 'absolute'
       元素.style.borderRadius    = '.25rem'
       元素.style.overflow        = 'hidden'
-      元素.style.border          = 'solid 1px rgba(24,24,24,.25)'
+      //元素.style.border          = 'solid 1px rgba(24,24,24,.25)'
       元素.style.transition      = 'all .75s'
       元素.onclick = function() {
         window.open('/api/image/'+信息.id)
