@@ -97,7 +97,7 @@ button {
   user-select: none;
   font-weight: 700;
   border-radius: .5em;
-  box-shadow: 0 .5em 1.1em 0 #EC4899;
+  box-shadow: 0 .5em 1.1em 0 rgba(236,72,153,.35);
   transition: all .25s;
 }
 button:hover {
