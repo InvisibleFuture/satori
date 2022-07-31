@@ -84,15 +84,26 @@ div.container.mx-auto.mt-42.projects
         button 前端 / 后端 / APP / 脚本 / 订制 /
       div.flex.items-center.max-w-3xl.p-4.text-center.text-white.font-bold
         div.flex.flex-col.mr-4(class="w-1/3")
-          img(src="/assets/image/wx.jpg")
+          img(:src="wx")
           p WeChat
         div.flex.flex-col.mr-4(class="w-1/3")
-          img(src="/assets/image/qq.jpg")
+          img(:src="qq")
           p QQ
         div.flex.flex-col.mr-4(class="w-1/3")
-          img(src="/assets/image/tg.jpg")
+          img(:src="tg")
           p Telegram
 </template>
+
+<script>
+import wx from '@/assets/image/wx.jpg'
+import qq from '@/assets/image/qq.jpg'
+import tg from '@/assets/image/tg.jpg'
+export default {
+  setup() {
+    return { wx, qq, tg }
+  },
+}
+</script>
 
 <style>
 .projects section {
