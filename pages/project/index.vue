@@ -5,41 +5,44 @@ div.container.mx-auto.mt-42.projects
     h2 NodeJS
     ul
       li
-        h3 Kana
-        p express + nedb 300行代码构建完备 RESTful 风格 WEB API 后端服务
         a(target="_blank" href="https://github.com/InvisibleFuture/kana")
-          button.mr-2 source code
+          h3 Kana
+          p express + nedb 300行代码构建完备 RESTful 风格 WEB API 后端服务
       li
-        h3 Kana BBS
-          span.bg-green-500.text-white.rounded-sm.inline-block.px-2.font-bold.text-xs.mx-2 vue
-        p Kana + Vue 构建轻量论坛
         a(target="_blank" href="https://github.com/InvisibleFuture/kana-bbs")
-          button.mr-2 source code
+          h3 Kana BBS
+            span.bg-green-500.text-white.rounded-sm.inline-block.px-2.font-bold.text-xs.mx-2 vue
+          p Kana + Vue 构建轻量论坛
         a(target="_blank" href="https://kana.satori.love")
           button.mr-2 Demo
       li
-        h3 Satori Blog
-          span.bg-green-500.text-white.rounded-sm.inline-block.px-2.font-bold.text-xs.mx-2 nuxt
-        p Nuxt3 + Mysql 构建个人博客
+        h3 Kana Chat
+          span.bg-green-500.text-white.rounded-sm.inline-block.px-2.font-bold.text-xs.mx-2 vue
+        p Simple + Vue 构建在线聊天室
+        a(target="_blank" href="https://kana.satori.love/chat")
+          button.mr-2 demo
+      li
         a(target="_blank" href="https://github.com/InvisibleFuture/satori")
-          button.mr-2 source code
+          h3 Satori Blog
+            span.bg-green-500.text-white.rounded-sm.inline-block.px-2.font-bold.text-xs.mx-2 nuxt
+          p Nuxt3 + Mysql 构建个人博客
         a(target="_blank" href="https://satori.love")
           button.mr-2 Demo
       li
-        h3 Simple
-        p express + nedb 300 行代码实现完备后端服务
-        button.mr-2 source code
+        a(target="_blank" href="https://www.npmjs.com/package/interrelated")
+          h3 interrelated
+            span.bg-red-600.text-white.rounded-sm.inline-block.px-2.font-bold.text-xs.mx-2 npm
+          p js 数据双向关联
       li
-        h3 Simple Chat
-          span.bg-green-500.text-white.rounded-sm.inline-block.px-2.font-bold.text-xs.mx-2 vue
-        p Simple + Vue 构建在线聊天室
-        button.mr-2 source code
-        button.mr-2 demo
+        a(target="_blank" href="https://www.npmjs.com/package/satori-markdown")
+          h3 satori-markdown
+            span.bg-red-600.text-white.rounded-sm.inline-block.px-2.font-bold.text-xs.mx-2 npm
+          p 使用指定 markdown 文件作为 wiki
       li
-        h3 satori-markdown.js
-          span.bg-red-600.text-white.rounded-sm.inline-block.px-2.font-bold.text-xs.mx-2 npm
-        p marked 构建 markdown 文档服务
-        button.mr-2 source code
+        a(target="_blank" href="https://www.npmjs.com/package/express-session-nedb")
+          h3 express-session-nedb
+            span.bg-red-600.text-white.rounded-sm.inline-block.px-2.font-bold.text-xs.mx-2 npm
+          p 使用 nedb 作为 session 的存储容器, 且保障nedb与项目使用统一版本依赖, 使 session 数据也可以被查询和管理
   section
     h2 Go
     ul
@@ -59,9 +62,10 @@ div.container.mx-auto.mt-42.projects
     h2 Dart
     ul
       li
-        h3 Flutter BBS
-          span.bg-blue-600.text-white.rounded-sm.inline-block.px-2.font-bold.text-xs.mx-2 Flutter
-        p 使用 Flutter 构建多端论坛 APP
+        a(target="_blank" href="https://github.com/InvisibleFuture/flutterbbs")
+          h3 Flutter BBS
+            span.bg-blue-600.text-white.rounded-sm.inline-block.px-2.font-bold.text-xs.mx-2 Flutter
+          p 使用 Flutter 构建多端论坛 APP
       li
         h3 Flutter Shop
           span.bg-blue-600.text-white.rounded-sm.inline-block.px-2.font-bold.text-xs.mx-2 Flutter
@@ -73,9 +77,21 @@ div.container.mx-auto.mt-42.projects
         a(target="_blank" href="https://github.com/InvisibleFuture/todo")
           h3 Todo
           p Linux 控制台中的任务管理
-  section
-    p Service type
-    button 约稿 / 订制 / 委托
+  section.py-16
+    div.bg-pink-500.rounded-xl.p-6.min-h-96
+      span.text-9xl.text-white.font-bold.opacity-10 Service type
+      div
+        button 前端 / 后端 / APP / 脚本 / 订制 /
+      div.flex.items-center.max-w-3xl.p-4.text-center.text-white.font-bold
+        div.flex.flex-col.mr-4(class="w-1/3")
+          img(src="/assets/image/wx.jpg")
+          p WeChat
+        div.flex.flex-col.mr-4(class="w-1/3")
+          img(src="/assets/image/qq.jpg")
+          p QQ
+        div.flex.flex-col.mr-4(class="w-1/3")
+          img(src="/assets/image/tg.jpg")
+          p Telegram
 </template>
 
 <style>
@@ -83,8 +99,9 @@ div.container.mx-auto.mt-42.projects
   margin: 4rem 0;
 }
 .projects section h2 {
-  color: red;
+  color: #EC4899;
   font-weight: bold;
+  margin-bottom: 1rem;
 }
 .projects section h2::before {
   content: '# ';
