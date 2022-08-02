@@ -81,7 +81,7 @@ div.container.mx-auto.mt-42.projects
     div.bg-pink-500.rounded-xl.p-6.min-h-96
       span.text-9xl.text-white.font-bold.opacity-10 Service type
       div
-        button 前端 / 后端 / APP / 脚本 / 订制 /
+        button 前端 / 后端 / APP / 脚本 / 订制 / 批量数据处理 / 批量图像处理
       div.flex.items-center.max-w-3xl.p-4.text-center.text-white.font-bold
         div.flex.flex-col.mr-4(class="w-1/3")
           img(:src="wx")

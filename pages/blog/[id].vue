@@ -112,16 +112,42 @@ export default {
       home: '',
     }))
 
-    const { data, pending } = useFetch(`/api/blog/${route.params.id}`)
-    return { data, pending, blog, marked, route, account, comments }
-  },
-  mounted() {
-    setTimeout(() => {
+    //nextTick(function() {
+    //  console.log("nextTick!")
+    //  for (let block of document.querySelectorAll("pre code")) {
+    //    hljs.highlightBlock(block);
+    //  }
+    //})
+    const initPage = function() {
       for (let block of document.querySelectorAll("pre code")) {
         hljs.highlightBlock(block);
       }
-    }, 100);
-    fetch('/api/comment?blogId='+this.route.params.id).then(res=>res.json()).then(data=>{
+      //fetch('/api/comment?blogId='+route.params.id).then(res=>res.json()).then(data=>{
+      //  console.log(data)
+      //  //this.comments.list = data.list
+      //  comments.value.push()
+      //  // = useState({
+      //  //  list: data.list
+      //  //})
+      //})
+    }
+
+    onMounted(() => {
+      console.log("onMounted")
+      initPage()
+    })
+
+    onUpdated(() => {
+      console.log("onUpdated")
+      initPage()
+    })
+
+    const { data, pending } = useFetch(`/api/blog/${route.params.id}`)
+    return { data, pending, blog, marked, route, account, comments }
+  },
+  method() {
+    fetch('/api/comment?blogId='+route.params.id).then(res=>res.json()).then(data=>{
+      console.log(data)
       this.comments.list = data.list
     })
   },
