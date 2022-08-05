@@ -1,4 +1,6 @@
 import fs from 'fs'
+import webp from 'webp-converter'
+import resize from 'resize-img'
 import { db, User, File } from '../../model'
 
 export default defineEventHandler(async event => {
@@ -9,20 +11,14 @@ export default defineEventHandler(async event => {
   }
 
   if (event.context.params.id.match(new RegExp(/.webp$/))) {
-    let file = await new Promise(resolve => {
-      fs.readFile(`../data/webp/${event.context.params.id}`, (err, data) => {
-        resolve(data)
-      })
-    })
-    return file
+    let path = `../data/webp/${event.context.params.id}`
+    if (!fs.existsSync(path)) {
+      let img = await resize(fs.readFileSync(data.path), { width: 480 })
+      fs.writeFileSync(path, img)
+      await webp.cwebp(path, path)
+    }
+    return fs.readFileSync(path)
   }
 
-  // TODO: image size
-  let file = await new Promise(resolve => {
-    fs.readFile(data.path, (err, data) => {
-      resolve(data)
-    })
-  })
-  // TODO: file type
-  return file
+  return fs.readFileSync(data.path)
 })

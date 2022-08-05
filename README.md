@@ -43,3 +43,9 @@ Checkout the [deployment documentation](https://v3.nuxtjs.org/docs/deployment) f
 
 新 BUG, 生产模式目录位置在 .output 内
 path":"/root/satori/.output/data/file/48eff3675fd07dcfb9c011b00.jpg"
+
+
+## webp
+yum install libXext.x86_64
+yum install libXrender.x86_64
+yum install libXtst.x86_64

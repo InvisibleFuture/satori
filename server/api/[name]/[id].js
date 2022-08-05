@@ -3,7 +3,7 @@ import md5 from 'md5'
 import random from 'string-random'
 import formidable from 'formidable'
 import imageSize from 'image-size'
-import webp from 'webp-converter'
+//import webp from 'webp-converter'
 import { db, User, Blog, Tag, File } from '../../model'
 
 // 获取对象
@@ -110,12 +110,12 @@ export default defineEventHandler(async event => {
         })
       })
     }))
-    list.forEach(item => {
-      const result = webp.cwebp(item.path, `../data/webp/${item.id}.webp`, "-q 80")
-      result.then((response) => {
-        console.log(response)
-      })
-    })
+    //list.forEach(item => {
+    //  const result = webp.cwebp(item.path, `../data/webp/${item.id}.webp`, "-q 80")
+    //  result.then((response) => {
+    //    console.log(response)
+    //  })
+    //})
     return list
   }
 
