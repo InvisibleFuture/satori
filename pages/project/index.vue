@@ -96,7 +96,7 @@ import wx from '@/assets/image/wx.jpg'
 import tg from '@/assets/image/tg.jpg'
 export default {
   setup() {
-    return { wx, qq, tg }
+    return { wx, tg }
   },
 }
 </script>
