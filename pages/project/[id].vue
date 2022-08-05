@@ -29,22 +29,22 @@ div.container.mx-auto.pt-42
         li.bg-pink-900.w-12.h-12
       div.flex.flex-row-reverse
         button(v-if="account.online" @click="edit_mode()") edit
-      .flex.my-12(v-for="item in comments.list", :key="item._id")
-        img.rounded-full.w-16.h-16.mr-4(:src="item.avatar")
-        div
-          .pb-2
-            span.font-bold.mr-2 {{ item.name }}
-            //span.font-bold.bg-pink-600.px-2.py-1.text-white.rounded-md.text-xs(
-            //  v-if="true || item.user.gid === 1"
-            //) admin
-          div(v-html="marked.parse(item.data, { breaks: true })")
-          .text-rose-300.font-bold.text-sm.my-2
-            span {{ rwdate(item.createdAt) }}
-          div
-            button.font-bold.bg-pink-600.px-2.py-1.text-white.rounded-md.text-xs(
-              @click="comment_remove(item.id)"
-              v-if="account.online"
-            ) delete
+      //.flex.my-12(v-for="item in comments.list", :key="item._id")
+      //  img.rounded-full.w-16.h-16.mr-4(:src="item.avatar")
+      //  div
+      //    .pb-2
+      //      span.font-bold.mr-2 {{ item.name }}
+      //      //span.font-bold.bg-pink-600.px-2.py-1.text-white.rounded-md.text-xs(
+      //      //  v-if="true || item.user.gid === 1"
+      //      //) admin
+      //    div(v-html="marked.parse(item.data, { breaks: true })")
+      //    .text-rose-300.font-bold.text-sm.my-2
+      //      span {{ rwdate(item.createdAt) }}
+      //    div
+      //      button.font-bold.bg-pink-600.px-2.py-1.text-white.rounded-md.text-xs(
+      //        @click="comment_remove(item.id)"
+      //        v-if="account.online"
+      //      ) delete
     div.flex(v-else)
       textarea.flex-auto.w-full.min-h-64.bg-opacity-10.bg-dark-200.p-4(
         v-model="blog.data"
@@ -108,16 +108,16 @@ export default {
       data: '',
       name: ''
     }))
-    const comments = useState('comments', () => ({
-      list: [],
-      data: '',
-      name: '',
-      mail: '',
-      home: '',
-    }))
+    //const comments = useState('comments', () => ({
+    //  list: [],
+    //  data: '',
+    //  name: '',
+    //  mail: '',
+    //  home: '',
+    //}))
 
     const { data, pending } = useFetch(`/api/project/${route.params.id}`)
-    return { data, pending, blog, marked, route, account, comments }
+    return { data, pending, blog, marked, route, account }
   },
   //mounted() {
   //  // 页面加载完毕后在开始载入讨论区
@@ -152,36 +152,36 @@ export default {
         console.log(data)
       })
     },
-    comment_remove(id) {
-      this.comments.list = this.comments.list.filter(item => item.id !== id)
-      fetch('/api/comment/'+ id, {method:'DELETE'}).then(res => res.json()).then(data => {
-        console.log(data)
-      })
-    },
-    comment_submit() {
-      console.log('commentSubmit')
-      fetch('/api/comment', {
-        method: 'POST',
-        headers: {"Content-Type": "application/json"},
-        body:    JSON.stringify({
-          name: this.comments.name,
-          mail: this.comments.mail,
-          home: this.comments.home,
-          data: this.comments.data,
-          blogId: this.route.params.id,
-        }),
-      }).then(async Response => {
-        if (Response.status === 200) {
-          this.comments.list.push(await Response.json())
-          return
-        }
-        if (Response.status === 400) {
-          console.log(await Response.text())
-          return
-        }
-        console.log('未知')
-      })
-    },
+    //comment_remove(id) {
+    //  this.comments.list = this.comments.list.filter(item => item.id !== id)
+    //  fetch('/api/comment/'+ id, {method:'DELETE'}).then(res => res.json()).then(data => {
+    //    console.log(data)
+    //  })
+    //},
+    //comment_submit() {
+    //  console.log('commentSubmit')
+    //  fetch('/api/comment', {
+    //    method: 'POST',
+    //    headers: {"Content-Type": "application/json"},
+    //    body:    JSON.stringify({
+    //      name: this.comments.name,
+    //      mail: this.comments.mail,
+    //      home: this.comments.home,
+    //      data: this.comments.data,
+    //      blogId: this.route.params.id,
+    //    }),
+    //  }).then(async Response => {
+    //    if (Response.status === 200) {
+    //      this.comments.list.push(await Response.json())
+    //      return
+    //    }
+    //    if (Response.status === 400) {
+    //      console.log(await Response.text())
+    //      return
+    //    }
+    //    console.log('未知')
+    //  })
+    //},
     input(e) {
       e.srcElement.style.height = '300px'
       e.srcElement.style.height = e.target.scrollHeight + 'px'
