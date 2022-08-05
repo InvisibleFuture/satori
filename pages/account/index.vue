@@ -5,7 +5,7 @@ div.container.mx-auto.p-24.text-white
       :class="{'left-16': avatar_active === 1, 'z-10': avatar_active === 1}"
       @click="avatar_click(0)"
     )
-    div.absolute.rounded-full.w-32.h-32.left-0.top-0.bg-white.transition-all.duration-700(
+    div.absolute.rounded-full.w-32.h-32.left-0.top-0.bg-gray-600.transition-all.duration-700(
       :class="{'left-16': avatar_active === 0, 'z-10': avatar_active === 0}"
       @click="avatar_click(1)"
     )
