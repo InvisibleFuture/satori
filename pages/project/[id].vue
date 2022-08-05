@@ -11,45 +11,35 @@ div.container.mx-auto.pt-48
       button.bg-green-700.p-4(@click="submit()") submit
 </template>
 
-<script>
+<script setup>
 import { marked } from "marked"
-export default {
-  setup() {
-    const route = useRoute()
-    const account = useState('account')
 
-    const { data, pending } = useFetch(`/api/project/${route.params.id}`)
-    const project = useState('editProject', () => {
-      return {data:'', edit: false}
-    })
+const route = useRoute()
+const account = useState('account')
 
-    return {
-      data, pending,
-      project, account,
-      marked,
+const { data, pending } = useFetch(`/api/project/${route.params.id}`)
+const project = useState('editProject', () => {
+  return {data:'', edit: false}
+})
 
-      submit() {
-        const reg     = new RegExp("^# .*\n")
-        const list    = this.project.data.match(reg)
-        const name    = list ? list[0].replace('# ', '').replace('\n', '') : "default"
-        const data    = this.project.data
-        fetch(`/api/project/${route.params.id}`, {
-          method:  'PATCH',
-          headers: {"Content-Type": "application/json"},
-          body:    JSON.stringify({name, data}),
-        }).then(res => {
-          console.log(res)
-          this.data.data    = this.project.data
-          this.project.edit = !this.project.edit
-        })
-      },
+const submit = function() {
+  const reg  = new RegExp("^# .*\n")
+  const list = this.project.data.match(reg)
+  const name = list ? list[0].replace('# ', '').replace('\n', '') : "default"
+  const data = this.project.data
+  fetch(`/api/project/${route.params.id}`, {
+    method:  'PATCH',
+    headers: {"Content-Type": "application/json"},
+    body:    JSON.stringify({name, data}),
+  }).then(res => {
+    console.log(res)
+    this.data.data    = this.project.data
+    this.project.edit = !this.project.edit
+  })
+}
 
-      edit() {
-        this.project.data = this.data.data
-        this.project.edit = !this.project.edit
-      }
-
-    }
-  }
+const edit = function() {
+  this.project.data = this.data.data
+  this.project.edit = !this.project.edit
 }
 </script>
