@@ -54,7 +54,7 @@ div.container.mx-auto.mt-42.projects
     ul
       li
         h3 Image Search
-        p 图片特征反向搜索
+        p 图像特征提取
       li
         h3 Image Download
         p 图片批量采集
