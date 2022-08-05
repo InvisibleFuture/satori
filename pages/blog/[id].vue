@@ -112,44 +112,22 @@ export default {
       home: '',
     }))
 
-    //nextTick(function() {
-    //  console.log("nextTick!")
-    //  for (let block of document.querySelectorAll("pre code")) {
-    //    hljs.highlightBlock(block);
-    //  }
-    //})
-    const initPage = function() {
-      for (let block of document.querySelectorAll("pre code")) {
-        hljs.highlightBlock(block);
-      }
-      //fetch('/api/comment?blogId='+route.params.id).then(res=>res.json()).then(data=>{
-      //  console.log(data)
-      //  //this.comments.list = data.list
-      //  comments.value.push()
-      //  // = useState({
-      //  //  list: data.list
-      //  //})
-      //})
-    }
-
-    onMounted(() => {
-      console.log("onMounted")
-      initPage()
-    })
-
-    onUpdated(() => {
-      console.log("onUpdated")
-      initPage()
-    })
-
     const { data, pending } = useFetch(`/api/blog/${route.params.id}`)
     return { data, pending, blog, marked, route, account, comments }
   },
-  method() {
-    fetch('/api/comment?blogId='+route.params.id).then(res=>res.json()).then(data=>{
-      console.log(data)
+  mounted() {
+    // 页面加载完毕后在开始载入讨论区
+    fetch('/api/comment?blogId='+this.route.params.id).then(res=>res.json()).then(data=>{
       this.comments.list = data.list
     })
+  },
+  updated() {
+    // 检查尚未渲染的区块执行渲染
+    for (let block of document.querySelectorAll("pre code")) {
+      if (!block.classList.contains('hljs')) {
+        hljs.highlightBlock(block);
+      }
+    }
   },
   methods: {
     rwdate(utc) {
