@@ -1,7 +1,7 @@
 <template lang="pug">
-div.container.mx-auto.mt-42.projects
-  h1.text-3xl Project List
-  section
+div.container.mx-auto.projects.pt-64
+  h1.w-3xl.mx-auto.text-3xl.mb-12 Project List
+  section.w-3xl.mx-auto
     h2 NodeJS
     ul
       li
@@ -43,13 +43,13 @@ div.container.mx-auto.mt-42.projects
           h3 express-session-nedb
             span.bg-red-600.text-white.rounded-sm.inline-block.px-2.font-bold.text-xs.mx-2 npm
           p 使用 nedb 作为 session 的存储容器, 且保障nedb与项目使用统一版本依赖, 使 session 数据也可以被查询和管理
-  section
+  section.w-3xl.mx-auto
     h2 Go
     ul
       li
         h3 mmm
         p 使用 levledb 构建通用后端服务
-  section
+  section.w-3xl.mx-auto
     h2 Python
     ul
       li
@@ -58,7 +58,7 @@ div.container.mx-auto.mt-42.projects
       li
         h3 Image Download
         p 图片批量采集
-  section
+  section.w-3xl.mx-auto
     h2 Dart
     ul
       li
@@ -70,25 +70,22 @@ div.container.mx-auto.mt-42.projects
         h3 Flutter Shop
           span.bg-blue-600.text-white.rounded-sm.inline-block.px-2.font-bold.text-xs.mx-2 Flutter
         p 使用 Flutter 构建多端商店 APP
-  section
+  section.w-3xl.mx-auto
     h2 Bash
     ul
       li
         a(target="_blank" href="https://github.com/InvisibleFuture/todo")
           h3 Todo
           p Linux 控制台中的任务管理
-  section.py-16
+  section.mx-auto.w-5xl.py-32
     div.bg-pink-500.rounded-xl.p-6.min-h-96
-      span.text-9xl.text-white.font-bold.opacity-10 Service type
-      div
+      span.text-8xl.text-white.font-bold.opacity-10 Service type
+      div.mt-6
         button 前端 / 后端 / APP / 脚本 / 订制 / 批量数据处理 / 批量图像处理
       div.flex.items-center.max-w-3xl.p-4.text-center.text-white.font-bold
         div.flex.flex-col.mr-4(class="w-1/3")
           img(:src="wx")
           p WeChat
-        div.flex.flex-col.mr-4(class="w-1/3")
-          img(:src="qq")
-          p QQ
         div.flex.flex-col.mr-4(class="w-1/3")
           img(:src="tg")
           p Telegram
@@ -96,7 +93,6 @@ div.container.mx-auto.mt-42.projects
 
 <script>
 import wx from '@/assets/image/wx.jpg'
-import qq from '@/assets/image/qq.jpg'
 import tg from '@/assets/image/tg.jpg'
 export default {
   setup() {
@@ -106,9 +102,6 @@ export default {
 </script>
 
 <style>
-.projects section {
-  margin: 4rem 0;
-}
 .projects section h2 {
   color: #EC4899;
   font-weight: bold;
