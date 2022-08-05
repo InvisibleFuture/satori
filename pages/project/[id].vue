@@ -197,7 +197,7 @@ export default {
       const list = this.blog.data.match(reg)
       const name = list ? list[0] : "default"
       const data = this.blog.data
-      fetch(`/api/blog/${this.route.params.id}`, {
+      fetch(`/api/project/${this.route.params.id}`, {
         method:  'PATCH',
         headers: {"Content-Type": "application/json"},
         body:    JSON.stringify({name, data}),
@@ -223,7 +223,7 @@ export default {
       let data = new FormData();
       let files = event.target.files
       for (let file of files) data.append("photos", file)
-      fetch(`/api/blog/${this.route.params.id}`, {
+      fetch(`/api/project/${this.route.params.id}`, {
         method: 'POST',
         body: data
       }).then(res => res.json()).then(data => {
