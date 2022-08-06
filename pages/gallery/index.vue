@@ -6,7 +6,7 @@ div.flex.flex-col
       span.text-4xl.text-white +
   #PUBULIUBOX.relative.mt-24.transition-opacity.duration-700.ease-in-out(ref="PUB" v-if="!pending" :class="{'opacity-100': !pending, 'opacity-10': pending}")
     template(v-for="item in data.list")
-      div.absolute.transition-all.duration-700.ease-in-out.left-0.top-0(v-for="img in item.files" :data-w="img.width" :data-h="img.height")
+      div.absolute.transition-all.duration-700.ease-in-out.left-0.top-0.bg-gray-100(v-for="img in item.files" :data-w="img.width" :data-h="img.height")
         img(:src="'/api/image/' + img.id + '.webp'" :title="img.name" :alt="img.name")
 </template>
 
