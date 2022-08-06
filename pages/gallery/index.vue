@@ -1,13 +1,14 @@
 <template lang="pug">
 div.flex.flex-col
-  .container.flex.justify-center.mx-auto.relative.top-24(v-if="account.online")
-    label.w-48.h-24.bg-dark-600.bg-opacity-20.rounded-xl.cursor-pointer.flex.justify-center.items-center
-      input.hidden(type="file", accept="image/*", multiple, @change="upload($event, null)")
-      span.text-4xl.text-white +
   #PUBULIUBOX.relative.mt-24.transition-opacity.duration-700.ease-in-out(ref="PUB" v-if="!pending" :class="{'opacity-100': !pending, 'opacity-10': pending}")
     template(v-for="item in data.list")
       div.absolute.transition-all.duration-700.ease-in-out.left-0.top-0.bg-gray-100(v-for="img in item.files" :data-w="img.width" :data-h="img.height")
-        img(:src="'/api/image/' + img.id + '.webp'" :title="img.name" :alt="img.name")
+        a(:href="'/api/image/'+img.id" target="_blank")
+          img(:src="'/api/image/' + img.id + '.webp'" :title="img.name" :alt="img.name")
+  div.fixed.bottom-12.right-12.bg-pink-500.rounded-lg(v-if="account.online")
+    label.w-18.h-18.rounded-xl.cursor-pointer.flex.justify-center.items-center
+      input.hidden(type="file", accept="image/*", multiple, @change="upload($event, null)")
+      span.text-4xl.text-white +
 </template>
 
 <script>
@@ -46,7 +47,35 @@ export default {
         // 加高
         各列高度[列号] += (缩放高 + 间距)
       }
-    }
+    },
+    async create() {
+      return await $fetch(`/api/gallery`, {
+        method:  'POST',
+        headers: {"Content-Type": "application/json"},
+        body:    {name:'default', data:'default'},
+      })
+    },
+    async upload(event, item) {
+      if (!item) {
+        item = await this.create()
+        item.files = []
+        this.data.list.push(item)
+      }
+      // 上传, 目标位置如果是new则先创建获得id, 否则目标位置本就有id ✨
+      let data = new FormData();
+      let files = event.target.files
+      for (let file of files) data.append("image", file)
+      fetch(`/api/gallery/${item.id}`, {
+        method: 'POST',
+        body: data
+      }).then(res => res.json()).then(data => {
+        this.data.list.forEach(x => {
+          if (x.id === item.id) {
+            data.forEach(it => x.files.push(it))
+          }
+        })
+      })
+    },
   },
   mounted() {
     console.log("mounted")
@@ -246,38 +275,10 @@ export default {
   //  },"100")
   //},
   //methods: {
-  //  async create() {
-  //    return await $fetch(`/api/gallery`, {
-  //      method:  'POST',
-  //      headers: {"Content-Type": "application/json"},
-  //      body:    {name:'default', data:'default'},
-  //    })
-  //  },
-  //  async upload(event, item) {
-  //    if (!item) {
-  //      item = await this.create()
-  //      item.files = []
-  //      this.data.list.push(item)
-  //    }
-  //    // 上传, 目标位置如果是new则先创建获得id, 否则目标位置本就有id ✨
-  //    let data = new FormData();
-  //    let files = event.target.files
-  //    for (let file of files) data.append("image", file)
-  //    fetch(`/api/gallery/${item.id}`, {
-  //      method: 'POST',
-  //      body: data
-  //    }).then(res => res.json()).then(data => {
-  //      this.data.list.forEach(x => {
-  //        if (x.id === item.id) {
-  //          data.forEach(it => x.files.push(it))
-  //        }
-  //      })
-  //    })
-  //  },
-  //  remove(id) {
-  //    this.data.list = this.data.list.filter(item => item.id !== id)
-  //    $fetch(`/api/gallery/${id}`, { method: 'DELETE' })
-  //  }
+  //  //remove(id) {
+  //  //  this.data.list = this.data.list.filter(item => item.id !== id)
+  //  //  $fetch(`/api/gallery/${id}`, { method: 'DELETE' })
+  //  //}
   //}
 }
 </script>
