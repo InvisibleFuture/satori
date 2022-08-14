@@ -61,6 +61,8 @@ article img {
 }
 article p {
   margin: 2rem 0;
+  word-wrap: break-word;
+  word-break:break-all;
 }
 article .hljs {
   border-radius: 2rem;
