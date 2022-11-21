@@ -5,7 +5,7 @@
       NuxtLink.px-4.py-6(to="/", :class="{'text-white': route.path==='/' }") Home
       NuxtLink.px-4.py-6(to="/blog", :class="{'text-pink-500': route.path==='/blog' }") Blog
       NuxtLink.px-4.py-6(to="/gallery" :class="{'text-pink-500': route.path==='/gallery' }") Gallery
-      NuxtLink.px-4.py-6(to="/project" :class="{'text-pink-500': route.path==='/project' }") Project
+      //NuxtLink.px-4.py-6(to="/project" :class="{'text-pink-500': route.path==='/project' }") Project
       NuxtLink.px-4.py-6.ml-auto(v-if="!account.online", to="/account/signin", :class="{'text-pink-500': route.path==='/account/signin' }") signin
       NuxtLink.px-4.py-6.ml-auto(v-else, to="/account", :class="{'text-pink-500': route.path==='/account' }") account
   NuxtChild
