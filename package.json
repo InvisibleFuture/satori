@@ -4,7 +4,7 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview"
+    "preview": "PORT=2334 nuxt preview"
   },
   "devDependencies": {
     "nuxt": "3.0.0-rc.4",
