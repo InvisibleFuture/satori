@@ -1,12 +1,16 @@
 <template lang="pug">
-.container.mx-auto.pt-42
+.max-w-3xl.mx-auto.py-42
   div(v-if="pending") Loading..
-  article.mb-32(v-else)
+  article(v-else)
     .content(v-html="data.content")
-    p.text-gray-600 {{ data.date }} Last
+    div.text-center
+      img.mx-auto.rounded-full(:src="avatar")
+      p --- satori ---
+      p.text-gray-600 {{ data.date }} Last
 </template>
 
 <script setup>
+import avatar from '@/assets/image/avatar.jpeg'
 import "highlight.js/styles/agate.css";
 const route = useRoute();
 const { data, pending } = useFetch(`/api/blog/${route.params.id}`, {
