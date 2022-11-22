@@ -1,0 +1,124 @@
+<template lang="pug">
+div.container.mx-auto.pt-24.flex
+  main.flex-1.mr-2
+    section.m-2.p-4.rounded-xl.text-center(v-if="pending") Loading...
+    section.m-2.p-4.rounded-xl(
+      v-else v-for="(item, index) in data.list"
+      :style="`animation-delay: .${index}s`"
+    )
+      NuxtLink(:to="`/blog/${item.id}`")
+        h2.text-xl.font-bold {{ item.name }}
+      p.text-sm.mb-4
+        span.mr-4 {{ rwdate(item.createdAt) }}
+        span.mr-4 {{ item.user.name }}
+      div(v-if="account.online")
+        button.mt-2.mr-2(@click="removeItem(item.id)") delete
+        button.mt-2.mr-2 editor
+    section.rounded-xl.py-12.text-center 加载更多..
+  aside.w-64.py-2.flex.flex-col.gap-8(class="<sm:hidden")
+    button.w-full(v-if="account.online" @click="edit.mode = !edit.mode") create
+    div.tags(v-if="!tagpeding")
+      span.font-bold # TAG
+      ul.flex.flex-wrap.gap-2.py-1
+        li.bg-gray-400.bg-opacity-10.px-2.rounded-md(v-for="item in tag.list" class="hover:text-pink-500") {{ item.name }}
+    div
+      span.font-bold # 归档
+      ul
+        li(v-for="index in 12") 2022 12 title
+  
+  // 弹出层编辑器
+  section.absolute.bg-dark-800.bg-opacity-80.z-10.top-0.left-0.right-0.bottom-0.flex.flex-col(v-if="edit.mode")
+      textarea.container.mx-auto.flex-1.bg-opacity-0.bg-dark-800.text-xl.p-12(
+        class="focus:(outline outline-transparent)"
+        v-focus
+        v-model="edit.data"
+        @input="input"
+        @keyup.ctrl.enter="create()"
+        @keyup.esc="edit.mode = !edit.mode"
+      )
+      button.absolute.top-8.right-8.bg-white.bg-opacity-0.w-16.h-16.transform.rotate-45.transition-all.shadow-none(
+        class="hover:(bg-opacity-20 rotate-15 rounded-full)"
+        title="Esc"
+        @click.stop="edit.mode = !edit.mode"
+      )
+        span.block.bg-white.absolute.rounded-sm.w-1.h-9.top-4.left-8
+        span.block.bg-white.absolute.rounded-sm.w-9.h-1.top-8.left-4
+      button.bg-green-600.px-4.py-2.text-white.font-bold.rounded-md(@click="create()") Submit(Ctrl+Enter)
+</template>
+
+<script>
+export default {
+  setup() {
+    const account = useState('account')
+    const edit = useState('createBlog', () => ({
+      mode: false,
+      name: '',
+      data: '# Title\n\nData..'
+    }))
+
+    const input = function(e) {
+      e.srcElement.style.height = '400px'
+      e.srcElement.style.height = e.target.scrollHeight + 'px'
+    }
+
+    const create = function() {
+      if (!this.edit.data) return console.log("输入不能为空");
+      //const reg  = new RegExp("(?<=^# ).*?(?=\n)|(?<=\n# ).*?(?=\n)")
+      //const list = this.edit.data.match(reg)
+      //this.edit.name = list ? list[0] : "default"
+      const reg  = new RegExp("^# .*\n")
+      const list = this.edit.data.match(reg)
+      const name = list ? list[0].replace('# ', '').replace('\n', '') : "default"
+      const data = this.edit.data
+      fetch('/api/blog', {
+        method: 'POST',
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ name, data })
+      }).then(Response => {
+        if (Response.status === 200) {
+          console.log(Response.status)
+          this.edit.mode = false
+          this.refresh()
+        }
+        return Response.text()
+      }).then(data => {
+        console.log(data)
+      })
+    }
+
+    const { data, pending, refresh } = useFetch('/api/blog')
+    const { data: tag, pending:tagpeding } = useFetch('/api/tag')
+    return { data, pending, account, edit, input, create, refresh, tag, tagpeding }
+  },
+  methods: {
+    // 将 UTC 时间转换成阅读格式
+    rwdate(utc='') {
+      const t = new Date(utc);
+      return utc ? `${t.getMonth() + 1}月 ${t.getDate()}, ${t.getFullYear()}` : '未知'
+    },
+    // 无法直接使用 data, 使用 this 传递
+    removeItem(id) {
+      fetch(`/api/blog/${id}`, { method: 'DELETE' }).then(Response => {
+        if (Response.status === 200) {
+          this.data.list = this.data.list.filter(item => item.id !== id)
+          console.log('删除成功')
+        }
+      })
+    },
+    // Remove title 第一行开始的, 行首是 # 号且间隔一个空格后是字符串的, 且直到结尾不再有 # 号
+    removeTitle(data="未命名档") {
+      let reg = new RegExp("^# .*\n")
+      return data.replace(reg, '')
+      //let reg = new RegExp("(?<=^# ).*?(?=\n)|(?<=\n# ).*?(?=\n)", 'i');
+      //return data.replace(reg, '')
+    },
+  },
+  directives: {
+    'focus': {
+      mounted(e) {
+        e.focus()
+      }
+    }
+  }
+}
+</script>

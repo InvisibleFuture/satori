@@ -8,7 +8,7 @@
       //NuxtLink.px-4.py-6(to="/project" :class="{'text-pink-500': route.path==='/project' }") Project
       NuxtLink.px-4.py-6.ml-auto(v-if="!account.online", to="/account/signin", :class="{'text-pink-500': route.path==='/account/signin' }") signin
       NuxtLink.px-4.py-6.ml-auto(v-else, to="/account", :class="{'text-pink-500': route.path==='/account' }") account
-  NuxtChild
+  NuxtPage
 </template>
 
 <script>
@@ -25,14 +25,14 @@ export default defineComponent({
     }))
     return  { route, account }
   },
-  mounted() {
-    $fetch('/api/account').then(data => {
-      if (data) {
-        this.account.name = data.name
-        this.account.online = true        
-      }
-    })
-  }
+  //mounted() {
+  //  $fetch('/api/account').then(data => {
+  //    if (data) {
+  //      this.account.name = data.name
+  //      this.account.online = true        
+  //    }
+  //  })
+  //}
 })
 </script>
 
@@ -50,7 +50,7 @@ html, body {
 }
 /*
  * 文章样式
- */
+
 article h1 {
   font-weight: bold;
   font-size: 2rem;
@@ -87,7 +87,7 @@ article input[type="checkbox"]:checked::before {
     content: "\2713";
     background-color: #EC4899;
 }
-
+ */
 /*
  * Button
  */
