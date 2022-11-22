@@ -30,15 +30,12 @@ const { data, pending } = useFetch(`/api/blog/${route.params.id}`, {
 .content table {
   border-collapse: collapse;
   border-spacing: 0;
-  border: 1px solid #ddd;
   margin: 1rem 0;
 }
 .content table tr th {
-  border-bottom: 1px solid #ddd;
   padding: 0.5rem;
 }
 .content table tr td {
-  border: 0px solid #ddd;
   padding: 0.5rem;
 }
 .content p {
