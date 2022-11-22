@@ -26,7 +26,11 @@ export default defineEventHandler(async event => {
             const highlighted = hljs.highlight(unescapeHTML(codeContent), {language}).value     // 代码高亮
             html = html.replace(code, `<code class="${className} hljs">${highlighted}</code>`)  // 逐一替换
         })
-        return { id, title, description, createdAt, updatedAt, content: html }
+        const rwdate = (utc) => {
+          let t = new Date(utc);
+          return t.getMonth() + 1 + "月 " + t.getDate() + ", " + t.getFullYear();
+        }
+        return { id, title, description, createdAt, updatedAt, content: html, date: rwdate(createdAt) }
     }
 
     // 处理 PATCH 请求, 修改 .md 文件

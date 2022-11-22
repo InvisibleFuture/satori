@@ -48,46 +48,7 @@ html, body {
   background-color: rgba(255,255,255, 1);
   /**background-image: url(/assets/image/background.jpg);**/
 }
-/*
- * 文章样式
 
-article h1 {
-  font-weight: bold;
-  font-size: 2rem;
-}
-article img {
-  border-radius: 3rem;
-  cursor: pointer;
-}
-article p {
-  margin: 2rem 0;
-  word-wrap: break-word;
-  word-break:break-all;
-}
-article .hljs {
-  border-radius: 2rem;
-  padding-top: 2rem;
-}
-article input[type=checkbox] {
-  position: relative;
-  margin-right: .3em;
-}
-article input[type=checkbox]::before {
-  position: absolute;
-  content: "\a0";
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  border-radius: .3em;
-  background-color: grey;
-  text-indent: .15em;
-  line-height: .65;
-}
-article input[type="checkbox"]:checked::before {
-    content: "\2713";
-    background-color: #EC4899;
-}
- */
 /*
  * Button
  */
@@ -112,7 +73,7 @@ button:hover {
  * A link
  */
 a:hover {
-  color: #EC4899;
+  color: #00aeec;
 }
 
 
