@@ -1,34 +1,41 @@
 <template lang="pug">
-div.bg-fixed.bg-cover.bg-no-repeat.bg-center(:style="`background-image:url(${background})`")
-  div.flex.flex-col.justify-center.items-center.text-white.min-h-screen.bg-black.bg-opacity-50
-    h1.text-4xl.mx-4 {{ kotoba() }}
-    div.flex.flex-row.flex-wrap.px-8(v-if="!pending")
-      NuxtLink.homelist.p-2.m-1(
-        v-for="(item, index) in data.list" :to="`/project/${item.id}`"
-        :style="`animation-delay: .${index}s`"
-      ) {{ item.name }}
-      NuxtLink.p-2.m-1(v-if="session" to="/project/create") +
+.container.mx-auto.pt-32
+  // 统计(访问量, 文章数, 评论数, 活跃状态)
+  div.bg-red-400.text-white.text-center.py-4
+    span.text-2xl.font-bold {{ total }}
+    span.text-lg ml-2 个
+  // 标签 TAG
+  .grid.grid-cols-2.gap-12
+    div.bg-white.rounded-lg.shadow-lg.p-8(v-for="item in items")
+      h2.text-2xl.font-bold.text-center {{ item.title }}
+      p.text-center {{ item.content }}
 </template>
 
-<script>
-import background from '@/assets/image/background.jpg'
-export default defineComponent({
-  setup() {
-    const session = useCookie('sid')
-    const { data, pending } = useFetch('/api/project')
-    return { data, pending, background, session }
+<script setup>
+const items = [
+  {
+    title: "炼丹",
+    content: "content1",
   },
-  methods: {
-    kotoba() {
-      const arr = [
-        "魔を封じ。あの日、出会いは唐突に。",
-        "夢の時。本当に夢のよう。",
-        "幻想は。どこまでも続く。",
-        "怪奇の。手にかかる様で。",
-        "紅き運命は。二人を定むのか。",
-      ]
-      return arr[Math.floor(Math.random() * arr.length)]
-    }
-  }
-})
+  {
+    title: "笔记",
+    content: "content2",
+  },
+  {
+    title: "AI",
+    content: "content3",
+  },
+  {
+    title: "ACG",
+    content: "content4",
+  },
+  {
+    title: "统计",
+    content: "content5",
+  },
+  {
+    title: "CADDY",
+    content: "content6",
+  },
+];
 </script>

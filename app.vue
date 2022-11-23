@@ -1,39 +1,60 @@
 <template lang="pug">
 .min-h-screen.bg-white.text-gray-800
-  header.absolute.left-0.top-0.right-0.border-gray-100(:class="{'border-b-1' : route.path!=='/' && route.path!=='/account/signin'}")
+  header.absolute.left-0.top-0.right-0.border-gray-100(
+    :class="{ 'border-b-1': route.path !== '/' && route.path !== '/account/signin' }"
+  )
     nav.container.mx-auto.flex.text-gray-400.text-lg.font-bold
-      NuxtLink.px-4.py-6(to="/", :class="{'text-white': route.path==='/' }") Home
-      NuxtLink.px-4.py-6(to="/blog", :class="{'text-pink-500': route.path==='/blog' }") Blog
-      NuxtLink.px-4.py-6(to="/gallery" :class="{'text-pink-500': route.path==='/gallery' }") Gallery
-      //NuxtLink.px-4.py-6(to="/project" :class="{'text-pink-500': route.path==='/project' }") Project
-      NuxtLink.px-4.py-6.ml-auto(v-if="!account.online", to="/account/signin", :class="{'text-pink-500': route.path==='/account/signin' }") signin
-      NuxtLink.px-4.py-6.ml-auto(v-else, to="/account", :class="{'text-pink-500': route.path==='/account' }") account
+      template(v-for="item in navItems")
+        NuxtLink.px-4.py-6.transition-all.duration-150(
+          class="hover:text-gray-800",
+          :class="{ 'text-black': route.path === item.path }",
+          :to="item.path"
+        ) {{ item.title }}
+      //NuxtLink.px-4.py-6.ml-auto(
+      //  v-if="!account.online",
+      //  to="/account/signin",
+      //  :class="{ 'text-pink-500': route.path === '/account/signin' }"
+      //) signin
+      //NuxtLink.px-4.py-6.ml-auto(
+      //  v-else,
+      //  to="/account",
+      //  :class="{ 'text-pink-500': route.path === '/account' }"
+      //) account
   NuxtPage
 </template>
 
-<script>
-export default defineComponent({
-  setup() {
-    const route   = useRoute()
-    const account = useState("account", () => ({
-      online: false,
-      id: 0,
-      gid: 0,
-      name: "Last",
-      avatar: "",
-      password: 'XOM',
-    }))
-    return  { route, account }
+<script setup>
+const route = useRoute();
+const account = useState("account", () => ({
+  online: false,
+  id: 0,
+  gid: 0,
+  name: "Last",
+  avatar: "",
+  password: "XOM",
+}));
+const navItems = [
+  {
+    title: "Home",
+    path: "/",
   },
-  //mounted() {
-  //  $fetch('/api/account').then(data => {
-  //    if (data) {
-  //      this.account.name = data.name
-  //      this.account.online = true        
-  //    }
-  //  })
-  //}
-})
+  {
+    title: "Blog",
+    path: "/blog",
+  },
+  {
+    title: "Gallery",
+    path: "/gallery",
+  },
+];
+//mounted() {
+//  $fetch('/api/account').then(data => {
+//    if (data) {
+//      this.account.name = data.name
+//      this.account.online = true
+//    }
+//  })
+//}
 </script>
 
 <style>
@@ -43,47 +64,29 @@ export default defineComponent({
 ::-webkit-scrollbar {
   display: none;
 }
-html, body {
-  /*background-color: rgba(55,65,81, 1);*/
-  background-color: rgba(255,255,255, 1);
-  /**background-image: url(/assets/image/background.jpg);**/
+html,
+body {
+  background-color: rgba(55, 65, 81, 1);
+  /*background-color: rgba(255, 255, 255, 1);**/
 }
 
 /*
  * Button
  */
 button {
-  color: #FFFFFF;
-  background-color: #EC4899;
-  padding: .4em 1.1em;
+  color: #ffffff;
+  background-color: #ec4899;
+  padding: 0.4em 1.1em;
   cursor: pointer;
   user-select: none;
   font-weight: 700;
-  border-radius: .5em;
-  box-shadow: 0 .5em 1.1em 0 rgba(236,72,153,.35);
-  transition: all .25s;
+  border-radius: 0.5em;
+  box-shadow: 0 0.5em 1.1em 0 rgba(236, 72, 153, 0.35);
+  transition: all 0.25s;
 }
 button:hover {
-  color: #EEEEEE;
-  background-color: #EC4899;
+  color: #eeeeee;
+  background-color: #ec4899;
   box-shadow: none;
-}
-
-/*
- * A link
- */
-a:hover {
-  color: #00aeec;
-}
-
-
-@keyframes example {
-  from {top:2em}
-  to {top:0;}
-}
-section, .list .item, .homelist {
-  position: relative;
-  animation: example .75s ease 0s 1 normal both;
-  /* 变化 持续时间 动画曲线 延迟执行 执行次数 运行方向 覆盖默认状态 */
 }
 </style>
