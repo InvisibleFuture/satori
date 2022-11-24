@@ -30,6 +30,8 @@ npm run dev
 
 ## 处理 webp 依赖
 
+```bash
 yum install libXext.x86_64
 yum install libXrender.x86_64
 yum install libXtst.x86_64
+```
