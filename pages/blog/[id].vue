@@ -1,16 +1,15 @@
 <template lang="pug">
-.max-w-3xl.mx-auto.py-42
+.blog-item.max-w-3xl.mx-auto.py-42
   div(v-if="pending") Loading..
   article(v-else)
     .content(v-html="data.content")
-    div.text-center
-      img.mx-auto.rounded-full(:src="avatar")
+    .text-center
+      img.mx-auto.rounded-full(src="/avatar.jpeg")
       p --- satori ---
       p.text-gray-600 {{ data.date }} Last
 </template>
 
 <script setup>
-import avatar from '@/assets/image/avatar.jpeg'
 import "highlight.js/styles/agate.css";
 const route = useRoute();
 const { data, pending } = useFetch(`/api/blog/${route.params.id}`, {
@@ -19,52 +18,52 @@ const { data, pending } = useFetch(`/api/blog/${route.params.id}`, {
 </script>
 
 <style>
-.content h1 {
+.blog-item .content h1 {
   font-weight: bold;
   font-size: 2rem;
   margin: 1.5rem 0;
 }
 
-.content pre code {
+.blog-item .content pre code {
   padding: 1rem;
   border-radius: 0.5rem;
   font-size: 14px;
 }
 
-.content table {
+.blog-item .content table {
   border-collapse: collapse;
   border-spacing: 0;
   margin: 1rem 0;
 }
-.content table tr th {
+.blog-item .content table tr th {
   padding: 0.5rem;
 }
-.content table tr td {
+.blog-item .content table tr td {
   padding: 0.5rem;
 }
-.content p {
+.blog-item .content p {
   margin: 2rem 0;
   word-wrap: break-word;
-  word-break:break-all;
+  word-break: break-all;
 }
-.content input[type=checkbox] {
+.blog-item .content input[type="checkbox"] {
   position: relative;
-  margin-right: .3em;
+  margin-right: 0.3em;
 }
-.content input[type=checkbox]::before {
+.blog-item .content input[type="checkbox"]::before {
   position: absolute;
   content: "\a0";
   display: inline-block;
   width: 1em;
   height: 1em;
-  border-radius: .3em;
+  border-radius: 0.3em;
   background-color: #ececec;
-  text-indent: .15em;
-  line-height: .65;
+  text-indent: 0.15em;
+  line-height: 0.65;
 }
-.content input[type="checkbox"]:checked::before {
-    content: "\2713";
-    color: #00aeec;
-    background-color: #dff6fd;
+.blog-item .content input[type="checkbox"]:checked::before {
+  content: "\2713";
+  color: #00aeec;
+  background-color: #dff6fd;
 }
 </style>
