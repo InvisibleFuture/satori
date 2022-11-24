@@ -15,7 +15,7 @@ export default defineEventHandler(async event => {
         const description = content.match(/^> (.*)/m)?.[1] || '' // 提取文件内容中的描述
         const createdAt = fs.statSync(filepath).birthtime        // 提取文件的创建日期
         const updatedAt = fs.statSync(filepath).mtime            // 提取文件的修改日期
-        var html = marked(content)                               // 渲染为html
+        var html = marked(content, { breaks:true })              // 渲染为html
         const unescapeHTML = str => str.replace(/&amp;|&lt;|&gt;|&#39;|&quot;/g, tag => ({
             '&amp;': '&', '&lt;': '<', '&gt;': '>', '&#39;': "'", '&quot;': '"'
         }[tag] || tag));

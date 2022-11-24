@@ -1,5 +1,17 @@
 import fs from 'fs'
 import path from 'path'
+import { lexer } from 'marked'
+
+// 读取所有 blog 中的 md 文件, 以此来获取所有的 tag
+const findTags = (item) => {
+    const list = []
+    if (item.type === 'em') list.push(item.text)
+    if (item.type === 'strong') list.push(item.text)
+    item.tokens?.forEach(token => {
+        findTags(token).forEach(tag => list.push(tag))
+    });
+    return list
+}
 
 export default defineEventHandler(async event => {
 
@@ -37,7 +49,12 @@ export default defineEventHandler(async event => {
             const updatedAt = fs.statSync(filepath).mtime            // 提取文件的修改日期
             return { id, title, description, createdAt, updatedAt }
         })
-        return { 'name': 'blog', list }
+        const tags = dirpath.map(file => {
+            const filepath = path.join(process.cwd(), 'data/blog/markdown', file)
+            const content = fs.readFileSync(filepath, 'utf-8');
+            return findTags({ tokens: lexer(content) })
+        }).flat();
+        return { 'name': 'blog', tags, list }
     }
 
     // 处理 POST 请求, 上传 .md 文件
