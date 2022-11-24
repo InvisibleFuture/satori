@@ -13,6 +13,12 @@ const findTags = (item) => {
     return list
 }
 
+// 转换时间格式
+const rwdate = (utc) => {
+    let t = new Date(utc);
+    return t.getMonth() + 1 + "月 " + t.getDate() + ", " + t.getFullYear();
+}
+
 export default defineEventHandler(async event => {
 
     // 如果数据目录不存在则创建
@@ -47,8 +53,8 @@ export default defineEventHandler(async event => {
             const description = content.match(/^> (.*)/m)?.[1] || '' // 提取文件内容中的描述
             const createdAt = fs.statSync(filepath).birthtime        // 提取文件的创建日期
             const updatedAt = fs.statSync(filepath).mtime            // 提取文件的修改日期
-            return { id, title, description, createdAt, updatedAt }
-        })
+            return { id, title, description, createdAt, updatedAt, date: rwdate(createdAt) }
+        }).sort((a, b) => b.updatedAt - a.updatedAt)
         const tags = dirpath.map(file => {
             const filepath = path.join(process.cwd(), 'data/blog/markdown', file)
             const content = fs.readFileSync(filepath, 'utf-8');

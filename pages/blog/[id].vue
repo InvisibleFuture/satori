@@ -11,7 +11,7 @@
         @keyup.ctrl.enter="editSubmit"
       )
     .text-center
-      img.mx-auto.rounded-full(src="/avatar.jpeg")
+      img.mx-auto.rounded-full.w-64.h-64(src="/avatar.jpeg")
       p --- satori ---
       p.text-gray-600 {{ data.date }} Last
 </template>
