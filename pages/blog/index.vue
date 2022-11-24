@@ -12,9 +12,10 @@
     .tags
       span.font-bold # TAG
       ul.flex.flex-wrap.gap-2.py-2
-        li.bg-gray-400.bg-opacity-10.px-2.rounded-md(
+        li.px-2.rounded-md.cursor-pointer.transition-all.duration-300(
+          class="hover:text-pink-500 hover:bg-gray-400 hover:bg-opacity-10"
           v-for="item in tags",
-          class="hover:text-pink-500"
+          :key="item.name"
         ) {{ item.name }}
     //div
     //  span.font-bold # 归档
