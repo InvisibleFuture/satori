@@ -6,7 +6,6 @@
     .content(v-if="!edit.show", v-html="data.html")
     .content(v-else)
       textarea.w-full.h-screen.p-8.outline-none.caret-light-blue-700(
-        ref="textarea",
         v-model="data.content",
         @keyup.ctrl.enter="editSubmit"
       )
@@ -14,6 +13,22 @@
       img.mx-auto.rounded-full.w-64.h-64(src="/avatar.jpeg")
       p --- satori ---
       p.text-gray-600 {{ data.date }} Last
+    .flex.my-12
+      textarea.bg-gray-100.p-4.outline-none.w-full(rows="6")
+    .flex.my-12(v-for="item in comments.list", :key="item.id")
+      img.rounded-full.w-16.h-16.mr-4(:src="item.avatar")
+      div
+        .flex.gap-2.pb-2.font-bold
+          span {{ item.name }}
+          //span.bg-pink-600.text-pink-600.bg-opacity-10.px-2.py-1.rounded-full.text-xs admin
+        div {{ item.content }}
+        .text-rose-300.font-bold.text-sm.my-2
+          span {{ item.date }}
+        //div
+        //  button.font-bold.bg-pink-600.px-2.py-1.text-white.rounded-md.text-xs(
+        //    @click="comment_remove(item.id)"
+        //    v-if="account.online"
+        //  ) delete
 </template>
 
 <script setup>
@@ -23,8 +38,33 @@ const route = useRoute();
 const { data, pending } = useFetch(`/api/blog/${route.params.id}`, {
   key: "blog" + route.params.id,
 });
-const textarea = ref(null);
 const edit = ref({ show: false });
+
+const comments = {
+  list: [
+    {
+      id: "1",
+      name: "桜華",
+      avatar: "/avatar.jpeg",
+      content: "hahaha",
+      date: "11月 24, 2022",
+    },
+    {
+      id: "2",
+      name: "桜華",
+      avatar: "/avatar.jpeg",
+      content: "hahaha",
+      date: "11月 24, 2022",
+    },
+    {
+      id: "3",
+      name: "桜華",
+      avatar: "/avatar.jpeg",
+      content: "hahaha",
+      date: "11月 24, 2022",
+    },
+  ],
+};
 
 // 进入编辑模式
 //const editData = () => {

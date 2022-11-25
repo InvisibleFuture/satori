@@ -3,10 +3,10 @@
   main.flex-1.px-12
     div(v-if="pending") Loading...
     .flex.flex-col.gap-6(v-else)
-      ul.list-decimal
+      ul.list-decimal.flex.flex-col.gap-8
         template(v-for="(item, index) in data.list", :key="item.id")
           li
-            NuxtLink.flex.px-1(:to="`/blog/${item.id}`")
+            NuxtLink.flex.flex-col.px-1(:to="`/blog/${item.id}`")
               span.font-bold.flex-1 {{ item.title }}
               span.text-sm.text-gray-400 {{ item.date }}
   aside.w-md.py-2.flex.flex-col.gap-8(class="<sm:hidden")
@@ -26,14 +26,6 @@
 
 <script setup>
 const { data, pending } = useFetch("/api/blog");
-
-//const tags = [
-//  { name: "Ubuntu" },
-//  { name: "Caddy" },
-//  { name: "JavaScript" },
-//  { name: "Stable Diffusion" },
-//  { name: "Dreambooth" },
-//];
 </script>
 
 <style>
