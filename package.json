@@ -4,7 +4,9 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "preview": "PORT=3000 nuxt preview"
+    "preview": "PORT=3000 nuxt preview",
+    "update": "ssh root@satori.love 'cd satori; git pull; npm install; npm run build; pm2 restart satori'",
+    "updata": "scp -r ./data/* root@satori.love:~/satori/.output/data/"
   },
   "devDependencies": {
     "nuxt": "3.0.0-rc.13",
