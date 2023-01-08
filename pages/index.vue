@@ -47,8 +47,8 @@ const 五术 = [
         reply: [
           {
             content: `hahah`,
-            name: `hana`,
-            avatar: `https://avatars.githubusercontent.com/u/12621342?v=4`,
+            name: `Last`,
+            avatar: `/avatar.jpeg`,
           }
         ]
       },
