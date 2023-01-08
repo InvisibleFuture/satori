@@ -73,6 +73,14 @@ const 五术 = [
   {
     title: "命",
     content: "content3",
+    list: [
+      {
+        content: `
+          醉后不知天在水, 满船清梦压星河
+        `,
+        date: '5月 12, 2022 Last',
+      }
+    ]
   },
   {
     title: "卜",
