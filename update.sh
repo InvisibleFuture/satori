@@ -14,3 +14,12 @@ ssh root@satori.love "cd ~/satori; unzip -o -d ~/satori .output.zip; pm2 reload 
 
 
 # pm2 start npm --name satori -- run preview
+
+# 同步数据
+# rsync -avz --delete --exclude-from=exclude.txt .
+
+# 上传文件
+# scp -r .
+
+# 重启服务
+# pm2 reload satori

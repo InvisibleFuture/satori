@@ -41,7 +41,7 @@ export default defineEventHandler(async event => {
         fs.mkdirSync(path.join(process.cwd(), 'data/blog/image'))
     }
 
-    // 处理 GET 请求(读取markdown中的md文件列表)
+    // 处理 GET 请求(读取 markdown 中的 md 文件列表)
     if (event.req.method === 'GET') {
         const dirpath = fs.readdirSync(path.join(process.cwd(), 'data/blog/markdown'))
         const files = dirpath.filter(file => path.extname(file) === '.md')
