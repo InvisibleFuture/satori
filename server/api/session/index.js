@@ -51,6 +51,10 @@ export default defineEventHandler(async event => {
         // 设置 cookie
         event.res.setHeader('Set-Cookie', `session=${session_value.id}; path=/; httpOnly`)
 
+        // 移除密码
+        delete u.password
+        delete u.salt
+
         // 返回用户信息
         session_value.user = u
         return session_value
