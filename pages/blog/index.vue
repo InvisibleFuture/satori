@@ -1,6 +1,6 @@
 <template lang="pug">
-div.container.mx-auto.py-32.px-16.flex.flex-col.gap-8
-  div.whitespace-pre.flex.flex-col.gap-6
+div.container.mx-auto.py-32.px-16.flex.flex-col.gap-2
+  div.whitespace-pre.flex.flex-col.gap-6(v-if="account.online")
     // 一个精致的markdown所见即所得输入框(宽高过渡动画)
     textarea.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150.ease-linear.delay-150(
       class="focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 focus:outline-none",
@@ -11,7 +11,7 @@ div.container.mx-auto.py-32.px-16.flex.flex-col.gap-8
       @change="onChanged"
     )
 
-  div.whitespace-pre.flex.flex-col.gap-6(v-for="item in data", :key="item.id")
+  div.whitespace-pre.flex.flex-col.gap-6.p-6(v-for="item in data", :key="item.id" tabindex="0" @click="select(item)" :class="{'bg-gray-100': select_items.includes(item)}")
     div {{ item.content }}
     div.flex.flex-col.gap-2
       div.flex.gap-2
@@ -26,11 +26,14 @@ div.container.mx-auto.py-32.px-16.flex.flex-col.gap-8
 
 <script setup>
 const { data, pending } = useFetch("/api/blog");
+const select_items = ref([]);
+const content = ref("");
+const account = useState("account");
+
 const rwdate = (date) => {
   const d = new Date(date);
   return `${d.getFullYear()} 年 ${d.getMonth() + 1} 月 ${d.getDate()} 日`;
 };
-const content = ref("");
 
 const create = () => {
   $fetch("/api/blog", {
@@ -40,6 +43,7 @@ const create = () => {
   }).then(item => {
     console.log('create', item);
     data.value.unshift(item)
+    content.value = ''
   });
 };
 
@@ -52,6 +56,15 @@ const onEnter = (event) => {
   const textarea = event.target;
   textarea.style.height = textarea.scrollHeight + 'px';
   return true
+};
+
+const select = (item) => {
+  console.log('select', item);
+  if (select_items.value.includes(item)) {
+    select_items.value = select_items.value.filter(i => i !== item);
+  } else {
+    select_items.value.push(item);
+  }
 };
 
 </script>
