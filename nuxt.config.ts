@@ -17,11 +17,24 @@ export default defineNuxtConfig({
       extract: {
         extractors: [{
           extractor: PugExtractor,
-          extensions: ['vue', 'pug']
+          extensions: ['vue', 'pug'],
         }]
-      }
-    }
-  }
+      },
+    },
+  },
+  nitro: {
+    storage: {
+      blog: {
+        driver: 'fs',
+        base: './data/blog'
+      },
+      //db: {
+      //  driver: 'fs',
+      //  base: './data/db',
+      //  baseDir: './data/db',
+      //},
+    },
+  },
   //vite: {
   //  server: {
   //    proxy: {

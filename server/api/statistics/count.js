@@ -35,42 +35,81 @@ export default defineEventHandler(async event => {
     const lines = log.toString().split('\n')
     const count = lines.length
 
-    // 获取当前域名
-    const host = event.req.headers.host
-
     // 今天的时间戳
     const today = new Date().setHours(0, 0, 0, 0)
     console.log(today)
 
-    // 三个月前的时间戳
-    const month = new Date().setMonth(new Date().getMonth() - 3)
-    console.log(month)
-
-    // 获取一个月内的日志(时间戳ts)
-    const monthLogs = lines.filter(line => {
-        return line !== '' && JSON.parse(line).ts * 1000 > month
+    // 过滤日志(时间戳ts)
+    const Logs = lines.filter(line => {
+        if (line === '') return false
+        const data = JSON.parse(line)
+        if (data.request === undefined) return false
+        if (data.request.host !== 'git.satori.love') return false
+        return true
     })
-    //console.log(monthLogs)
 
-    // 获取等级为info的日志
-    const infoLogs = monthLogs.filter(line => {
-        return JSON.parse(line).level === 'info'
+    // 统计 User-Agent 的数量
+    const userAgent = {}
+    Logs.forEach(line => {
+        const data = JSON.parse(line)
+        const ua = data.request.headers['User-Agent']
+        if (userAgent[ua] === undefined) {
+            userAgent[ua] = 1
+        } else {
+            userAgent[ua]++
+        }
     })
-    console.log(infoLogs)
 
-    // 获取 logger 的日志
-    const loggerLogs = infoLogs.filter(line => {
-        return !['tls', 'tls.cache', 'tls.renew', 'tls.obtain', 'tls.issuance.acme', 'tls.issuance.acme.acme_client', 'tls.cache.maintenance', 'admin', 'admin.api'].includes(JSON.parse(line).logger)
+    // 按照数量排序(并展示数量)
+    const userAgentSort = Object.keys(userAgent).sort((a, b) => {
+        return userAgent[b] - userAgent[a]
     })
-    console.log('loggerLogs')
-    console.log(loggerLogs)
 
-    // 获取 satori-blog 的日志
-    const satoriLogs = infoLogs.filter(line => {
-        return JSON.parse(line).request.host === 'satori.love' //host
+    // 打印出来每项的数量
+    userAgentSort.forEach(ua => {
+        console.log(`${ua} : ${userAgent[ua]}`)
     })
+
+
+
+
+//    // 三个月前的时间戳
+//    const month = new Date().setMonth(new Date().getMonth() - 0)
+//    //console.log(month)
+//
+//    // 获取一个月内的日志(时间戳ts)
+//    const monthLogs = lines.filter(line => {
+//        return line !== '' && JSON.parse(line).ts * 1000 > month
+//    })
+//    //console.log(monthLogs)
+//
+//    // 获取等级为info的日志
+//    const infoLogs = monthLogs.filter(line => {
+//        return true //JSON.parse(line).level !== 'info'
+//    })
+//    //console.log(infoLogs)
+//
+//    // 获取 logger 的日志
+//    const loggerLogs = infoLogs.filter(line => {
+//        return !['tls', 'tls.cache', 'tls.renew', 'tls.obtain', 'tls.issuance.acme', 'tls.issuance.acme.acme_client', 'tls.cache.maintenance', 'tls.handshake', 'tls.stdlib', 'admin', 'admin.api', 'http.stdlib', 'http.handlers.reverse_proxy', 'events', 'http.handlers.file_server'].includes(JSON.parse(line).logger)
+//    })
+//
+//    // 过滤出 msg 为 'http request' 的日志
+//    const requestLogs = loggerLogs.filter(line => {
+//        return JSON.parse(line).msg !== 'http request'
+//    })
+//
+//    // 获取 satori-blog 的日志
+//    const host =  'satori.love' // event.req.headers.host
+//    const satoriLogs = requestLogs.filter(line => {
+//        if (JSON.parse(line).request === undefined) {
+//            //console.log(JSON.parse(line))
+//            return false
+//        }
+//        return JSON.parse(line).request.host === host
+//    })
     
-
+    const host =  'satori.love' // event.req.headers.host
     return {
         name: host,
         count,
