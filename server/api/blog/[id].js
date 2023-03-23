@@ -48,7 +48,7 @@ export default defineEventHandler(async event => {
     }
 
     const blog = useStorage('blog')
-    const body = useBodyParser() // await readBody()
+    const session = useStorage('session')
 
     // 处理 GET 请求
     if (event.req.method === 'GET') {
@@ -61,6 +61,15 @@ export default defineEventHandler(async event => {
             }
         })
     }
+    
+    // 处理 DELETE 请求(检查是否有权限)
+    if (event.req.method === 'DELETE') {
+        console.log('DELETE:', event.context.params.id)
+        await blog.removeItem(event.context.params.id)
+        return { success: true }
+    }
+
+    const body = await readBody()
 
     // 处理 PUT 请求
     if (event.req.method === 'PUT') {

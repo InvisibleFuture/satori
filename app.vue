@@ -1,6 +1,6 @@
 <template lang="pug">
 .min-h-screen.bg-white.text-gray-800
-  header.absolute.left-0.top-0.right-0.border-gray-100(
+  header.header.absolute.left-0.top-0.right-0.border-gray-100.transition-all.duration-150(
     :class="{ 'border-b-1': route.path !== '/' && route.path !== '/account/signin' }"
   )
     nav.container.mx-auto.flex.text-gray-400.text-lg.font-bold
