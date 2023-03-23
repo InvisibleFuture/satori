@@ -28,11 +28,10 @@ export default defineNuxtConfig({
         driver: 'fs',
         base: './data/blog'
       },
-      //db: {
-      //  driver: 'fs',
-      //  base: './data/db',
-      //  baseDir: './data/db',
-      //},
+      user: {
+        driver: 'fs',
+        base: './data/user'
+      },
     },
   },
   //vite: {
