@@ -32,6 +32,10 @@ export default defineNuxtConfig({
         driver: 'fs',
         base: './data/user'
       },
+      session: {
+        driver: 'fs',
+        base: './data/session'
+      },
     },
   },
   //vite: {
