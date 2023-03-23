@@ -1,7 +1,7 @@
 import { defineNuxtConfig } from 'nuxt/config'
 import { PugExtractor } from 'vite-plugin-windicss'
 
-// https://v3.nuxtjs.org/api/configuration/nuxt.config
+// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: ['nuxt-windicss'],
   app: {
