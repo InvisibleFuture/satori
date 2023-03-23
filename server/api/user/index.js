@@ -28,13 +28,13 @@ export default defineEventHandler(async event => {
             return { 'error': '用户名已存在' }
         }
 
-        // 密码加密(slat 随机32位字符串)
-        const slat = v4()
+        // 密码加密(salt 随机32位字符串)
+        const salt = v4()
         const data = {
             id: v4(),
             name,
-            slat,
-            password: md5(password + slat),
+            salt,
+            password: md5(password + salt),
             createdAt: Date.now(),
             updatedAt: Date.now()
         }
@@ -48,7 +48,7 @@ export default defineEventHandler(async event => {
             return Promise.all(keys.map(key => {
                 return user.getItem(key).then(data => {
                     delete data.password
-                    delete data.slat
+                    delete data.salt
                     return data
                 })
             }))
