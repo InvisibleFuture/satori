@@ -39,18 +39,21 @@ export default defineEventHandler(async event => {
         }
 
         // 保存会话
-        const sid = v4()
-        session.setItem(sid, {
-            id: sid,
+        const session_value = {
+            id: v4(),
             user_id: u.id,
             ip: event.req.headers['x-forwarded-for'] || event.req.connection.remoteAddress,
             ua: event.req.headers['user-agent'],
             created_at: new Date().getTime()
-        })
+        }
+        session.setItem(session_value.id, session_value)
 
         // 设置 cookie
-        event.res.setHeader('Set-Cookie', `session=${sid}; path=/; httpOnly`)
-        return u
+        event.res.setHeader('Set-Cookie', `session=${session_value.id}; path=/; httpOnly`)
+
+        // 返回用户信息
+        session_value.user = u
+        return session_value
     }
 
     // GET 请求(获取本用户所有会话)

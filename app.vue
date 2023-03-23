@@ -10,21 +10,20 @@
           :class="{ 'text-black': route.path === item.path }",
           :to="item.path"
         ) {{ item.title }}
-      //NuxtLink.px-4.py-6.ml-auto(
-      //  v-if="!account.online",
-      //  to="/account/signin",
-      //  :class="{ 'text-pink-500': route.path === '/account/signin' }"
-      //) signin
-      //NuxtLink.px-4.py-6.ml-auto(
-      //  v-else,
-      //  to="/account",
-      //  :class="{ 'text-pink-500': route.path === '/account' }"
-      //) account
+      NuxtLink.px-4.py-6.ml-auto(
+        v-if="!account.online",
+        to="/account/signin",
+      ) signin
+      NuxtLink.px-4.py-6.ml-auto(
+        v-else,
+        to="/account"
+      ) account
   NuxtPage
 </template>
 
 <script setup>
 const route = useRoute();
+
 const account = useState("account", () => ({
   online: false,
   id: 0,
@@ -32,7 +31,9 @@ const account = useState("account", () => ({
   name: "Last",
   avatar: "",
   password: "XOM",
+  online: false
 }));
+
 const navItems = [
   {
     title: "Home",
@@ -47,6 +48,22 @@ const navItems = [
     path: "/gallery",
   },
 ];
+
+onMounted(() => {
+  // 取会话ID(如果有会话ID，尝试获取用户信息)
+  const session = useCookie("session");
+  console.log('session', session.value);
+
+  if (session.value) {
+    $fetch("/api/account").then((data) => {
+      if (data) {
+        account.value = data;
+      }
+    });
+  }
+});
+
+
 //mounted() {
 //  $fetch('/api/account').then(data => {
 //    if (data) {

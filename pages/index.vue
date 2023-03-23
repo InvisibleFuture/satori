@@ -1,13 +1,9 @@
 <template lang="pug">
 .container.mx-auto.pt-32
+  // 主页: 发布页(只含成品作品的发布)
   // 统计(访问量, 文章数, 评论数, 活跃状态)
-  //.bg-red-400.text-white.text-center.py-4
-  //  span.text-2xl.font-bold {{ total }}
-  //  span.text-lg ml-2 个
-  // 五术
   div
     div(v-for="item in 五术", :key="item.title")
-      //h2.text-2xl.font-bold(v-if="item.list") {{ item.title }}
       div.whitespace-pre.p-8(v-for="x in item.list", :key="x.content")
         div {{ x.content }}
         div.flex.flex-col.gap-2
@@ -20,11 +16,6 @@
                   span {{ reply.name }}
                   span 2021-08-08 12:12:12
           div.px-8.text-green-500(v-if="x.reply") 展开12个讨论..
-  // 标签 TAG
-  //.grid.grid-cols-2.gap-12
-  //  .bg-white.rounded-lg.shadow-lg.p-8(v-for="item in items")
-  //    h2.text-2xl.font-bold.text-center {{ item.title }}
-  //    p.text-center {{ item.content }}
 </template>
 
 <script setup>
