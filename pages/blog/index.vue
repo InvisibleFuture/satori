@@ -81,35 +81,39 @@ const selectItem = (item) => {
   }
 };
 
+const keydown_all = (event) => {
+  // 如果有选中的 item, 则删除选中的 item
+  if (event.key === "Delete") {
+    if (select_items.value.length > 0) {
+      data.value = data.value.filter((item) => {
+        return !select_items.value.includes(item);
+      });
+      select_items.value.forEach((item) => {
+        $fetch(`/api/blog/${item.id}`, {
+          method: "DELETE",
+        }).then((data) => {
+          console.log("delete", data);
+        });
+      });
+      select_items.value = [];
+    }
+  }
+  // 如果有选中的 item, 则取消选中的 item
+  if (event.key === "Escape") {
+    if (select_items.value.length > 0) {
+      select_items.value = [];
+    }
+  }
+};
+
 onMounted(() => {
   // 挂载监听器, 监听键盘 delete 键
-  window.addEventListener("keydown", (event) => {
-    if (event.key === "Delete") {
-      // 如果有选中的 item, 则删除选中的 item
-      if (select_items.value.length > 0) {
-        data.value = data.value.filter((item) => {
-          return !select_items.value.includes(item);
-        });
-        select_items.value.forEach((item) => {
-          $fetch(`/api/blog/${item.id}`, {
-            method: "DELETE",
-          }).then((data) => {
-            console.log("delete", data);
-          });
-        });
-        select_items.value = [];
-      }
-    }
-  });
+  window.addEventListener("keydown", keydown_all);
 });
 
 onUnmounted(() => {
   // 卸载监听器
-  window.removeEventListener("keydown", (event) => {
-    if (event.key === "Delete") {
-      console.log("delete");
-    }
-  });
+  window.removeEventListener("keydown", keydown_all);
 });
 
 </script>
