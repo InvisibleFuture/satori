@@ -33,22 +33,14 @@ export default defineEventHandler(async event => {
 
     // 处理 GET 请求(读取 markdown 中的 md 文件列表)
     if (event.req.method === 'GET') {
-        return blog.getKeys().then(keys => {
+        return await blog.getKeys().then(keys => {
             return Promise.all(keys.map(key => {
                 return blog.getItem(key).then(data => {
                     return (typeof data === 'string') || data
                 })
             }))
-        })
-        //.sort((a, b) => b.updatedAt - a.updatedAt)
+        }).then(list => list.sort((a, b) => b.updatedAt - a.updatedAt))
     }
-
-    //    const tags = dirpath.map(file => {
-    //        const filepath = path.join(process.cwd(), 'data/blog/markdown', file)
-    //        const content = fs.readFileSync(filepath, 'utf-8');
-    //        return findTags({ tokens: lexer(content) })
-    //    }).flat();
-    //    return { 'name': 'blog', tags, list }
 
     // 处理其他请求
     return { 'OTHER': 'OTHER LIST' }
