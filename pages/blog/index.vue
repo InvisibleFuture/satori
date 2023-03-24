@@ -29,7 +29,6 @@ div.container.mx-auto.py-32.px-16.flex.flex-col.gap-2
 
 <script setup>
 const { data, pending } = useFetch("/api/blog");
-const select_items = ref([]);
 const content = ref("");
 const account = useState("account");
 
@@ -61,19 +60,23 @@ const onEnter = (event) => {
   return true
 };
 
-const selectItem = (item) => {
-  if (select_items.value.includes(item)) {
-    select_items.value = select_items.value.filter(i => i !== item);
-  } else {
-    select_items.value.push(item);
-  }
-  // 如果列表中有选中的项, 则将列表以外的内容全部透明化
-  if (select_items.value.length > 0) {
-    document.querySelectorAll('header.header, textarea').forEach((item) => {
-      item.classList.add('opacity-0');
-      item.classList.add('pointer-events-none');
-    });
-  } else {
+
+// 被选中的列表
+const select_items = ref([]);
+
+// 选中某项(隐藏视焦外的元素)
+const __select_item = (item) => {
+  select_items.value.push(item);
+  document.querySelectorAll('header.header, textarea').forEach((item) => {
+    item.classList.add('opacity-0');
+    item.classList.add('pointer-events-none');
+  });
+};
+
+// 取消选中某项(无选项时, 恢复显示视焦外的元素)
+const __unselect_item = (item) => {
+  select_items.value = select_items.value.filter(i => i !== item);
+  if (select_items.value.length === 0) {
     document.querySelectorAll('header.header, textarea').forEach((item) => {
       item.classList.remove('opacity-0');
       item.classList.remove('pointer-events-none');
@@ -81,7 +84,17 @@ const selectItem = (item) => {
   }
 };
 
-const keydown_all = (event) => {
+// 点击某项时, 选中或取消选中
+const selectItem = (item) => {
+  if (select_items.value.includes(item)) {
+    __unselect_item(item);
+  } else {
+    __select_item(item);
+  }
+};
+
+// 监听键盘事件
+const __keydown_all = (event) => {
   // 如果有选中的 item, 则删除选中的 item
   if (event.key === "Delete") {
     if (select_items.value.length > 0) {
@@ -95,25 +108,27 @@ const keydown_all = (event) => {
           console.log("delete", data);
         });
       });
-      select_items.value = [];
+      select_items.value.forEach((item) => {
+        __unselect_item(item);
+      });
     }
   }
   // 如果有选中的 item, 则取消选中的 item
   if (event.key === "Escape") {
-    if (select_items.value.length > 0) {
-      select_items.value = [];
-    }
+    select_items.value.forEach((item) => {
+      __unselect_item(item);
+    });
   }
 };
 
+// 挂载监听器, 监听键盘 delete 键
 onMounted(() => {
-  // 挂载监听器, 监听键盘 delete 键
-  window.addEventListener("keydown", keydown_all);
+  window.addEventListener("keydown", __keydown_all);
 });
 
+// 卸载监听器
 onUnmounted(() => {
-  // 卸载监听器
-  window.removeEventListener("keydown", keydown_all);
+  window.removeEventListener("keydown", __keydown_all);
 });
 
 </script>
