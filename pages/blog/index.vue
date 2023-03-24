@@ -13,7 +13,7 @@ div.container.mx-auto.py-32.px-16.flex.flex-col.gap-2
   div.whitespace-pre.flex.flex-col.gap-6.p-6(
     v-for="item in data", :key="item.id" tabindex="0"
     :class="{'bg-gray-100': select_items.includes(item)}"
-    @click="selectItem(item)"
+    @click="event => selectItem(event,item)"
   )
     div(v-html="item.html")
     div.flex.flex-col.gap-2
@@ -85,12 +85,17 @@ const __unselect_item = (item) => {
 };
 
 // 点击某项时, 选中或取消选中
-const selectItem = (item) => {
+const selectItem = (event, item) => {
+  // 如果已经选中, 则取消选中
   if (select_items.value.includes(item)) {
-    __unselect_item(item);
-  } else {
-    __select_item(item);
+    return __unselect_item(item);
   }
+  // 如果不是多选, 取消已经选中的(按住ctrl键时为多选)
+  if (!event.ctrlKey) {
+    select_items.value.forEach((item) => __unselect_item(item));
+  }
+  // 并选中当前 item
+  __select_item(item);
 };
 
 // 监听键盘事件
