@@ -1,5 +1,5 @@
 import { v4 } from 'uuid'
-import { lexer } from 'marked'
+import { lexer, marked } from 'marked';
 
 // 读取所有 blog 中的 md 文件, 以此来获取所有的 tag
 const findTags = (item) => {
@@ -28,6 +28,7 @@ export default defineEventHandler(async event => {
         const date = Date.now()
         const data = { id: v4(), content, createdAt:date, updatedAt:date }
         await blog.setItem(data.id, data)
+        data.html = marked(data.content, { breaks: true })
         return data
     }
 
@@ -36,7 +37,9 @@ export default defineEventHandler(async event => {
         return await blog.getKeys().then(keys => {
             return Promise.all(keys.map(key => {
                 return blog.getItem(key).then(data => {
-                    return (typeof data === 'string') || data
+                    if (typeof data === 'string') return null
+                    data.html = marked(data.content, { breaks: true })
+                    return data
                 })
             }))
         }).then(list => list.sort((a, b) => b.updatedAt - a.updatedAt))

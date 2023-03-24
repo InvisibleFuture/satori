@@ -15,7 +15,7 @@ div.container.mx-auto.py-32.px-16.flex.flex-col.gap-2
     :class="{'bg-gray-100': select_items.includes(item)}"
     @click="selectItem(item)"
   )
-    div {{ item.content }}
+    div(v-html="item.html")
     div.flex.flex-col.gap-2
       div.flex.gap-2
         img.h-8.w-8.rounded-full.object-cover(src="/avatar.jpeg" alt="Last")
