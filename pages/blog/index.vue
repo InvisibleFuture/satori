@@ -28,6 +28,9 @@ div.container.mx-auto.py-32.px-16.flex.flex-col.gap-2
 </template>
 
 <script setup>
+// 引入代码高亮插件的样式
+import "highlight.js/styles/atom-one-dark.css";
+
 const { data, pending } = useFetch("/api/blog");
 const content = ref("");
 const account = useState("account");

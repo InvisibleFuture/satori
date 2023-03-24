@@ -1,5 +1,7 @@
 import { v4 } from 'uuid'
 import { lexer, marked } from 'marked';
+import hljs from 'highlight.js';
+import he from 'he';
 
 // 读取所有 blog 中的 md 文件, 以此来获取所有的 tag
 const findTags = (item) => {
@@ -38,7 +40,12 @@ export default defineEventHandler(async event => {
             return Promise.all(keys.map(key => {
                 return blog.getItem(key).then(data => {
                     if (typeof data === 'string') return null
-                    data.html = marked(data.content, { breaks: true })
+                    data.html = marked(data.content, { breaks: true }) // 转换为 html
+                    const regex = /<code\s+class="(.*)"\s*>([\s\S]*?)<\/code>/g;
+                    data.html = data.html.replace(regex, (match, p1, p2) => {
+                        const html = hljs.highlightAuto(he.decode(p2)).value
+                        return `<code class="${p1} hljs">${html}</code>`
+                    })
                     return data
                 })
             }))
