@@ -188,9 +188,13 @@ onMounted(() => {
   window.addEventListener("keydown", __keydown_all);
 });
 
-// 卸载监听器
+// 卸载监听器(离开时恢复隐藏内容)
 onUnmounted(() => {
   window.removeEventListener("keydown", __keydown_all);
+  document.querySelectorAll('header.header, textarea.create-blog').forEach((item) => {
+    item.classList.remove('opacity-0');
+    item.classList.remove('pointer-events-none');
+  });
 });
 
 </script>
