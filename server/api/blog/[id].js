@@ -1,16 +1,6 @@
 import { marked, lexer } from 'marked'
 import hljs from "highlight.js"
-
-// 转换编码格式
-const unescapeHTML = str => str.replace(/&amp;|&lt;|&gt;|&#39;|&quot;/g, tag => ({
-    '&amp;': '&', '&lt;': '<', '&gt;': '>', '&#39;': "'", '&quot;': '"'
-}[tag] || tag));
-
-// 转换时间格式
-const rwdate = (utc) => {
-    let t = new Date(utc);
-    return t.getMonth() + 1 + "月 " + t.getDate() + ", " + t.getFullYear();
-}
+import he from 'he';
 
 // 获取所有的 tag
 const findTags = (item) => {
@@ -21,17 +11,6 @@ const findTags = (item) => {
         findTags(token).forEach(tag => list.push(tag))
     });
     return list
-}
-
-// 转换 markdown 为 html
-const md2html = (md) => {
-    return marked(md, { breaks: true }).match(/<code class="(.*)">([\s\S]*?)<\/code>/g)?.forEach(code => {
-        const className = code.match(/<code class="(.*)">/)[1]                              // 正则提取code标签中的class
-        const language = className.replace(/language-/, '')                                 // 则去除class中的 language-bash 字符串
-        const codeContent = code.replace(/<code class="(.*)">/, '').replace(/<\/code>/, '') // 提取code标签中的内容(去除头尾标签)
-        const highlighted = hljs.highlight(unescapeHTML(codeContent), { language }).value   // 代码高亮
-        return md.replace(code, `<code class="${className} hljs">${highlighted}</code>`)
-    })
 }
 
 export default defineEventHandler(async event => {
@@ -47,16 +26,19 @@ export default defineEventHandler(async event => {
         return (sessionData.uid !== uid)
     }
 
-    // 获取当前目标数据
-    const blogData = await blog.getItem(event.context.params.id)
-
     // 处理 GET 请求
     if (event.req.method === 'GET') {
+        const data = await blog.getItem(event.context.params.id)
+        const regex = /<code\s+class="(.*)"\s*>([\s\S]*?)<\/code>/g;
         return {
-            ...blogData,
-            date: rwdate(blogData.updatedAt),
-            html: md2html(blogData.content),
-            tags: findTags({ tokens: lexer(blogData.content)})
+            ...data,
+            html: marked(data.content, { breaks: true }).replace(regex, (match, p1, p2) => {
+                return `<code class="${p1} hljs">${hljs.highlightAuto(he.decode(p2)).value}</code>`
+            }),
+            tags: findTags({ tokens: lexer(data.content) }),
+            title: lexer(data.content).find(item => item.type === 'heading' && item.depth === 1),
+            createdAt: new Date(data.createdAt),
+            updatedAt: new Date(data.updatedAt),
         }
     }
 

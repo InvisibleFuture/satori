@@ -1,5 +1,5 @@
 <template lang="pug">
-main.container.mx-auto.py-32.px-16.flex.gap-8
+main.container.mx-auto.py-32.px-16.flex.gap-8(v-if="!pending")
   div.flex.flex-1.flex-col.gap-2
     div.flex.flex-col.gap-6.p-6(v-if="account.online")
       // 一个精致的markdown所见即所得输入框(宽高过渡动画)
@@ -14,7 +14,7 @@ main.container.mx-auto.py-32.px-16.flex.gap-8
       )
     //pre {{ 归档列表 }}
     div.flex.flex-col.gap-0.p-6(
-      v-for="item in 活动列表", :key="item.id" tabindex="0"
+      v-for="item in data.filter(x=>!x.title)", :key="item.id" tabindex="0"
       :class="{'bg-gray-100': select_items.includes(item)}"
       @click="event => selectItem(event,item)"
     )
@@ -41,43 +41,19 @@ main.container.mx-auto.py-32.px-16.flex.gap-8
           v-for="item in ['vue','react','node']"
           :key="item"
         ) {{ item }}
-    div
+    div.flex.flex-col.gap-2
       span.font-bold # 归档
-      ul.py-4
-        li.flex.flex-col.gap-4(v-for="(value, key) of 归档列表" :key="key")
-          time.text-gray-500 {{ key }}
-          NuxtLink.block(
-            class="hover:text-pink-500"
-            v-for="item in value"
-            :key="item.id"
-            :to="`/blog/${item.id}`"
-          ) {{ item.title }}
+      template(v-for="item in data.filter(x=>x.title)" :key="item.id")
+        NuxtLink.block(
+          class="hover:text-pink-500"
+          :to="`/blog/${item.id}`"
+        ) {{ item.title }}
 </template>
 
 <script setup>
-const { data, pending } = useFetch("/api/blog");
+const { data, pending } = useFetch("/api/blog", { immediate: true });
 const content = ref("");
 const account = useState("account");
-
-const 活动列表 = computed(() => {
-  return data.value.filter(item => {
-    return !item.title ? true : false
-  })
-});
-
-const 归档列表 = computed(() => {
-  const datelist = {}
-  data.value.filter(item => item.title).forEach(item => {
-    const t = new Date(item.createdAt);
-    const key = t.getFullYear() + '-' + (t.getMonth() + 1);
-    if (datelist[key]) {
-      datelist[key].push(item);
-    } else {
-      datelist[key] = [item];
-    }
-  })
-  return datelist
-});
 
 // 转换时间格式
 const rwdate = (utc) => {
