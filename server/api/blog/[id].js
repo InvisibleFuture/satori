@@ -36,30 +36,34 @@ const md2html = (md) => {
 
 export default defineEventHandler(async event => {
 
-    // 对接收到的数据预处理
-    if (['POST', 'PATCH', 'PUT'].includes(event.req.method)) {
-        if (event.req.headers['content-type'].indexOf('application/json') !== -1) {
-            event.context.body = await new Promise(resolve => {
-                let data = ''
-                event.req.on('data', (chunk) => data += chunk)
-                event.req.on('end', () => resolve(JSON.parse(decodeURI(data))))
-            })
-        }
-    }
-
     const blog = useStorage('blog')
     const session = useStorage('session')
 
+    // 检查是否有权限操作
+    const checkPermission = async (blog_uid) => {
+        const cookie = event.req.headers.cookie
+        const session_id = cookie ? cookie.split(';').find(item => item.trim().startsWith('session=')).split('=')[1] : null
+        const sessionData = session_id ? await session.getItem(session_id) : {}
+        return (sessionData.uid !== uid)
+    }
+
+    // 获取当前目标数据
+    const blogData = await blog.getItem(event.context.params.id)
+
     // 处理 GET 请求
     if (event.req.method === 'GET') {
-        return await blog.getItem(event.context.params.id).then(data => {
-            return {
-                ...data,
-                date: rwdate(data.updatedAt),
-                html: md2html(data.content),
-                tags: findTags({ tokens: lexer(data.content)})
-            }
-        })
+        return {
+            ...blogData,
+            date: rwdate(blogData.updatedAt),
+            html: md2html(blogData.content),
+            tags: findTags({ tokens: lexer(blogData.content)})
+        }
+    }
+
+    // 检查是否有权限操作
+    if (await checkPermission(blogData.uid)) {
+        event.res.statusCode = 403
+        return { success: false, message: '没有权限' }
     }
     
     // 处理 DELETE 请求(检查是否有权限)
@@ -69,22 +73,23 @@ export default defineEventHandler(async event => {
         return { success: true }
     }
 
+    // 获取 body
     const body = await readBody()
 
     // 处理 PUT 请求
     if (event.req.method === 'PUT') {
         return await blog.setItem(event.context.params.id, {
-            ...event.context.body,
+            ...body,
             updatedAt: new Date().toISOString(),
-            html: md2html(event.context.body.content)
+            html: md2html(body.content)
         })
     }
 
     // 处理 PATCH 请求(body 中的数据覆盖原数据)
     if (event.req.method === 'PATCH') {
         const data = await blog.getItem(event.context.params.id)
-        for (const key in event.context.body) {
-            data[key] = event.context.body[key]
+        for (const key in body) {
+            data[key] = body[key]
         }
         return await blog.setItem(event.context.params.id, {
             ...data,
