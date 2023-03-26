@@ -18,12 +18,13 @@ main.container.mx-auto.py-32.px-16.flex.gap-8(v-if="!pending")
       @click="event => selectItem(event,item)"
     )
       div.markdown(v-if="!edit_items.includes(item)" v-html="item.html")
-      textarea.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150.min-h-xl(
+      textarea.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150.min-h-xl.mb-4(
         class="focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 focus:outline-none",
         v-else,
         v-model="item.content",
         placeholder="写点什么呢",
         @keydown.ctrl.enter.prevent="editItem(item)",
+        @click.stop
       )
       //pre {{ item }}
       div.mb-6.flex.gap-4.text-gray-500.text-xs
