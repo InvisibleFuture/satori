@@ -1,30 +1,44 @@
 <template lang="pug">
-div.container.mx-auto.py-32.px-16.flex.flex-col.gap-2
-  div.flex.flex-col.gap-6(v-if="account.online")
-    // 一个精致的markdown所见即所得输入框(宽高过渡动画)
-    textarea.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150(
-      class="focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 focus:outline-none",
-      v-model="content",
-      placeholder="写点什么呢",
-      @keydown.ctrl.enter.prevent="create"
-      @keydown.enter="onEnter"
-      @change="onChanged"
+main.container.mx-auto.py-32.px-16.flex.gap-8
+  div.flex.flex-1.flex-col.gap-2
+    div.flex.flex-col.gap-6.p-6(v-if="account.online")
+      // 一个精致的markdown所见即所得输入框(宽高过渡动画)
+      textarea.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150(
+        class="focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 focus:outline-none",
+        v-model="content",
+        placeholder="写点什么呢",
+        @keydown.ctrl.enter.prevent="create"
+        @keydown.enter="onEnter"
+        @change="onChanged"
+      )
+    div.flex.flex-col.gap-6.p-6(
+      v-for="item in data", :key="item.id" tabindex="0"
+      :class="{'bg-gray-100': select_items.includes(item)}"
+      @click="event => selectItem(event,item)"
     )
-  div.flex.flex-col.gap-6.p-6(
-    v-for="item in data", :key="item.id" tabindex="0"
-    :class="{'bg-gray-100': select_items.includes(item)}"
-    @click="event => selectItem(event,item)"
-  )
-    div.markdown(v-html="item.html")
-    div.flex.flex-col.gap-2
-      div.flex.gap-2
-        img.h-8.w-8.rounded-full.object-cover(src="/avatar.jpeg" alt="Last")
-        div
-          p hahahah
-          div.flex.gap-2.text-gray-500.text-xs
-            span Last
-            span 2021-08-08 12:12:12
-      div.text-green-500 展开12个讨论..
+      div.markdown(v-html="item.html")
+      div.flex.flex-col.gap-2
+        div.flex.gap-2
+          img.h-8.w-8.rounded-full.object-cover(src="/avatar.jpeg" alt="Last")
+          div
+            p hahahah
+            div.flex.gap-2.text-gray-500.text-xs
+              span Last
+              span 2021-08-08 12:12:12
+        div.text-green-500 展开12个讨论..
+  aside.w-64.py-2.flex.flex-col.gap-8(class="<sm:hidden")
+    div
+      span.font-bold # TAG
+      ul.flex.flex-wrap.gap-2.py-1
+        li.bg-gray-400.bg-opacity-10.px-2.rounded-md.cursor-pointer(
+          class="hover:text-pink-500"
+          v-for="item in ['vue','react','node']"
+          :key="item"
+        ) {{ item }}
+    div
+      span.font-bold # 归档
+      ul
+        li(v-for="index in 12") 2022 12 title
 </template>
 
 <script setup>

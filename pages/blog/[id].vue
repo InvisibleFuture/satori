@@ -32,8 +32,6 @@
 </template>
 
 <script setup>
-//import "highlight.js/styles/agate.css";
-
 const route = useRoute();
 const { data, pending } = useFetch(`/api/blog/${route.params.id}`, {
   key: "blog" + route.params.id,
