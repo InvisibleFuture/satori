@@ -12,12 +12,14 @@ main.container.mx-auto.py-32.px-16.flex.gap-8
         @keydown.enter="onEnter"
         @change="onChanged"
       )
+    //pre {{ 归档列表 }}
     div.flex.flex-col.gap-0.p-6(
-      v-for="item in data", :key="item.id" tabindex="0"
+      v-for="item in 活动列表", :key="item.id" tabindex="0"
       :class="{'bg-gray-100': select_items.includes(item)}"
       @click="event => selectItem(event,item)"
     )
       div.markdown(v-html="item.html")
+      //pre {{ item }}
       div.mb-6.flex.gap-4.text-gray-500.text-xs
         time {{ rwdate(item.createdAt) }} 创建
         time(v-if="item.createdAt !== item.updatedAt") {{ rwdate(item.updatedAt) }} 最后更新
@@ -34,21 +36,48 @@ main.container.mx-auto.py-32.px-16.flex.gap-8
     div
       span.font-bold # TAG
       ul.flex.flex-wrap.gap-2.py-1
-        li.bg-gray-400.bg-opacity-10.px-2.rounded-md.cursor-pointer(
+        li.bg-gray-400.bg-opacity-10.px-2.rounded-md.cursor-pointer.overflow-clip(
           class="hover:text-pink-500"
           v-for="item in ['vue','react','node']"
           :key="item"
         ) {{ item }}
     div
       span.font-bold # 归档
-      ul
-        li(v-for="index in 12") 2022 12 title
+      ul.py-4
+        li.flex.flex-col.gap-4(v-for="(value, key) of 归档列表" :key="key")
+          time.text-gray-500 {{ key }}
+          NuxtLink.block(
+            class="hover:text-pink-500"
+            v-for="item in value"
+            :key="item.id"
+            :to="`/blog/${item.id}`"
+          ) {{ item.title }}
 </template>
 
 <script setup>
 const { data, pending } = useFetch("/api/blog");
 const content = ref("");
 const account = useState("account");
+
+const 活动列表 = computed(() => {
+  return data.value.filter(item => {
+    return !item.title ? true : false
+  })
+});
+
+const 归档列表 = computed(() => {
+  const datelist = {}
+  data.value.filter(item => item.title).forEach(item => {
+    const t = new Date(item.createdAt);
+    const key = t.getFullYear() + '-' + (t.getMonth() + 1);
+    if (datelist[key]) {
+      datelist[key].push(item);
+    } else {
+      datelist[key] = [item];
+    }
+  })
+  return datelist
+});
 
 // 转换时间格式
 const rwdate = (utc) => {

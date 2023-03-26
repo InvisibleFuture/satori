@@ -31,6 +31,15 @@ export default defineEventHandler(async event => {
                         const html = hljs.highlightAuto(he.decode(p2)).value
                         return `<code class="${p1} hljs">${html}</code>`
                     })
+                    // 提取标题
+                    const tokens = lexer(data.content)
+                    const title = tokens.find(item => item.type === 'heading' && item.depth === 1)
+                    data.title = title ? title.text : ''
+                    // 提取标签
+                    data.tags = []
+                    tokens.forEach(token => {
+                        findTags(token).forEach(tag => data.tags.push(tag))
+                    })
                     // 将时间戳转换为 UTC 时间
                     data.createdAt = new Date(data.createdAt)
                     data.updatedAt = new Date(data.updatedAt)
