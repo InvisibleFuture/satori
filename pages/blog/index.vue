@@ -17,16 +17,7 @@ main.container.mx-auto.py-32.px-16.flex.gap-8(v-if="!pending")
       :class="{'bg-gray-100': select_items.includes(item)}"
       @click="event => selectItem(event,item)"
     )
-      div.markdown(v-if="!edit_items.includes(item)" v-html="item.html")
-      textarea.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150.min-h-xl.mb-4(
-        class="focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 focus:outline-none",
-        v-else,
-        v-model="item.content",
-        placeholder="写点什么呢",
-        @keydown.ctrl.enter.prevent="editItem(item)",
-        @click.stop
-      )
-      //pre {{ item }}
+      div.markdown(v-html="item.html")
       div.mb-6.flex.gap-4.text-gray-500.text-xs
         time {{ rwdate(item.createdAt) }} 创建
         time(v-if="item.createdAt !== item.updatedAt") {{ rwdate(item.updatedAt) }} 最后更新
@@ -55,12 +46,41 @@ main.container.mx-auto.py-32.px-16.flex.gap-8(v-if="!pending")
           class="hover:text-pink-500"
           :to="`/blog/${item.id}`"
         ) {{ item.title }}
+  // 弹出层编辑器
+  div.fixed.bg-green-300.top-0.bottom-0.left-0.right-0(v-if="editor.edit_mode" @click="editor.edit_mode = false" @keyup.esc="editor.edit_mode = false")
+    div.container.mx-auto.my-12
+      textarea#editor.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150.min-h-xl.mb-4(
+        class="focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 focus:outline-none",
+        v-model="editor.item.content",
+        placeholder="写点什么呢",
+        @keydown.ctrl.enter.prevent="editor.submit()"
+        @click.stop
+      )
 </template>
 
 <script setup>
 const { data, pending } = useFetch("/api/blog", { immediate: true });
 const content = ref("");
 const account = useState("account");
+const editor = ref({
+  edit_mode: false,
+  item: {
+    id: '',
+    content: '',
+    createdAt: '',
+  },
+  submit() {
+    $fetch(`/api/blog/${this.item.id}`, {
+      method: "PATCH",
+      body: JSON.stringify({content: this.item.content}),
+      Headers: {"Content-Type": "application/json"}
+    }).then(data => {
+      console.log('editItem', data);
+      this.item.html = data.html
+      this.edit_mode = false
+    });
+  }
+});
 
 // 转换时间格式
 const rwdate = (utc) => {
@@ -122,7 +142,6 @@ const selectItem = (event, item) => {
   if (!account.value.online) {
     return console.log('登录后可以操作')
   }
-
   // 如果已经选中, 则取消选中
   if (select_items.value.includes(item)) {
     return __unselect_item(item);
@@ -133,21 +152,6 @@ const selectItem = (event, item) => {
   }
   // 并选中当前 item
   __select_item(item);
-};
-
-const edit_items = ref([]);
-
-// 编辑某项
-const editItem = (item) => {
-  $fetch(`/api/blog/${item.id}`, {
-    method: "PATCH",
-    body: JSON.stringify({content: item.content}),
-    Headers: {"Content-Type": "application/json"}
-  }).then(data => {
-    console.log('editItem', data);
-    item.html = data.html
-    edit_items.value = []
-  });
 };
 
 // 监听键盘事件
@@ -177,9 +181,14 @@ const __keydown_all = (event) => {
     });
   }
   // 如果有选中的 item, 且只有一个 item, 则编辑该 item
-  if (event.key === "e" && !edit_items.value.length) {
+  if (event.key === "e" && !editor.value.edit_mode) {
     if (select_items.value.length === 1) {
-      edit_items.value.push(select_items.value[0]);
+      editor.value.item = select_items.value[0];
+      editor.value.edit_mode = true;
+      // 渲染后, 聚焦到编辑器
+      setTimeout(() => {
+        document.querySelector('textarea#editor').focus();
+      }, 0);
     }
   }
 };
