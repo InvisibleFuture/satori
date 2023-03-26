@@ -11,7 +11,7 @@
           :to="item.path"
         ) {{ item.title }}
       NuxtLink.px-4.py-6.ml-auto(v-if="!account.online" to="/account/signin") signin
-      NuxtLink.px-4.py-6.ml-auto(v-else to="/account") account
+      NuxtLink.px-4.py-6.ml-auto(v-else to="/account") {{ account.name }}
   NuxtPage
 </template>
 
