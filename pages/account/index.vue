@@ -32,15 +32,15 @@ const user = useCookie('sid')
 const account = useState('account')
 const router = useRouter()
 
-const avatar_list = []
-const avatar_active = 0
+const avatar_list = ref([])
+const avatar_active = ref(0)
 
 const avatar_click = (id) => {
-  if (id === avatar_active) {
-    console.log('交换头像')
-    avatar_active = avatar_active ? 0 : 1
+  if (id === avatar_active.value) {
+    avatar_active.value = avatar_active.value ? 0 : 1
+  } else {
+    console.log('上传修改头像')
   }
-  console.log('上传修改头像')
 }
 
 const exit = () => {
