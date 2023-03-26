@@ -54,7 +54,7 @@ export default defineEventHandler(async event => {
         const cookie = event.req.headers.cookie
         const session_id = cookie ? cookie.split(';').find(item => item.trim().startsWith('session=')).split('=')[1] : null
         const sessionData = session_id ? await session.getItem(session_id) : {}
-        return !!sessionData.uid
+        return !!sessionData.user_id
     }
 
     // 检查是否有权限操作
@@ -70,6 +70,23 @@ export default defineEventHandler(async event => {
         const data = { id: v4(), content, createdAt:date, updatedAt:date }
         await blog.setItem(data.id, data)
         data.html = marked(data.content, { breaks: true })
+        const regex = /<code\s+class="(.*)"\s*>([\s\S]*?)<\/code>/g;
+        data.html = data.html.replace(regex, (match, p1, p2) => {
+            const html = hljs.highlightAuto(he.decode(p2)).value
+            return `<code class="${p1} hljs">${html}</code>`
+        })
+        // 提取标题
+        const tokens = lexer(data.content)
+        const title = tokens.find(item => item.type === 'heading' && item.depth === 1)
+        data.title = title ? title.text : ''
+        // 提取标签
+        data.tags = []
+        tokens.forEach(token => {
+            findTags(token).forEach(tag => data.tags.push(tag))
+        })
+        // 将时间戳转换为 UTC 时间
+        data.createdAt = new Date(data.createdAt)
+        data.updatedAt = new Date(data.updatedAt)
         return data
     }
 

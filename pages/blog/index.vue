@@ -3,7 +3,7 @@ main.container.mx-auto.py-32.px-16.flex.gap-8(v-if="!pending")
   div.flex.flex-1.flex-col.gap-2
     div.flex.flex-col.gap-6.p-6(v-if="account.online")
       // 一个精致的markdown所见即所得输入框(宽高过渡动画)
-      textarea.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150(
+      textarea.create-blog.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150(
         class="focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 focus:outline-none",
         v-if="account.online"
         v-model="content",
@@ -12,13 +12,19 @@ main.container.mx-auto.py-32.px-16.flex.gap-8(v-if="!pending")
         @keydown.enter="onEnter"
         @change="onChanged"
       )
-    //pre {{ 归档列表 }}
     div.flex.flex-col.gap-0.p-6(
       v-for="item in data.filter(x=>x.title.length < 6)", :key="item.id" tabindex="0"
       :class="{'bg-gray-100': select_items.includes(item)}"
       @click="event => selectItem(event,item)"
     )
-      div.markdown(v-html="item.html")
+      div.markdown(v-if="!edit_items.includes(item)" v-html="item.html")
+      textarea.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150.min-h-xl(
+        class="focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 focus:outline-none",
+        v-else,
+        v-model="item.content",
+        placeholder="写点什么呢",
+        @keydown.ctrl.enter.prevent="editItem(item)",
+      )
       //pre {{ item }}
       div.mb-6.flex.gap-4.text-gray-500.text-xs
         time {{ rwdate(item.createdAt) }} 创建
@@ -93,7 +99,7 @@ const select_items = ref([]);
 // 选中某项(隐藏视焦外的元素)
 const __select_item = (item) => {
   select_items.value.push(item);
-  document.querySelectorAll('header.header, textarea').forEach((item) => {
+  document.querySelectorAll('header.header, textarea.create-blog').forEach((item) => {
     item.classList.add('opacity-0');
     item.classList.add('pointer-events-none');
   });
@@ -103,7 +109,7 @@ const __select_item = (item) => {
 const __unselect_item = (item) => {
   select_items.value = select_items.value.filter(i => i !== item);
   if (select_items.value.length === 0) {
-    document.querySelectorAll('header.header, textarea').forEach((item) => {
+    document.querySelectorAll('header.header, textarea.create-blog').forEach((item) => {
       item.classList.remove('opacity-0');
       item.classList.remove('pointer-events-none');
     });
@@ -126,6 +132,21 @@ const selectItem = (event, item) => {
   }
   // 并选中当前 item
   __select_item(item);
+};
+
+const edit_items = ref([]);
+
+// 编辑某项
+const editItem = (item) => {
+  $fetch(`/api/blog/${item.id}`, {
+    method: "PATCH",
+    body: JSON.stringify({content: item.content}),
+    Headers: {"Content-Type": "application/json"}
+  }).then(data => {
+    console.log('editItem', data);
+    item.html = data.html
+    edit_items.value = []
+  });
 };
 
 // 监听键盘事件
@@ -153,6 +174,12 @@ const __keydown_all = (event) => {
     select_items.value.forEach((item) => {
       __unselect_item(item);
     });
+  }
+  // 如果有选中的 item, 且只有一个 item, 则编辑该 item
+  if (event.key === "e" && !edit_items.value.length) {
+    if (select_items.value.length === 1) {
+      edit_items.value.push(select_items.value[0]);
+    }
   }
 };
 
