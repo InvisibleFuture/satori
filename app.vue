@@ -17,15 +17,14 @@
 
 <script setup>
 // 全局引入代码高亮插件的样式
-//import 'highlight.js/lib/common' // 主流语言高亮子集
-//import "highlight.js/styles/agate.css";
 import "highlight.js/styles/atom-one-dark.css"
 
 const route = useRoute();
 const account = useState("account", () => ({
   id: 0,
+  sid: '',
   name: "Last",
-  online: false
+  online: false,
 }));
 
 const navItems = [
@@ -47,7 +46,6 @@ onMounted(() => {
   $fetch("/api/user/self").then((data) => {
     if (data) {
       console.log(data);
-      data.online = true;
       account.value = data;
     }
   });
