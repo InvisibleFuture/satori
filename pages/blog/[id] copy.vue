@@ -92,7 +92,7 @@ div.container.mx-auto.pt-42
 </template>
 
 <script>
-import "highlight.js/styles/agate.css"
+//import "highlight.js/styles/agate.css"
 import hljs from "highlight.js"
 import { marked } from "marked"
 export default {

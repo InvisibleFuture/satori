@@ -1,6 +1,6 @@
 <template lang="pug">
 div.container.mx-auto.py-32.px-16.flex.flex-col.gap-2
-  div.whitespace-pre.flex.flex-col.gap-6(v-if="account.online")
+  div.flex.flex-col.gap-6(v-if="account.online")
     // 一个精致的markdown所见即所得输入框(宽高过渡动画)
     textarea.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150(
       class="focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 focus:outline-none",
@@ -10,12 +10,12 @@ div.container.mx-auto.py-32.px-16.flex.flex-col.gap-2
       @keydown.enter="onEnter"
       @change="onChanged"
     )
-  div.whitespace-pre.flex.flex-col.gap-6.p-6(
+  div.flex.flex-col.gap-6.p-6(
     v-for="item in data", :key="item.id" tabindex="0"
     :class="{'bg-gray-100': select_items.includes(item)}"
     @click="event => selectItem(event,item)"
   )
-    div(v-html="item.html")
+    div.markdown(v-html="item.html")
     div.flex.flex-col.gap-2
       div.flex.gap-2
         img.h-8.w-8.rounded-full.object-cover(src="/avatar.jpeg" alt="Last")
@@ -28,9 +28,6 @@ div.container.mx-auto.py-32.px-16.flex.flex-col.gap-2
 </template>
 
 <script setup>
-// 引入代码高亮插件的样式
-import "highlight.js/styles/atom-one-dark.css";
-
 const { data, pending } = useFetch("/api/blog");
 const content = ref("");
 const account = useState("account");
@@ -40,7 +37,7 @@ const rwdate = (date) => {
   return `${d.getFullYear()} 年 ${d.getMonth() + 1} 月 ${d.getDate()} 日`;
 };
 
-const create = () => {
+const create = (event) => {
   $fetch("/api/blog", {
     method: "POST",
     body: JSON.stringify({content: content.value}),
@@ -49,6 +46,8 @@ const create = () => {
     console.log('create', item);
     data.value.unshift(item)
     content.value = ''
+    const textarea = event.target; // 恢复输入框高度
+    textarea.style.height = textarea.scrollHeight + 'px';
   });
 };
 
