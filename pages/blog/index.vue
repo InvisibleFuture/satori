@@ -88,6 +88,10 @@ const __unselect_item = (item) => {
 
 // 点击某项时, 选中或取消选中
 const selectItem = (event, item) => {
+  if (!account.value.online) {
+    return console.log('登录后可以操作')
+  }
+
   // 如果已经选中, 则取消选中
   if (select_items.value.includes(item)) {
     return __unselect_item(item);
