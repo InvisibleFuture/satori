@@ -46,6 +46,9 @@ export default defineEventHandler(async event => {
                         const html = hljs.highlightAuto(he.decode(p2)).value
                         return `<code class="${p1} hljs">${html}</code>`
                     })
+                    // 将时间戳转换为 UTC 时间
+                    data.createdAt = new Date(data.createdAt)
+                    data.updatedAt = new Date(data.updatedAt)
                     return data
                 })
             }))
