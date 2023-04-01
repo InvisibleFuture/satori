@@ -38,6 +38,9 @@ export default defineNuxtConfig({
       },
     },
   },
+  build: {
+    analyze: true,
+  },
   //vite: {
   //  server: {
   //    proxy: {
