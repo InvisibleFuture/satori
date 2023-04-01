@@ -100,7 +100,7 @@ export default defineEventHandler(async event => {
 //    })
 //
 //    // 获取 satori-blog 的日志
-//    const host =  'satori.love' // event.req.headers.host
+//    const host =  'satori.love' // event.node.req.headers.host
 //    const satoriLogs = requestLogs.filter(line => {
 //        if (JSON.parse(line).request === undefined) {
 //            //console.log(JSON.parse(line))
@@ -109,7 +109,7 @@ export default defineEventHandler(async event => {
 //        return JSON.parse(line).request.host === host
 //    })
     
-    const host =  'satori.love' // event.req.headers.host
+    const host =  'satori.love' // event.node.req.headers.host
     return {
         name: host,
         count,

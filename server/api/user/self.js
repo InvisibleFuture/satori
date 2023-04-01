@@ -1,7 +1,7 @@
 export default defineEventHandler(async event => {
     const user = useStorage('user')
     const session = useStorage('session')
-    const cookie = event.req.headers.cookie
+    const cookie = event.node.req.headers.cookie
 
     // 获取当前会话
     const session_id = cookie ? cookie.split(';').find(item => item.trim().startsWith('session=')).split('=')[1] : null

@@ -10,7 +10,7 @@ export default defineEventHandler(async event => {
     if (!fs.existsSync(webpDir)) fs.mkdirSync(webpDir)
 
     // 处理 GET 请求
-    if (event.req.method === 'GET') {
+    if (event.node.req.method === 'GET') {
         const { id } = event.context.params
 
         // 请求文件后缀是否 .webp 格式
@@ -32,8 +32,8 @@ export default defineEventHandler(async event => {
 
         // 有无缩略图(请求参数中有width和height)
         //if (width && height) {
-        //    //const width = parseInt(event.req.query.width)
-        //    //const height = parseInt(event.req.query.height)
+        //    //const width = parseInt(event.node.req.query.width)
+        //    //const height = parseInt(event.node.req.query.height)
         //    //const thumbpath = path.join(process.cwd(), 'data/thumb', `${id}-${width}x${height}.webp`)
         //    //if (fs.existsSync(thumb[...])) {
         //    //    return fs.readFileSync(thumb[...])

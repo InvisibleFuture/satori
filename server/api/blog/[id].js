@@ -28,7 +28,7 @@ export default defineEventHandler(async event => {
 
     // 检查是否有权限操作(不存在ID的允许任意修改)
     const checkPermission = async (blog_uid) => {
-        const cookie = event.req.headers.cookie
+        const cookie = event.node.req.headers.cookie
         const session_id = cookie ? cookie.split(';').find(item => item.trim().startsWith('session=')).split('=')[1] : null
         const sessionData = session_id ? await session.getItem(session_id) : {}
         return (sessionData.user_id !== blog_uid) && blog_uid
@@ -37,7 +37,7 @@ export default defineEventHandler(async event => {
     const data = await blog.getItem(event.context.params.id)
 
     // 处理 GET 请求
-    if (event.req.method === 'GET') {
+    if (event.node.req.method === 'GET') {
         return {
             ...data,
             html: md2html(data.content),
@@ -55,7 +55,7 @@ export default defineEventHandler(async event => {
     }
     
     // 处理 DELETE 请求(检查是否有权限)
-    if (event.req.method === 'DELETE') {
+    if (event.node.req.method === 'DELETE') {
         console.log('DELETE:', event.context.params.id)
         await blog.removeItem(event.context.params.id)
         return { success: true }
@@ -65,7 +65,7 @@ export default defineEventHandler(async event => {
     const body = await readBody(event)
 
     // 处理 PATCH 请求(body 中的数据覆盖原数据)
-    if (event.req.method === 'PATCH') {
+    if (event.node.req.method === 'PATCH') {
         // 移除禁止修改的字段
         delete body.id
         delete body.user_id

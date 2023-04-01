@@ -20,7 +20,7 @@ export default defineEventHandler(async event => {
     const blog = useStorage('blog')
 
     // 处理 GET 请求(读取 markdown 中的 md 文件列表)
-    if (event.req.method === 'GET') {
+    if (event.node.req.method === 'GET') {
         return await blog.getKeys().then(keys => {
             return Promise.all(keys.map(key => {
                 return blog.getItem(key).then(data => {
@@ -51,7 +51,7 @@ export default defineEventHandler(async event => {
 
     // 验证是否登录
     const checkPermission = async () => {
-        const cookie = event.req.headers.cookie
+        const cookie = event.node.req.headers.cookie
         const session_id = cookie ? cookie.split(';').find(item => item.trim().startsWith('session=')).split('=')[1] : null
         const sessionData = session_id ? await session.getItem(session_id) : {}
         return !!sessionData.user_id
@@ -64,7 +64,7 @@ export default defineEventHandler(async event => {
     }
 
     // 处理 POST 请求, 写入 markdown
-    if (event.req.method === 'POST') {
+    if (event.node.req.method === 'POST') {
         const { content } = await readBody(event)
         const date = Date.now()
         const data = { id: v4(), content, createdAt:date, updatedAt:date }

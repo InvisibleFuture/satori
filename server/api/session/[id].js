@@ -2,10 +2,10 @@ export default defineEventHandler(async event => {
     const session = useStorage('session')
 
     // DELETE 请求(注销指定会话)
-    if (event.req.method === 'DELETE') {
+    if (event.node.req.method === 'DELETE') {
 
         // 获取当前会话
-        const cookie = event.req.headers.cookie
+        const cookie = event.node.req.headers.cookie
         const session_id = cookie ? cookie.split(';').find(item => item.trim().startsWith('session=')).split('=')[1] : null
         const session_ea = session_id ? await session.getItem(session_id) : {}
 
@@ -43,10 +43,10 @@ export default defineEventHandler(async event => {
     }
 
     // GET 请求(获取指定会话)
-    if (event.req.method === 'GET') {
+    if (event.node.req.method === 'GET') {
 
         // 获取当前会话
-        const cookie = event.req.headers.cookie
+        const cookie = event.node.req.headers.cookie
         const session_id = cookie ? cookie.split(';').find(item => item.trim().startsWith('session=')).split('=')[1] : null
         const session_ea = session_id ? await session.getItem(session_id) : {}
 

@@ -8,7 +8,7 @@ export default defineEventHandler(async event => {
     const user = useStorage('user')
 
     // POST 请求(创建会话)
-    if (event.req.method === 'POST') {
+    if (event.node.req.method === 'POST') {
         const { name, password } = await readBody(event)
 
         // 验证参数
@@ -42,8 +42,8 @@ export default defineEventHandler(async event => {
         const session_value = {
             id: v4(),
             user_id: u.id,
-            ip: event.req.headers['x-forwarded-for'] || event.req.connection.remoteAddress,
-            ua: event.req.headers['user-agent'],
+            ip: event.node.req.headers['x-forwarded-for'] || event.node.req.connection.remoteAddress,
+            ua: event.node.req.headers['user-agent'],
             created_at: new Date().getTime()
         }
         session.setItem(session_value.id, session_value)
@@ -61,9 +61,9 @@ export default defineEventHandler(async event => {
     }
 
     // GET 请求(获取本用户所有会话)
-    if (event.req.method === 'GET') {
+    if (event.node.req.method === 'GET') {
         // 从 cookie 中获取会话 id (session)
-        const sid = event.req.headers.cookie?.split(';').find(c => c.trim().startsWith('session=')).split('=')[1]
+        const sid = event.node.req.headers.cookie?.split(';').find(c => c.trim().startsWith('session=')).split('=')[1]
 
         // 取出会话(判断是否登录)
         const s = await session.getItem(sid)

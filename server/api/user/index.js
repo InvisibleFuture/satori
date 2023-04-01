@@ -5,7 +5,7 @@ export default defineEventHandler(async event => {
     const user = useStorage('user')
 
     // 处理 POST 请求(创建用户)
-    if (event.req.method === 'POST') {
+    if (event.node.req.method === 'POST') {
         const body = await readBody(event)
         const { name, password } = body
 
@@ -43,7 +43,7 @@ export default defineEventHandler(async event => {
     }
 
     // 处理 GET 请求(读取用户列表)
-    if (event.req.method === 'GET') {
+    if (event.node.req.method === 'GET') {
         return user.getKeys().then(keys => {
             return Promise.all(keys.map(key => {
                 return user.getItem(key).then(data => {
