@@ -82,6 +82,23 @@ export default defineEventHandler(async event => {
             data[key] = body[key]
         }
         data.updatedAt = new Date().toISOString() // 自动修改的字段
+        data.createdAt = ''
+        // 正则从 content 中的最后一行提取时间作为 createdAt
+        const match = data.content.match(/(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2})/)
+        if (match) {
+            console.log('match:', match[1])
+            data.createdAt = new Date(match[1]).getTime()
+            data.content = data.content.replace(match[1], '')
+            // 输入的时间可能不是标准格式，可能只有年月日, 尝试提取年月日
+            if (!data.createdAt) {
+                const match = data.content.match(/(\d{4}-\d{2}-\d{2})/)
+                if (match) {
+                    data.createdAt = new Date(match[1]).getTime()
+                    data.content = data.content.replace(match[1], '')
+                }
+            }
+
+        }
         await blog.setItem(event.context.params.id, data)
         return {
             ...data,
