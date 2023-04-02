@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { defineEventHandler, getCookie } from 'h3'
+import { defineEventHandler } from 'h3'
 
 // 检查 logs 目录是否存在，不存在则创建
 if (!fs.existsSync('./data/logs')) {

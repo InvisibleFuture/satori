@@ -1,3 +1,4 @@
+import { defineEventHandler, getCookie } from 'h3'
 import { marked, lexer } from 'marked'
 import hljs from "highlight.js"
 import he from 'he';
@@ -28,10 +29,11 @@ export default defineEventHandler(async event => {
 
     // 检查是否有权限操作(不存在ID的允许任意修改)
     const checkPermission = async (blog_uid) => {
-        const cookie = event.node.req.headers.cookie
-        const session_id = cookie ? cookie.split(';').find(item => item.trim().startsWith('session=')).split('=')[1] : null
-        const sessionData = session_id ? await session.getItem(session_id) : {}
-        return (sessionData.user_id !== blog_uid) && blog_uid
+        const session_id = getCookie(event, 'session')
+        if (!session_id) return false
+        const session_data = await session.getItem(session_id)
+        if (!session_data) return false
+        return session_data.user_id !== blog_uid
     }
 
     const data = await blog.getItem(event.context.params.id)

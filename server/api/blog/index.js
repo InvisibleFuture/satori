@@ -1,3 +1,4 @@
+import { defineEventHandler, getCookie } from 'h3'
 import { v4 } from 'uuid'
 import { lexer, marked } from 'marked';
 import hljs from 'highlight.js';
@@ -51,8 +52,7 @@ export default defineEventHandler(async event => {
 
     // 验证是否登录
     const checkPermission = async () => {
-        const cookie = event.node.req.headers.cookie
-        const session_id = cookie ? cookie.split(';').find(item => item.trim().startsWith('session=')).split('=')[1] : null
+        const session_id = getCookie(event, 'session')
         const sessionData = session_id ? await session.getItem(session_id) : {}
         return !!sessionData.user_id
     }
