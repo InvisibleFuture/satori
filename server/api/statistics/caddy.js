@@ -1,15 +1,4 @@
 import fs from 'fs'
-import path from 'path'
-
-// 如果数据目录不存在则创建
-if (!fs.existsSync(path.join(process.cwd(), 'data'))) {
-    fs.mkdirSync(path.join(process.cwd(), 'data'))
-}
-
-// 如果blog目录不存在则创建
-if (!fs.existsSync(path.join(process.cwd(), 'data/statistics'))) {
-    fs.mkdirSync(path.join(process.cwd(), 'data/statistics'))
-}
 
 // 基本的统计功能
 // 1. 日志总数
