@@ -45,7 +45,6 @@ const navItems = [
 onMounted(() => {
   $fetch("/api/user/self").then((data) => {
     if (data) {
-      console.log(data);
       account.value = data;
     }
   });
