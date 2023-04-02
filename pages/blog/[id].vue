@@ -1,9 +1,13 @@
 <template lang="pug">
-.blog-item.max-w-3xl.mx-auto.py-42
+.max-w-3xl.mx-auto.py-42
   div(v-if="pending") Loading..
   article(v-else)
-    .content(v-if="!edit.show", v-html="data.html")
-    .content(v-else)
+    div(v-if="!edit.show")
+      div.markdown(v-html="data.html")
+      div.mb-6.flex.gap-4.text-gray-500.text-xs
+        time {{ rwdate(data.createdAt) }} 创建
+        time(v-if="data.createdAt !== data.updatedAt") {{ rwdate(data.updatedAt) }} 最后更新
+    div(v-else)
       textarea.w-full.h-screen.p-8.outline-none.caret-light-blue-700(
         v-model="data.content",
         @keyup.ctrl.enter="editSubmit"
@@ -28,6 +32,7 @@
         //    @click="comment_remove(item.id)"
         //    v-if="account.online"
         //  ) delete
+
 </template>
 
 <script setup>
@@ -63,6 +68,12 @@ const comments = {
   ],
 };
 
+// 转换时间格式
+const rwdate = (utc) => {
+    let t = new Date(utc);
+    return t.getMonth() + 1 + "月 " + t.getDate() + ", " + t.getFullYear();
+}
+
 // 进入编辑模式
 const editData = () => {
   edit.value.show = !edit.value.show;
@@ -97,54 +108,3 @@ onMounted(() => {
   };
 });
 </script>
-
-<style>
-.blog-item .content h1 {
-  font-weight: bold;
-  font-size: 2rem;
-  margin: 1.5rem 0;
-}
-
-.blog-item .content pre code {
-  padding: 1rem;
-  border-radius: 0.5rem;
-  font-size: 14px;
-}
-
-.blog-item .content table {
-  border-collapse: collapse;
-  border-spacing: 0;
-  margin: 1rem 0;
-}
-.blog-item .content table tr th {
-  padding: 0.5rem;
-}
-.blog-item .content table tr td {
-  padding: 0.5rem;
-}
-.blog-item .content p {
-  margin: 2rem 0;
-  word-wrap: break-word;
-  word-break: break-all;
-}
-.blog-item .content input[type="checkbox"] {
-  position: relative;
-  margin-right: 0.3em;
-}
-.blog-item .content input[type="checkbox"]::before {
-  position: absolute;
-  content: "\a0";
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  border-radius: 0.3em;
-  background-color: #ececec;
-  text-indent: 0.15em;
-  line-height: 0.65;
-}
-.blog-item .content input[type="checkbox"]:checked::before {
-  content: "\2713";
-  color: #00aeec;
-  background-color: #dff6fd;
-}
-</style>
