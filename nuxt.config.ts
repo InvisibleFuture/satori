@@ -36,6 +36,10 @@ export default defineNuxtConfig({
         driver: 'fs',
         base: './data/session'
       },
+      comment: {
+        driver: 'fs',
+        base: './data/comment'
+      },
     },
   },
   build: {

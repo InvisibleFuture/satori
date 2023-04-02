@@ -16,9 +16,10 @@
       img.mx-auto.rounded-full.w-64.h-64(src="/avatar.jpeg")
       p --- satori ---
       p.text-gray-600 {{ data.date }} Last
-    .flex.my-12
-      textarea.bg-gray-100.p-4.outline-none.w-full(rows="6")
-    .flex.my-12(v-for="item in comments.list", :key="item.id")
+    .flex.flex-col.my-12
+      input.bg-gray-100.p-4.outline-none.w-full(placeholder="邮箱", v-model="comment.email" type="email")
+      textarea.bg-gray-100.p-4.outline-none.w-full(rows="6" placeholder="评论" v-model="comment.content" @keyup.enter="comment_submit")
+    .flex.my-12(v-for="item in comments", :key="item.id")
       img.rounded-full.w-16.h-16.mr-4(:src="item.avatar")
       div
         .flex.gap-2.pb-2.font-bold
@@ -42,31 +43,48 @@ const { data, pending } = useFetch(`/api/blog/${route.params.id}`, {
 });
 const edit = ref({ show: false });
 
-const comments = {
-  list: [
-    {
-      id: "1",
-      name: "桜華",
-      avatar: "/avatar.jpeg",
-      content: "hahaha",
-      date: "11月 24, 2022",
-    },
-    {
-      id: "2",
-      name: "桜華",
-      avatar: "/avatar.jpeg",
-      content: "hahaha",
-      date: "11月 24, 2022",
-    },
-    {
-      id: "3",
-      name: "桜華",
-      avatar: "/avatar.jpeg",
-      content: "hahaha",
-      date: "11月 24, 2022",
-    },
-  ],
+const { data: comments, pending: comments_pending } = useFetch(`/api/comment?blog_id=${route.params.id}`, {
+  key: "comment" + route.params.id,
+});
+
+const comment = ref({ email:"", content: "", blog_id: route.params.id });
+const comment_submit = () => {
+  fetch("/api/comment", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(comment.value),
+  }).then((res) => res.json()).then((rest) => {
+    console.log(rest);
+    comments.value.data.push(rest);
+    comment.value.content = "";
+  });
 };
+
+//const comments = {
+//  list: [
+//    {
+//      id: "1",
+//      name: "桜華",
+//      avatar: "/avatar.jpeg",
+//      content: "hahaha",
+//      date: "11月 24, 2022",
+//    },
+//    {
+//      id: "2",
+//      name: "桜華",
+//      avatar: "/avatar.jpeg",
+//      content: "hahaha",
+//      date: "11月 24, 2022",
+//    },
+//    {
+//      id: "3",
+//      name: "桜華",
+//      avatar: "/avatar.jpeg",
+//      content: "hahaha",
+//      date: "11月 24, 2022",
+//    },
+//  ],
+//};
 
 // 转换时间格式
 const rwdate = (utc) => {
