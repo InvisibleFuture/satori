@@ -8,7 +8,9 @@ if (!fs.existsSync('./data/logs')) {
 
 export default defineEventHandler(async event => {
 
-    console.log('log', event.node.req.method, event.node.req.url)
+    // 排除 /api/statistics/http 请求和 /api/log 请求
+    if (event.node.req.url === '/api/statistics/http') return
+    if (event.node.req.url === '/api/log') return
 
     // 增量写入JSON格式的日志到本地
     fs.appendFileSync('./data/logs/default.json', JSON.stringify({
