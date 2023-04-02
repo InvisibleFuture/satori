@@ -15,20 +15,24 @@ export default defineEventHandler(async event => {
             return (!method || log.method === method) && (!url || log.url.indexOf(url) !== -1) && (!time || log.time >= time)
         })
         logs.forEach(log => {
+
+            // 按请求方法统计
             if (!counts.method[log.method]) counts.method[log.method] = 0
             counts.method[log.method]++;
+
+            // 按请求路径统计
             if (!counts.url[log.url]) counts.url[log.url] = 0
             counts.url[log.url]++;
 
-            // 时间按小时统计
+            // 按请求时间统计(每小时)
             log.time = log.time.slice(0, 13) + ':00:00.000Z'
             if (!counts.time[log.time]) counts.time[log.time] = 0
             counts.time[log.time]++;
 
             // session 取前 8 位(不可公开)
-            log.session = log.session?.slice(0, 8)
-            if (!counts.session[log.session]) counts.session[log.session] = 0
-            counts.session[log.session]++;
+            //log.session = log.session?.slice(0, 8)
+            //if (!counts.session[log.session]) counts.session[log.session] = 0
+            //counts.session[log.session]++;
         })
         return counts
     }
