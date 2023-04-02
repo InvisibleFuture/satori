@@ -94,7 +94,8 @@ export default defineEventHandler(async event => {
             ...data,
             html: md2html(data.content),
             tags: findTags({ tokens: lexer(data.content) }),
-            title: lexer(data.content).find(item => item.type === 'heading' && item.depth === 1)
+            title: lexer(data.content).find(item => item.type === 'heading' && item.depth === 1),
+            createdAt: new Date(data.createdAt),
         }
     }
 

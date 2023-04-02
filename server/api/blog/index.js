@@ -47,7 +47,7 @@ export default defineEventHandler(async event => {
                     return data
                 })
             }))
-        }).then(list => list.sort((a, b) => b.updatedAt - a.updatedAt))
+        }).then(list => list.sort((a, b) => b.createdAt - a.createdAt))
     }
 
     // 验证是否登录

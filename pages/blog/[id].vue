@@ -76,32 +76,6 @@ const comment_remove = (id) => {
   });
 };
 
-//const comments = {
-//  list: [
-//    {
-//      id: "1",
-//      name: "桜華",
-//      avatar: "/avatar.jpeg",
-//      content: "hahaha",
-//      date: "11月 24, 2022",
-//    },
-//    {
-//      id: "2",
-//      name: "桜華",
-//      avatar: "/avatar.jpeg",
-//      content: "hahaha",
-//      date: "11月 24, 2022",
-//    },
-//    {
-//      id: "3",
-//      name: "桜華",
-//      avatar: "/avatar.jpeg",
-//      content: "hahaha",
-//      date: "11月 24, 2022",
-//    },
-//  ],
-//};
-
 // 转换时间格式
 const rwdate = (utc) => {
     let t = new Date(utc);
@@ -119,10 +93,10 @@ const editSubmit = () => {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ content: data.value.content }),
-  })
-    .then((res) => res.json())
-    .then((rest) => {
+  }).then((res) => res.json()).then((rest) => {
       data.value.html = rest.html;
+      data.value.createdAt = rest.createdAt
+      data.value.updatedAt = rest.updatedAt
       edit.value.show = !edit.value.show;
     });
 };

@@ -85,6 +85,8 @@ const editor = ref({
     }).then(data => {
       console.log('editItem', data);
       this.item.html = data.html
+      this.item.createdAt = data.createdAt
+      this.item.updatedAt = data.updatedAt
       this.edit_mode = false
     });
   }
