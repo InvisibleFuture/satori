@@ -1,17 +1,25 @@
 <template lang="pug">
-main.container.mx-auto.py-32.px-16.flex.gap-8(v-if="!pending")
+main.container.mx-auto.py-24.flex.gap-8(
+  class=">sm:px-16 >sm:py-32"
+  v-if="!pending"
+)
   div.flex.flex-1.flex-col.gap-2
     div.flex.flex-col.gap-6.p-6(v-if="account.online")
       // 一个精致的markdown所见即所得输入框(宽高过渡动画)
-      textarea.create-blog.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150(
-        class="focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 focus:outline-none",
-        v-if="account.online"
-        v-model="content",
-        placeholder="写点什么呢",
-        @keydown.ctrl.enter.prevent="create"
-        @keydown.enter="onEnter"
-        @change="onChanged"
-      )
+      div.create-blog
+        textarea.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150(
+          class="focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 focus:outline-none",
+          v-if="account.online"
+          v-model="content",
+          placeholder="写点什么呢",
+          @keydown.ctrl.enter.prevent="create"
+          @keydown.enter="onEnter"
+          @change="onChanged"
+        )
+        button.px-8.py-1.bg-light-blue-100.text-light-blue-400.rounded-lg.transition-all(
+          class="hover:bg-light-blue-50"
+          v-if="content.length > 0", @click="create"
+        ) 发布
     div.flex.flex-col.gap-0.p-6(
       v-for="item in data.filter(x=>x.title.length < 6)", :key="item.id" tabindex="0"
       :class="{'bg-gray-100': select_items.includes(item)}"
@@ -120,7 +128,7 @@ const select_items = ref([]);
 // 选中某项(隐藏视焦外的元素)
 const __select_item = (item) => {
   select_items.value.push(item);
-  document.querySelectorAll('header.header, textarea.create-blog').forEach((item) => {
+  document.querySelectorAll('header.header, .create-blog').forEach((item) => {
     item.classList.add('opacity-0');
     item.classList.add('pointer-events-none');
   });
@@ -130,7 +138,7 @@ const __select_item = (item) => {
 const __unselect_item = (item) => {
   select_items.value = select_items.value.filter(i => i !== item);
   if (select_items.value.length === 0) {
-    document.querySelectorAll('header.header, textarea.create-blog').forEach((item) => {
+    document.querySelectorAll('header.header, .create-blog').forEach((item) => {
       item.classList.remove('opacity-0');
       item.classList.remove('pointer-events-none');
     });
@@ -201,7 +209,7 @@ onMounted(() => {
 // 卸载监听器(离开时恢复隐藏内容)
 onUnmounted(() => {
   window.removeEventListener("keydown", __keydown_all);
-  document.querySelectorAll('header.header, textarea.create-blog').forEach((item) => {
+  document.querySelectorAll('header.header, .create-blog').forEach((item) => {
     item.classList.remove('opacity-0');
     item.classList.remove('pointer-events-none');
   });
