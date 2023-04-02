@@ -13,6 +13,9 @@ export default defineEventHandler(async event => {
     if (event.node.req.method === 'GET') {
         const { id } = event.context.params
 
+        // 浏览器缓存一个月
+        event.node.res.setHeader('Cache-Control', 'max-age=2629746,immutable')
+
         // 请求文件后缀是否 .webp 格式
         if (id.match(/\.webp$/)) {
             const filepath = path.join(process.cwd(), 'data/gallery/webp', id)
