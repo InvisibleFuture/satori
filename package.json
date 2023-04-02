@@ -5,7 +5,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "PORT=3000 nuxt preview",
-    "update": "ssh root@satori.love 'cd satori; git pull; npm install; npm run build; pm2 restart satori'",
+    "update": "./update.sh",
+    "update_bk": "ssh root@satori.love 'cd satori; git pull; npm install; npm run build; pm2 restart satori'",
     "updata": "scp -r ./data/* root@satori.love:~/satori/.output/data/"
   },
   "devDependencies": {
