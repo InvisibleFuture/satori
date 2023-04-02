@@ -2,7 +2,6 @@
 .blog-item.max-w-3xl.mx-auto.py-42
   div(v-if="pending") Loading..
   article(v-else)
-    // button.rounded-full(@click="editData") editData
     .content(v-if="!edit.show", v-html="data.html")
     .content(v-else)
       textarea.w-full.h-screen.p-8.outline-none.caret-light-blue-700(
@@ -65,13 +64,9 @@ const comments = {
 };
 
 // 进入编辑模式
-//const editData = () => {
-//  edit.value.show = !edit.value.show;
-//  //textarea.value.addEventListener("input", (e) => {
-//  //  textarea.value.style.height = "100px";
-//  //  textarea.value.style.height = e.target.scrollHeight + "px";
-//  //});
-//};
+const editData = () => {
+  edit.value.show = !edit.value.show;
+};
 
 // 提交编辑的内容
 const editSubmit = () => {
@@ -94,6 +89,10 @@ onMounted(() => {
     }
     if (e.code === "KeyI" && e.ctrlKey === true) {
       edit.value.show = !edit.value.show;
+    }
+    // 取消编辑
+    if (e.code === "Escape") {
+      edit.value.show = false;
     }
   };
 });

@@ -9,7 +9,7 @@ export default defineEventHandler(async event => {
 
     //// 如果当前会话不存在, 则要求登录(401)
     //if (!session_value) {
-    //    event.res.statusCode = 401
+    //    event.node.res.statusCode = 401
     //    return { message: '请先登录' }
     //}
 
@@ -30,7 +30,7 @@ export default defineEventHandler(async event => {
     //// 如果当前用户不存在, 注销掉此会话, 要求登录(401)
     //if (!user_value) {
     //    await session.removeItem(session_id)
-    //    event.res.statusCode = 401
+    //    event.node.res.statusCode = 401
     //    return { message: '请先登录' }
     //}
 

@@ -49,7 +49,7 @@ export default defineEventHandler(async event => {
         session.setItem(session_value.id, session_value)
 
         // 设置 cookie
-        event.res.setHeader('Set-Cookie', `session=${session_value.id}; path=/; httpOnly`)
+        event.node.res.setHeader('Set-Cookie', `session=${session_value.id}; path=/; httpOnly`)
 
         // 移除密码
         delete u.password

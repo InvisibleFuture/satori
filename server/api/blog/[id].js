@@ -30,16 +30,18 @@ export default defineEventHandler(async event => {
     // 检查是否有权限操作(不存在ID的允许任意修改)
     const checkPermission = async (blog_uid) => {
         const session_id = getCookie(event, 'session')
+        console.log('session_id:', session_id)
         if (!session_id) return false
         const session_data = await session.getItem(session_id)
+        console.log('session_data:', session_data)
         if (!session_data) return false
-        return session_data.user_id !== blog_uid
+        console.log('blog_uid:', blog_uid)
+        return session_data.user_id === blog_uid
     }
-
-    const data = await blog.getItem(event.context.params.id)
 
     // 处理 GET 请求
     if (event.node.req.method === 'GET') {
+        const data = await blog.getItem(event.context.params.id)
         return {
             ...data,
             html: md2html(data.content),
@@ -49,40 +51,43 @@ export default defineEventHandler(async event => {
             updatedAt: new Date(data.updatedAt),
         }
     }
-
-    // 检查是否有权限操作
-    if (await checkPermission(data.user_id)) {
-        event.res.statusCode = 403
-        return { success: false, message: '没有权限' }
-    }
     
     // 处理 DELETE 请求(检查是否有权限)
     if (event.node.req.method === 'DELETE') {
+        const data = await blog.getItem(event.context.params.id)
+        if (!(await checkPermission(data.user_id))) {
+            event.node.res.statusCode = 403
+            return { success: false, message: '没有权限' }
+        }
         console.log('DELETE:', event.context.params.id)
         await blog.removeItem(event.context.params.id)
         return { success: true }
     }
 
-    // 获取 body
-    const body = await readBody(event)
-
     // 处理 PATCH 请求(body 中的数据覆盖原数据)
     if (event.node.req.method === 'PATCH') {
-        // 移除禁止修改的字段
-        delete body.id
-        delete body.user_id
-        // 合并数据
-        for (const key in body) {
+        const data = await blog.getItem(event.context.params.id)
+        if (!data) {
+            event.node.res.statusCode = 404
+            return { success: false, message: '没有找到该博客' }
+        }
+        if (data.user_id && !await checkPermission(data.user_id)) {
+            event.node.res.statusCode = 403
+            return { success: false, message: '没有权限' }
+        }
+        const body = await readBody(event) // 获取 body
+        delete body.id                     // 移除禁止修改的字段
+        delete body.user_id                // 移除禁止修改的字段
+        for (const key in body) {          // 合并数据
             data[key] = body[key]
         }
+        data.updatedAt = new Date().toISOString() // 自动修改的字段
         await blog.setItem(event.context.params.id, data)
         return {
             ...data,
             html: md2html(data.content),
             tags: findTags({ tokens: lexer(data.content) }),
-            title: lexer(data.content).find(item => item.type === 'heading' && item.depth === 1),
-            createdAt: new Date(data.createdAt),
-            updatedAt: new Date(data.updatedAt),
+            title: lexer(data.content).find(item => item.type === 'heading' && item.depth === 1)
         }
     }
 

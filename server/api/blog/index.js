@@ -59,7 +59,7 @@ export default defineEventHandler(async event => {
 
     // 检查是否有权限操作
     if (!await checkPermission()) {
-        event.res.statusCode = 401
+        event.node.res.statusCode = 401
         return { success: false, message: '没有权限' }
     }
 
