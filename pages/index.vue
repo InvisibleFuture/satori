@@ -35,20 +35,18 @@ onMounted(async () => {
   chart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: Object.keys(data.time).map(key=>{
+      labels: Array.from({ length: 24 }, (_, i) => `${i < 10 ? '0' + i : i}:00`),
+      datasets: Object.keys(data.days).map(key => {
+        const item = data.days[key]
         const date = new Date(key)
-        const hour = date.getHours()
-        return `${hour < 10 ? '0' + hour : hour}:00`
+        return {
+          label: `${date.toLocaleDateString().replace(/\d{4}年/, '')} ${week[date.getDay()]}`,
+          data: item.map(x=>x.count),
+          borderWidth: 2,
+          fill: true,
+          tension: 0.3,
+        }
       }),
-      datasets: [{
-        label: '访问量',
-        data: Object.keys(data.time).map(key => data.time[key]),
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 2,
-        fill: true,
-        tension: 0.3,
-      }],
     },
   })
 })
@@ -69,20 +67,22 @@ const setChart = () => {
   chart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: Object.keys(data.time).map(key=>{
-        const date = new Date(key)
-        const hour = date.getHours()
-        return `${hour < 10 ? '0' + hour : hour}:00`
-      }),
-      datasets: [{
-        label: '访问量',
-        data: Object.keys(data.time).map(key => data.time[key]),
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 2,
-        fill: true,
-        tension: 0.3,
-      }],
+      // 0点到23点生成24个小时的数据
+      labels: Array.from({ length: 24 }, (_, i) => `${i < 10 ? '0' + i : i}:00`),
+      //Object.keys(data.time).map(key=>{
+      //  const date = new Date(key)
+      //  const hour = date.getHours()
+      //  return `${hour < 10 ? '0' + hour : hour}:00`
+      //}),
+      //datasets: [{
+      //  label: '访问量',
+      //  data: Object.keys(data.time).map(key => data.time[key]),
+      //  backgroundColor: 'rgba(255, 99, 132, 0.2)',
+      //  borderColor: 'rgba(255, 99, 132, 1)',
+      //  borderWidth: 2,
+      //  fill: true,
+      //  tension: 0.3,
+      //}],
     },
   })
 }
