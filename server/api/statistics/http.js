@@ -24,10 +24,24 @@ export default defineEventHandler(async event => {
             if (!counts.url[log.url]) counts.url[log.url] = 0
             counts.url[log.url]++;
 
-            // 按请求时间统计(每小时)
+            // 按请求时间统计
+            //log.time = log.time.slice(0, 13) + ':00:00.000Z'
+            //if (!counts.time[log.time]) counts.time[log.time] = 0
+            //counts.time[log.time]++;
+
+            // 按请求时间统计, 重写修正(每小时, 如果缺少某个小时的数据, 会导致图表显示不连续, 可以补充数据为0)
             log.time = log.time.slice(0, 13) + ':00:00.000Z'
             if (!counts.time[log.time]) counts.time[log.time] = 0
             counts.time[log.time]++;
+            const times = Object.keys(counts.time).sort()
+            for (let i = 0; i < times.length - 1; i++) {
+                const time1 = new Date(times[i])
+                const time2 = new Date(times[i + 1])
+                if (time2 - time1 > 3600000) {
+                    const time = new Date(time1.getTime() + 3600000).toISOString()
+                    counts.time[time] = 0
+                }
+            }
 
             // session 取前 8 位(不可公开)
             //log.session = log.session?.slice(0, 8)
