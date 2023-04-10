@@ -30,13 +30,10 @@ export default defineEventHandler(async event => {
     // 检查是否有权限操作(不存在ID的允许任意修改)
     const checkPermission = async (blog_uid) => {
         const session_id = getCookie(event, 'session')
-        console.log('session_id:', session_id)
         if (!session_id) return false
         const session_data = await session.getItem(session_id)
-        console.log('session_data:', session_data)
         if (!session_data) return false
-        console.log('blog_uid:', blog_uid)
-        return session_data.user_id === blog_uid
+        return (!blog_uid) || session_data.user_id === blog_uid
     }
 
     // 处理 GET 请求
