@@ -50,24 +50,25 @@ export default defineEventHandler(async event => {
         }).then(list => list.sort((a, b) => b.createdAt - a.createdAt))
     }
 
-    // 验证是否登录
-    const checkPermission = async () => {
-        const session_id = getCookie(event, 'session')
-        const sessionData = session_id ? await session.getItem(session_id) : {}
-        return !!sessionData.user_id
-    }
-
-    // 检查是否有权限操作
-    if (!await checkPermission()) {
-        event.node.res.statusCode = 401
-        return { success: false, message: '没有权限' }
-    }
-
     // 处理 POST 请求, 写入 markdown
     if (event.node.req.method === 'POST') {
+        const session_id = getCookie(event, 'session')
+        if (!session_id) {
+            event.node.res.statusCode = 401
+            return { success: false, message: '需要登录' }
+        }
+        const { user_id } = await session.getItem(session_id) || {}
+        if (!user_id) {
+            event.node.res.statusCode = 401
+            return { success: false, message: '没有权限' }
+        }
         const { content } = await readBody(event)
+        if (!content) {
+            event.node.res.statusCode = 400
+            return { success: false, message: '内容不可为空' }
+        }
         const date = Date.now()
-        const data = { id: v4(), content, createdAt:date, updatedAt:date }
+        const data = { id: v4(), content, createdAt:date, updatedAt:date, user_id }
         await blog.setItem(data.id, data)
         data.html = marked(data.content, { breaks: true })
         const regex = /<code\s+class="(.*)"\s*>([\s\S]*?)<\/code>/g;
