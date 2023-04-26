@@ -10,7 +10,7 @@
     "updata": "scp -r ./data/* root@satori.love:~/satori/.output/data/"
   },
   "devDependencies": {
-    "nuxt": "^3.3.1",
+    "nuxt": "^3.4.2",
     "nuxt-windicss": "^2.6.0",
     "pug": "^3.0.2"
   },
