@@ -3,7 +3,7 @@ import { defineEventHandler } from 'h3'
 
 // 检查 logs 目录是否存在，不存在则创建
 if (!fs.existsSync('./data/logs')) {
-    fs.mkdirSync('./data/logs')
+    fs.mkdirSync('./data/logs', { recursive: true })
 }
 
 export default defineEventHandler(async event => {
