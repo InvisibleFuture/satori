@@ -26,18 +26,17 @@ main.container.mx-auto.py-24.flex.gap-8(
       @click="event => selectItem(event,item)"
     )
       div.markdown(v-html="item.html")
-      div.mb-6.flex.gap-4.text-gray-500.text-xs
-        time {{ rwdate(item.createdAt) }} 创建
-        time(v-if="item.createdAt !== item.updatedAt") {{ rwdate(item.updatedAt) }} 最后更新
-      div.flex.flex-col.gap-2
-        div.flex.gap-2
-          img.h-8.w-8.rounded-full.object-cover(src="/avatar.jpeg" alt="Last")
-          div
-            p hahahah
-            div.flex.gap-2.text-gray-500.text-xs
-              span Last
-              span 2021-08-08 12:12:12
-        div.text-green-500 展开12个讨论..
+      div.flex.gap-4.text-gray-500.text-xs
+        time {{ rwdate(item.updatedAt) }} {{ item.createdAt !== item.updatedAt ? '创建' : '最后更新' }}
+      //div.flex.flex-col.gap-2
+      //  div.flex.gap-2
+      //    img.h-8.w-8.rounded-full.object-cover(src="/avatar.jpeg" alt="Last")
+      //    div
+      //      p hahahah
+      //      div.flex.gap-2.text-gray-500.text-xs
+      //        span Last
+      //        time {{ rwdate(item.updatedAt) }} {{ item.createdAt !== item.updatedAt ? '创建' : '最后更新' }}
+      //  div.text-green-500 展开12个讨论..
   aside.w-64.py-2.flex.flex-col.gap-8(class="<sm:hidden")
     div
       span.font-bold # TAG
@@ -54,7 +53,7 @@ main.container.mx-auto.py-24.flex.gap-8(
           class="hover:text-pink-500"
           :to="`/blog/${item.id}`"
         ) {{ item.title }}
-  // 弹出层编辑器
+  // 弹出层编辑器(编辑日志)
   div.fixed.bg-green-300.top-0.bottom-0.left-0.right-0(v-if="editor.edit_mode" @click="editor.edit_mode = false" @keyup.esc="editor.edit_mode = false")
     div.container.mx-auto.my-12
       textarea#editor.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150.min-h-xl.mb-4(
@@ -64,12 +63,23 @@ main.container.mx-auto.py-24.flex.gap-8(
         @keydown.ctrl.enter.prevent="editor.submit()"
         @click.stop
       )
+  // 弹出层编辑器(发表评论)
+  div.fixed.top-0.bottom-0.left-0.right-0.backdrop-filter.backdrop-blur-md.backdrop-saturate-150(
+    v-show="comments.item.show"
+    @click="comments.item.show = false"
+    @keyup.esc="comments.item.show = false"
+    class="transition-all duration-750 bg-white bg-opacity-0"
+    :class="{'bg-opacity-100': !comments.item.show}"
+  )
+  //div
+  //  button(@click="comments.item.show = true") 评论
 </template>
 
 <script setup>
 const { data, pending } = useFetch("/api/blog", { immediate: true });
 const content = ref("");
 const account = useState("account");
+const comments = ref({ list: [], item: { data: '', blog_id: '', show: true } });
 const editor = ref({
   edit_mode: false,
   item: {
@@ -80,8 +90,8 @@ const editor = ref({
   submit() {
     $fetch(`/api/blog/${this.item.id}`, {
       method: "PATCH",
-      body: JSON.stringify({content: this.item.content}),
-      Headers: {"Content-Type": "application/json"}
+      body: JSON.stringify({ content: this.item.content }),
+      Headers: { "Content-Type": "application/json" }
     }).then(data => {
       console.log('editItem', data);
       this.item.html = data.html
@@ -94,15 +104,15 @@ const editor = ref({
 
 // 转换时间格式
 const rwdate = (utc) => {
-    let t = new Date(utc);
-    return t.getMonth() + 1 + "月 " + t.getDate() + ", " + t.getFullYear();
+  let t = new Date(utc);
+  return t.getMonth() + 1 + "月 " + t.getDate() + ", " + t.getFullYear();
 }
 
 const create = (event) => {
   $fetch("/api/blog", {
     method: "POST",
-    body: JSON.stringify({content: content.value}),
-    Headers: {"Content-Type": "application/json"}
+    body: JSON.stringify({ content: content.value }),
+    Headers: { "Content-Type": "application/json" }
   }).then(item => {
     console.log('create', item);
     data.value.unshift(item)
