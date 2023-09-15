@@ -31,29 +31,21 @@ div.flex.justify-center.items-center.min-h-screen
 </template>
 
 <script setup>
-const route = useRoute();
-const router = useRouter();
-const account = useState("account");
-
-const sign_data = ref({
-  name: "",
-  password: ""
-});
+const router = useRouter()
+const account = useState("account")
+const sign_data = ref({ name: "", password: "" })
 
 const signin = () => {
   $fetch("/api/session", {
     method: "POST",
     body: JSON.stringify(sign_data.value),
-    Headers: {"Content-Type": "application/json"}
+    Headers: { "Content-Type": "application/json" }
   }).then((data) => {
-    if (data) {
-      console.log('signin', data);
-      data.user.online = true;
-      account.value = data.user;
-      router.push("/account");
-    }
-  });
-};
-
-
+    if (data.message) return alert(data.message)
+    console.log('signin', data)
+    data.user.online = true
+    account.value = data.user
+    router.push("/account")
+  })
+}
 </script>
