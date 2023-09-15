@@ -25,7 +25,6 @@
     "mariadb": "^3.1.1",
     "marked": "^4.3.0",
     "md5": "^2.3.0",
-    "mysql2": "^2.3.3",
     "resize-img": "^2.0.0",
     "sequelize": "^6.29.3",
     "string-random": "^0.1.3",
