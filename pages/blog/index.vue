@@ -28,6 +28,7 @@ main.container.mx-auto.py-24.flex.gap-8(
       div.markdown(v-html="item.html")
       div.flex.gap-4.text-gray-500.text-xs
         time {{ rwdate(item.updatedAt) }} {{ item.createdAt !== item.updatedAt ? '创建' : '最后更新' }}
+        button(@click.stop="comment_show()") 评论
       //div.flex.flex-col.gap-2
       //  div.flex.gap-2
       //    img.h-8.w-8.rounded-full.object-cover(src="/avatar.jpeg" alt="Last")
@@ -63,23 +64,23 @@ main.container.mx-auto.py-24.flex.gap-8(
         @keydown.ctrl.enter.prevent="editor.submit()"
         @click.stop
       )
-  // 弹出层编辑器(发表评论)
-  div.fixed.top-0.bottom-0.left-0.right-0.backdrop-filter.backdrop-blur-md.backdrop-saturate-150(
-    v-show="comments.item.show"
-    @click="comments.item.show = false"
-    @keyup.esc="comments.item.show = false"
-    class="transition-all duration-750 bg-white bg-opacity-0"
-    :class="{'bg-opacity-100': !comments.item.show}"
+  // 弹出层编辑器(发表评论) v-if="comments.item.show"
+  div.fixed.top-0.bottom-0.left-0.right-0.backdrop-filter.backdrop-saturate-150(
+    v-if="comments.item.visible"
+    @click="comment_show()"
+    @keyup.esc="comment_show()"
+    class="transition-all duration-250 bg-white bg-opacity-0 backdrop-blur-md"
+    :class="{'opacity-100': comments.item.show, 'opacity-0': !comments.item.show}"
   )
-  //div
-  //  button(@click="comments.item.show = true") 评论
+  div
+    button(@click="comment_show()") 评论
 </template>
 
 <script setup>
 const { data, pending } = useFetch("/api/blog", { immediate: true });
 const content = ref("");
 const account = useState("account");
-const comments = ref({ list: [], item: { data: '', blog_id: '', show: true } });
+const comments = ref({ list: [], item: { data: '', blog_id: '', visible: false, show: false } });
 const editor = ref({
   edit_mode: false,
   item: {
@@ -100,7 +101,18 @@ const editor = ref({
       this.edit_mode = false
     });
   }
-});
+})
+
+// 在显示组件后才触发class变化
+const comment_show = () => {
+  if (comments.value.item.visible && comments.value.item.show) {
+    comments.value.item.show = false
+    setTimeout(() => comments.value.item.visible = false, 250)
+  } else {
+    comments.value.item.visible = true
+    setTimeout(() => comments.value.item.show = true, 0)
+  }
+}
 
 // 转换时间格式
 const rwdate = (utc) => {
