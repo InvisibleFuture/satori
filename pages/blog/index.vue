@@ -8,7 +8,7 @@ main.container.mx-auto.py-24.flex.gap-8(
       // 一个精致的markdown所见即所得输入框(宽高过渡动画)
       div.create-blog
         textarea.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150(
-          class="focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 focus:outline-none",
+          class="focus:outline-none focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50",
           v-if="account.online"
           v-model="content",
           placeholder="写点什么呢",
@@ -28,7 +28,7 @@ main.container.mx-auto.py-24.flex.gap-8(
       div.markdown(v-html="item.html")
       div.flex.gap-4.text-gray-500.text-xs
         time {{ rwdate(item.updatedAt) }} {{ item.createdAt !== item.updatedAt ? '创建' : '最后更新' }}
-        button(@click.stop="comment_show()") 评论
+        button(@click.stop="comment_show(item)") 评论
       //div.flex.flex-col.gap-2
       //  div.flex.gap-2
       //    img.h-8.w-8.rounded-full.object-cover(src="/avatar.jpeg" alt="Last")
@@ -58,27 +58,31 @@ main.container.mx-auto.py-24.flex.gap-8(
   div.fixed.bg-green-300.top-0.bottom-0.left-0.right-0(v-if="editor.edit_mode" @click="editor.edit_mode = false" @keyup.esc="editor.edit_mode = false")
     div.container.mx-auto.my-12
       textarea#editor.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150.min-h-xl.mb-4(
-        class="focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 focus:outline-none",
+        class="focus:outline-none focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50",
         v-model="editor.item.content",
         placeholder="写点什么呢",
         @keydown.ctrl.enter.prevent="editor.submit()"
         @click.stop
       )
-  // 弹出层编辑器(发表评论) v-if="comments.item.show"
+  // 弹出层编辑器(发表评论)
   div.fixed.top-0.bottom-0.left-0.right-0.backdrop-filter.backdrop-saturate-150(
-    v-if="comments.item.visible"
-    @click="comment_show()"
-    @keyup.esc="comment_show()"
-    class="transition-all duration-250 bg-white bg-opacity-0 backdrop-blur-md"
-    :class="{'opacity-100': comments.item.show, 'opacity-0': !comments.item.show}"
+    v-if="dialog.visible"
+    @click="dialogShow()"
+    @keyup.esc="dialogShow()"
+    tabindex="0"
+    ref="dialogRef"
+    class="bg-white bg-opacity-0 transition-all duration-250 backdrop-blur-md"
+    :class="{'opacity-100': dialog.show, 'opacity-0': !dialog.show}"
   )
+    div.container.mx-auto.my-12.p-4.transition-all.duration-250(@click.stop)
+      div(v-html="comments.item.html")
+      pre {{ comments.item }}
 </template>
 
 <script setup>
 const { data, pending } = useFetch("/api/blog", { immediate: true });
 const content = ref("");
 const account = useState("account");
-const comments = ref({ list: [], item: { data: '', blog_id: '', visible: false, show: false } });
 const editor = ref({
   edit_mode: false,
   item: {
@@ -102,14 +106,28 @@ const editor = ref({
 })
 
 // 在显示组件后才触发class变化
-const comment_show = () => {
-  if (comments.value.item.visible && comments.value.item.show) {
-    comments.value.item.show = false
-    setTimeout(() => comments.value.item.visible = false, 250)
+const dialog = ref({ show: false, visible: false })
+const dialogRef = ref()
+const dialogShow = () => {
+  if (dialog.value.visible && dialog.value.show) {
+    dialog.value.show = false
+    setTimeout(() => dialog.value.visible = false, 250)
   } else {
-    comments.value.item.visible = true
-    setTimeout(() => comments.value.item.show = true, 0)
+    dialog.value.visible = true                   // 显示弹出层
+    setTimeout(() => dialog.value.show = true, 0) // 等待渲染后再显示
+    nextTick(() => dialogRef.value.focus())       // 弹出层自动聚焦
   }
+}
+
+// 展示组件
+const comments = ref({
+  item: { data: '', blog_id: '' },
+  list: [],
+  editor: {},
+})
+const comment_show = (item) => {
+  comments.value.item = item
+  dialogShow()
 }
 
 // 转换时间格式
