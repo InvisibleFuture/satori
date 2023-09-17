@@ -3,15 +3,20 @@ import readline from 'readline'
 
 export default defineEventHandler(async event => {
     if (event.node.req.method === 'GET') {
-        const { method, url, time } = getQuery(event)
+        const { method, url, time, week:x } = getQuery(event)
 
         // 本周7天分别统计访问次数
         const counts = {}
 
-        // 读取本周所有日志文件(防止大文件溢出内存)
+        // 回溯时间(周)
+        const w = x ? parseInt(x) * 24 * 60 * 60 * 1000 : 0
+        console.log(w)
+
+        // 读取指定周或本周所有日志文件(防止大文件溢出内存)
         const files = await fs.promises.readdir('./data/logs')
         await Promise.all(files.filter(file => {
-            const date = new Date(Date.now() + 8 * 60 * 60 * 1000)
+            const date = new Date(Date.now() + 8 * 60 * 60 * 1000 - w )
+            console.log(date)
             const year = date.getFullYear()
             const month = date.getMonth() + 1
             const day = date.getDate()
