@@ -15,8 +15,8 @@ export default defineEventHandler(async event => {
     if (event.node.req.url === '/api/statistics/http/week') return
     if (event.node.req.url === '/api/statistics/http/month') return
 
-    // 每天一个日志文件
-    const date = new Date().toISOString().slice(0, 10)
+    // 每天一个日志文件(东八区时间)
+    const date = new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString().slice(0, 10)
     const filepath = `./data/logs/${date}.json`
     if (!await fs.promises.access(filepath).then(() => true).catch(() => false)) {
         await fs.promises.writeFile(filepath, '')
