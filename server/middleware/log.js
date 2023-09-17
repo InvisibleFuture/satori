@@ -18,7 +18,7 @@ export default defineEventHandler(async event => {
     // 每天一个日志文件
     const date = new Date().toISOString().slice(0, 10)
     const filepath = `./data/logs/${date}.json`
-    if (!await fs.promises.exists(filepath)) {
+    if (!await fs.promises.access(filepath).then(() => true).catch(() => false)) {
         await fs.promises.writeFile(filepath, '')
     }
 
