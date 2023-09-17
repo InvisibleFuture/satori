@@ -72,8 +72,6 @@ main.container.mx-auto.py-24.flex.gap-8(
     class="transition-all duration-250 bg-white bg-opacity-0 backdrop-blur-md"
     :class="{'opacity-100': comments.item.show, 'opacity-0': !comments.item.show}"
   )
-  div
-    button(@click="comment_show()") 评论
 </template>
 
 <script setup>
