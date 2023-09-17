@@ -44,20 +44,5 @@ export default defineNuxtConfig({
   },
   build: {
     analyze: true,
-  },
-  //vite: {
-  //  server: {
-  //    proxy: {
-  //      "/api": {
-  //        target: "http://localhost:2333",
-  //        changeOrigin: true,
-  //        rewrite: (path) => path.replace(/^\/api/, ""),
-  //      },
-  //      "/data": {
-  //        target: "http://localhost:2333",
-  //        changeOrigin: true,
-  //      },
-  //    },
-  //  },
-  //},
+  }
 })
