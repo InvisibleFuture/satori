@@ -16,15 +16,14 @@
   //    li 评论数: {{ 0 }}
   //    li 活跃状态: {{ 0 }}
   // 统计(访问量)
-  //div
-  //  h1.text-xl.text-gray-600.font-bold 统计(访问量)
-  //  div.rounded-lg.bg-gray-300.bg-opacity-10.p-4.h-120.flex.justify-center
-  //    canvas#myChart(style="width: 100%; height: 100%")
-  //  div
-  //    button.bg-light-blue-600.mx-2.text-white.rounded-md(@click="changeDay") 切换为一天的访问量
-  //    button.bg-light-blue-600.mx-2.text-white.rounded-md(@click="changeWeek") 切换为一周的访问量
-  //    button.bg-light-blue-600.mx-2.text-white.rounded-md(@click="changeMonth") 切换为一月的访问量
-  //
+  div
+    div.rounded-lg.bg-gray-300.bg-opacity-10.p-4.h-120.flex.justify-center
+      canvas#myChart(style="width: 100%; height: 100%")
+    //div
+    //  button.bg-light-blue-600.mx-2.text-white.rounded-md(@click="changeDay") 切换为一天的访问量
+    //  button.bg-light-blue-600.mx-2.text-white.rounded-md(@click="changeWeek") 切换为一周的访问量
+    //  button.bg-light-blue-600.mx-2.text-white.rounded-md(@click="changeMonth") 切换为一月的访问量
+  
   //### 远程办公
   //1. 离开办公室走进咖啡厅, 你缺少什么?
   //    成本损耗, 效益加成: 咖啡厅显著提高了成本, 但未加成效率
@@ -69,59 +68,73 @@ const week = {
   6: '周六',
 }
 
-/**
+//const 按日获取访问量 = () => {
+//  return fetch('/api/statistics/http').then(res => res.json())
+//}
+//
+//const 按周获取访问量 = () => {
+//  return fetch('/api/statistics/http').then(res => res.json())
+//}
+//
+//const 按月获取访问量 = () => {
+//  return fetch('/api/statistics/http').then(res => res.json())
+//}
+
 onMounted(async () => {
   const ctx = document.getElementById('myChart')
-  data = await fetch('/api/statistics/http').then(res => res.json())
-  console.log(data)
+  const counts = await $fetch('/api/statistics/http/day')
+  console.log(counts)
+  //$fetch('/api/statistics/http').then(data => {
+  //  console.log(data)
+  //})
+  //console.log(data)
 
-  // 只有按天统计的数据, 使用按天统计的数据转换为按周统计的数据
-  data.weeks = {}
-  Object.keys(data.days).forEach(key => {
-    const item = data.days[key]
-    const date = new Date(key)
-    const week = date.getDay()
-    if (!data.weeks[week]) {
-      data.weeks[week] = []
-    }
-    data.weeks[week].push(...item)
-  })
+  //// 只有按天统计的数据, 使用按天统计的数据转换为按周统计的数据
+  //data.weeks = {}
+  //Object.keys(data.days).forEach(key => {
+  //  const item = data.days[key]
+  //  const date = new Date(key)
+  //  const week = date.getDay()
+  //  if (!data.weeks[week]) {
+  //    data.weeks[week] = []
+  //  }
+  //  data.weeks[week].push(...item)
+  //})
 
-  // 只有按天统计的数据, 使用按天统计的数据转换为按月统计的数据
-  data.months = {}
-  Object.keys(data.days).forEach(key => {
-    const item = data.days[key]
-    const date = new Date(key)
-    const month = date.getMonth()
-    if (!data.months[month]) {
-      data.months[month] = []
-    }
-    data.months[month].push(...item)
-  })
+  //// 只有按天统计的数据, 使用按天统计的数据转换为按月统计的数据
+  //data.months = {}
+  //Object.keys(data.days).forEach(key => {
+  //  const item = data.days[key]
+  //  const date = new Date(key)
+  //  const month = date.getMonth()
+  //  if (!data.months[month]) {
+  //    data.months[month] = []
+  //  }
+  //  data.months[month].push(...item)
+  //})
 
-  chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: Array.from({ length: 24 }, (_, i) => `${i < 10 ? '0' + i : i}:00`),
-      datasets: Object.keys(data.days).map(key => {
-        const item = data.days[key]
-        const date = new Date(key)
-        return {
-          label: `${date.toLocaleDateString().replace(/\d{4}年/, '')} ${week[date.getDay()]}`,
-          data: item.map(x => x.count),
-          borderWidth: 2,
-          fill: true,
-          tension: 0.3,
-        }
-      }),
-    },
-  })
+  //chart = new Chart(ctx, {
+  //  type: 'line',
+  //  data: {
+  //    labels: Array.from({ length: 24 }, (_, i) => `${i < 10 ? '0' + i : i}:00`),
+  //    datasets: Object.keys(data.days).map(key => {
+  //      const item = data.days[key]
+  //      const date = new Date(key)
+  //      return {
+  //        label: `${date.toLocaleDateString().replace(/\d{4}年/, '')} ${week[date.getDay()]}`,
+  //        data: item.map(x => x.count),
+  //        borderWidth: 2,
+  //        fill: true,
+  //        tension: 0.3,
+  //      }
+  //    }),
+  //  },
+  //})
 })
 
 onUnmounted(() => {
   chart.destroy()
 })
- */
 
 // 点击切换为一天的访问量
 const changeDay = () => {

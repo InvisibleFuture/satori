@@ -8,21 +8,22 @@ if (!fs.existsSync('./data/logs')) {
 
 export default defineEventHandler(async event => {
 
-    // 排除 /api/statistics/http 请求和 /api/log 请求
-    if (event.node.req.url === '/api/statistics/http') return
+    // 排除无需记录的请求
     if (event.node.req.url === '/api/log') return
+    if (event.node.req.url === '/api/statistics/http') return
+    if (event.node.req.url === '/api/statistics/http/day') return
+    if (event.node.req.url === '/api/statistics/http/week') return
+    if (event.node.req.url === '/api/statistics/http/month') return
 
-    // 自动压缩日志文件(超过10M)
-    if (fs.existsSync('./data/logs/default.json')) {
-        const stats = fs.statSync('./data/logs/default.json')
-        if (stats.size > 1024 * 1024 * 10) {
-            const date = new Date().toISOString().slice(0, 10)
-            fs.renameSync('./data/logs/default.json', `./data/logs/default-${date}.json`)
-        }
+    // 每天一个日志文件
+    const date = new Date().toISOString().slice(0, 10)
+    const filepath = `./data/logs/${date}.json`
+    if (!await fs.promises.exists(filepath)) {
+        await fs.promises.writeFile(filepath, '')
     }
 
     // 增量写入JSON格式的日志到本地
-    fs.appendFileSync('./data/logs/default.json', JSON.stringify({
+    await fs.promises.appendFile(filepath, JSON.stringify({
         time: new Date().toISOString(),
         method: event.node.req.method,
         url: event.node.req.url,
@@ -33,4 +34,5 @@ export default defineEventHandler(async event => {
             authorization: undefined,
         },
     }) + '\n')
+
 })
