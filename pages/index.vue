@@ -23,7 +23,7 @@
     //  button.bg-light-blue-600.mx-2.text-white.rounded-md(@click="changeDay") 切换为一天的访问量
     //  button.bg-light-blue-600.mx-2.text-white.rounded-md(@click="changeWeek") 切换为一周的访问量
     //  button.bg-light-blue-600.mx-2.text-white.rounded-md(@click="changeMonth") 切换为一月的访问量
-  
+
   //### 远程办公
   //1. 离开办公室走进咖啡厅, 你缺少什么?
   //    成本损耗, 效益加成: 咖啡厅显著提高了成本, 但未加成效率
@@ -54,8 +54,8 @@ const list = [
   { name: '可控个人助理', icon: '', list: [] },
 ]
 
-var chart = null
 var data = null
+var chart = null
 
 // 展示本周的访问量
 const week = {
@@ -68,68 +68,55 @@ const week = {
   6: '周六',
 }
 
-//const 按日获取访问量 = () => {
-//  return fetch('/api/statistics/http').then(res => res.json())
-//}
-//
-//const 按周获取访问量 = () => {
-//  return fetch('/api/statistics/http').then(res => res.json())
-//}
-//
-//const 按月获取访问量 = () => {
-//  return fetch('/api/statistics/http').then(res => res.json())
-//}
-
 onMounted(async () => {
-  const ctx = document.getElementById('myChart')
   const counts = await $fetch('/api/statistics/http/day')
   console.log(counts)
-  //$fetch('/api/statistics/http').then(data => {
-  //  console.log(data)
-  //})
-  //console.log(data)
-
-  //// 只有按天统计的数据, 使用按天统计的数据转换为按周统计的数据
-  //data.weeks = {}
-  //Object.keys(data.days).forEach(key => {
-  //  const item = data.days[key]
-  //  const date = new Date(key)
-  //  const week = date.getDay()
-  //  if (!data.weeks[week]) {
-  //    data.weeks[week] = []
-  //  }
-  //  data.weeks[week].push(...item)
-  //})
-
-  //// 只有按天统计的数据, 使用按天统计的数据转换为按月统计的数据
-  //data.months = {}
-  //Object.keys(data.days).forEach(key => {
-  //  const item = data.days[key]
-  //  const date = new Date(key)
-  //  const month = date.getMonth()
-  //  if (!data.months[month]) {
-  //    data.months[month] = []
-  //  }
-  //  data.months[month].push(...item)
-  //})
-
-  //chart = new Chart(ctx, {
-  //  type: 'line',
-  //  data: {
-  //    labels: Array.from({ length: 24 }, (_, i) => `${i < 10 ? '0' + i : i}:00`),
-  //    datasets: Object.keys(data.days).map(key => {
-  //      const item = data.days[key]
-  //      const date = new Date(key)
-  //      return {
-  //        label: `${date.toLocaleDateString().replace(/\d{4}年/, '')} ${week[date.getDay()]}`,
-  //        data: item.map(x => x.count),
-  //        borderWidth: 2,
-  //        fill: true,
-  //        tension: 0.3,
-  //      }
-  //    }),
-  //  },
-  //})
+  const hour = new Date().getHours()
+  chart = new Chart(document.querySelector('#myChart'), {
+    type: 'line',
+    data: {
+      labels: Object.keys(counts).map(item => item),
+      datasets: [{
+        label: '今天访问量',
+        data: Object.values(counts).map(item => item),
+        spanGaps: true,
+        borderWidth: 2,
+        fill: true,
+        tension: 0.3
+      }]
+    },
+    // 为当前时间 hour 设置截断线
+    options: {
+      plugins: {
+        annotation: {
+          annotations: [
+            {
+              type: 'line',
+              mode: 'vertical',
+              scaleID: 'x',
+              value: new Date().toISOString().slice(0, 10),
+              borderColor: 'red',
+              borderWidth: 2,
+              label: {
+                content: 'Today',
+                enabled: true,
+                position: 'top',
+              }
+            },
+          ],
+        },
+      },
+      scales: {
+        x: {
+          ticks: {
+            callback: (value, index, values) => {
+              return (index === hour) ? '(当前) ' + value : value
+            }
+          }
+        }
+      }
+    }
+  })
 })
 
 onUnmounted(() => {
