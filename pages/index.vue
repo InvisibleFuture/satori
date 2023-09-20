@@ -27,6 +27,7 @@
   //### 远程办公
   //1. 离开办公室走进咖啡厅, 你缺少什么?
   //    成本损耗, 效益加成: 咖啡厅显著提高了成本, 但未加成效率
+  //    咖啡厅加成了什么? 状态氛围
   //2. 为什么缺少? 如何补足?
 </template>
 
@@ -69,8 +70,8 @@ const week = {
 }
 
 onMounted(async () => {
-  // 获取昨天的访问量
-  const 昨天的时间戳 = new Date().getTime() - 24 * 60 * 60 * 1000
+  // 获取昨天的访问量(东八区时间, 24小时前)
+  const 昨天的时间戳 = new Date().getTime() + (8 - 24) * 60 * 60 * 1000
   const 昨天的日期 = new Date(昨天的时间戳).toISOString().slice(0, 10)
   console.log(昨天的日期)
   const 昨天的访问量 = await $fetch(`/api/statistics/http/day?day=${昨天的日期}`)
@@ -85,7 +86,7 @@ onMounted(async () => {
       labels: Object.keys(counts).map(item => item),
       datasets: [
         {
-          label: '今日访问量'+Object.values(counts).map(item => item).reduce((a,b)=>a+b,0),
+          label: '今日访问量' + Object.values(counts).map(item => item).reduce((a, b) => a + b, 0),
           data: Object.values(counts).map(item => item),
           spanGaps: true,
           borderWidth: 2,
@@ -93,7 +94,7 @@ onMounted(async () => {
           tension: 0.3
         },
         {
-          label: '昨日访问量'+Object.values(昨天的访问量).map(item => item).reduce((a,b)=>a+b,0),
+          label: '昨日访问量' + Object.values(昨天的访问量).map(item => item).reduce((a, b) => a + b, 0),
           data: Object.values(昨天的访问量).map(item => item),
           spanGaps: true,
           borderWidth: 2,
