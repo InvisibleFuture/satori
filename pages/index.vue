@@ -17,8 +17,8 @@
   //    li 活跃状态: {{ 0 }}
   // 统计(访问量)
   div
-    div.rounded-lg.bg-gray-300.bg-opacity-10.p-4.h-80.flex.justify-center
-      canvas#myChart(style="width: 70%; height: 100%")
+    div.rounded-lg.bg-gray-300.bg-opacity-10.p-4.h-80.w-60vw.mx-auto.flex.justify-center
+      canvas#myChart(style="width: 100%; height: 100%")
     //div
     //  button.bg-light-blue-600.mx-2.text-white.rounded-md(@click="changeDay") 切换为一天的访问量
     //  button.bg-light-blue-600.mx-2.text-white.rounded-md(@click="changeWeek") 切换为一周的访问量
