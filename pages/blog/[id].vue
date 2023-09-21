@@ -21,7 +21,7 @@
         input.bg-gray-100.p-4.outline-none.w-full.border-b.border-dark-500.border-opacity-5(placeholder="昵称", v-model="comment.name" type="text")
         input.bg-gray-100.p-4.outline-none.w-full.border-b.border-dark-500.border-opacity-5(placeholder="邮箱", v-model="comment.email" type="email")
         input.bg-gray-100.p-4.outline-none.w-full.border-b.border-dark-500.border-opacity-5(placeholder="网址", v-model="comment.url" type="text")
-      textarea.bg-gray-100.p-4.outline-none.w-full(rows="6" placeholder="评论" v-model="comment.content" @keyup.enter="comment_submit")
+      textarea.bg-gray-100.p-4.outline-none.w-full(rows="6" placeholder="评论" v-model="comment.content" @keyup.enter="comment.submit()")
     .flex.my-12(v-for="item in data.comments", :key="item.id")
       img.rounded-full.w-16.h-16.mr-4(:src="'item.user.avatar'")
       div
@@ -32,7 +32,7 @@
         time.text-rose-300.font-bold.text-sm.my-2  {{ rwdate(item.createdAt || item.updatedAt) }}
         div
           button.font-bold.bg-pink-600.px-2.py-1.text-white.rounded-md.text-xs(
-            @click="comment_remove(item.id)"
+            @click="comment.remove(item.id)"
             v-if="account.online"
           ) delete
 
@@ -46,29 +46,28 @@ const { data, pending } = useFetch(`/api/blog/${route.params.id}`, {
 });
 const edit = ref({ show: false });
 
-const comment = ref({ name: "", email: "", url: "", content: "", blog_id: route.params.id });
-const comment_submit = () => {
-  fetch("/api/comment", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(comment.value),
-  }).then((res) => res.json()).then(item => {
-    console.log('create', item);
-    comments.value.unshift(item)
-    comment.value.content = "";
-    // 本地保存 name 和 email
-    localStorage.setItem("name", comment.value.name);
-    localStorage.setItem("email", comment.value.email);
-    localStorage.setItem("url", comment.value.url);
-  });
-};
-
-const comment_remove = (id) => {
-  $fetch(`/api/blog/${data.value.id}/comments/${id}`, { method: "DELETE" }).then(item => {
-    data.value.comments = data.value.comments.filter(x => x.id !== id);
-    console.log('delete', item);
-  });
-};
+// 评论(发表评论, 删除评论)
+const comment = ref({
+  item: { name: "", email: "", url: "", content: "" },
+  submit: () => {
+    $fetch(`/api/blog/${route.params.id}/comments`, {
+      method: "POST",
+      body: JSON.stringify(comment.value.item),
+    }).then((item) => {
+      data.value.comments.unshift(item);                       // 添加到评论列表
+      comment.value.item.content = "";                         // 清空输入框
+      localStorage.setItem("name", comment.value.item.name);   // 本地保存 name
+      localStorage.setItem("email", comment.value.item.email); // 本地保存 email
+      localStorage.setItem("url", comment.value.item.url);     // 本地保存 url
+    });
+  },
+  remove: (comment_id) => {
+    $fetch(`/api/blog/${data.value.id}/comments/${comment_id}`, { method: "DELETE" }).then(item => {
+      data.value.comments = data.value.comments.filter(x => x.id !== id);
+      console.log('delete', item);
+    });
+  },
+});
 
 // 转换时间格式
 const rwdate = (utc) => {
