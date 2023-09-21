@@ -63,6 +63,8 @@ onMounted(() => {
   font-weight: bold;
   font-size: 2rem;
   margin: 1.5rem 0;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 
 .markdown pre code {
@@ -76,21 +78,26 @@ onMounted(() => {
   border-spacing: 0;
   margin: 1rem 0;
 }
+
 .markdown table tr th {
   padding: 0.5rem;
 }
+
 .markdown table tr td {
   padding: 0.5rem;
 }
+
 .markdown p {
   margin: 2rem 0;
   word-wrap: break-word;
   word-break: break-all;
 }
+
 .markdown input[type="checkbox"] {
   position: relative;
   margin-right: 0.3em;
 }
+
 .markdown input[type="checkbox"]::before {
   position: absolute;
   content: "\a0";
@@ -102,6 +109,7 @@ onMounted(() => {
   text-indent: 0.15em;
   line-height: 0.65;
 }
+
 .markdown input[type="checkbox"]:checked::before {
   content: "\2713";
   color: #00aeec;
