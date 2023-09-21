@@ -81,10 +81,16 @@ main.container.mx-auto.py-24.flex.gap-8(
   )
     div.container.mx-auto.my-12.p-4.transition-all.duration-250(@click.stop)
       // 主题区
-      //div(v-html="comments.item.html")
-      div {{ comments }}
-      pre {{ comments.item }}
+      div(v-html="comments.item.html")
       // 评论区
+      div.py-2(v-for="item in comments.item.comments", :key="item.id")
+        div.flex.gap-2
+          img.h-8.w-8.rounded-full.object-cover(src="/avatar.jpeg" alt="Last")
+          div
+            p {{ item.content }}
+            div.flex.gap-2.text-gray-500.text-xs
+              span Last
+              time(:datetime="item.updatedAt || item.createdAt") {{ rwdate(item.updatedAt ? item.updatedAt : item.createdAt) }} {{ item.updatedAt ? '最后更新' : '创建' }}
       // 编辑器
       textarea.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150.min-h-xl.mb-4(
         class="focus:outline-none focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50",
@@ -140,6 +146,7 @@ const comments = ref({
   id: '',
   item: computed(() => data.value.find(x => x.id === comments.value.id)),
   edit: { content: '' },
+  // 提交评论内容
   async submit() {
     const id = comments.value.id
     const rest = await $fetch(`/api/blog/${id}/comments`, {
@@ -151,6 +158,7 @@ const comments = ref({
     })
     console.log('create:', rest);
   },
+  // 展示 bolg 详情
   async show(id) {
     comments.value.id = id
     dialogShow()
