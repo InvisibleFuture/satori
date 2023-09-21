@@ -82,7 +82,6 @@ main.container.mx-auto.py-24.flex.gap-8(
     div.container.mx-auto.my-12.p-4.transition-all.duration-250(@click.stop)
       // 主题区
       div(v-html="comments.item.html")
-      pre {{ comments.item }}
       // 评论区
       div.py-2(v-for="item in comments.item.comments", :key="item.id")
         div.flex.gap-2

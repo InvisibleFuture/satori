@@ -14,6 +14,10 @@ export default defineEventHandler(async event => {
     // 发表 BLOG 的评论
     if (event.node.req.method === 'POST') {
         const body = await readBody(event)
+        if (!body.content || !body.name || !body.email) {
+            event.node.res.statusCode = 400
+            return { success: false, message: '参数错误' }
+        }
         const comment = { ...body, id: v4(), createdAt: new Date().toISOString() }
         await blog.setItem(data.id, { ...data, comments: [comment, ...(data.comments || [])] })
         return comment
