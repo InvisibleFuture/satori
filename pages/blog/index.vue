@@ -82,6 +82,7 @@ main.container.mx-auto.py-24.flex.gap-8(
     div.container.mx-auto.my-12.p-4.transition-all.duration-250(@click.stop)
       // 主题区
       div(v-html="comments.item.html")
+      pre {{ comments.item }}
       // 评论区
       div.py-2(v-for="item in comments.item.comments", :key="item.id")
         div.flex.gap-2
@@ -143,24 +144,22 @@ const dialogShow = () => {
 
 // 展示组件
 const comments = ref({
-  id: '',
-  item: computed(() => data.value.find(x => x.id === comments.value.id)),
-  edit: { content: '' },
+  edit: { id: '', content: '' },
+  item: computed(() => data.value.find(x => x.id === comments.value.edit.id)),
   // 提交评论内容
   async submit() {
-    const id = comments.value.id
+    const { id, ...body } = comments.value.edit
     const rest = await $fetch(`/api/blog/${id}/comments`, {
       method: "POST",
-      body: JSON.stringify({
-        content: this.content,
-      }),
+      body: JSON.stringify(body),
       Headers: { "Content-Type": "application/json" }
     })
     console.log('create:', rest);
+    this.item.comments.unshift(rest)
   },
   // 展示 bolg 详情
   async show(id) {
-    comments.value.id = id
+    comments.value.edit.id = id
     dialogShow()
   }
 })
