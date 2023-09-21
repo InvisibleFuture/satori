@@ -29,15 +29,6 @@ main.container.mx-auto.py-24.flex.gap-8(
       div.flex.gap-4.text-gray-500.text-xs
         time {{ rwdate(item.updatedAt) }} {{ item.createdAt === item.updatedAt ? '创建' : '最后更新' }}
         button(@click.stop="comments.show(item.id)") 评论
-      //div.flex.flex-col.gap-2
-      //  div.flex.gap-2
-      //    img.h-8.w-8.rounded-full.object-cover(src="/avatar.jpeg" alt="Last")
-      //    div
-      //      p hahahah
-      //      div.flex.gap-2.text-gray-500.text-xs
-      //        span Last
-      //        time {{ rwdate(item.updatedAt) }} {{ item.createdAt !== item.updatedAt ? '创建' : '最后更新' }}
-      //  div.text-green-500 展开12个讨论..
   aside.w-64.py-2.flex.flex-col.gap-8(class="<sm:hidden")
     div
       span.font-bold # TAG
@@ -103,6 +94,7 @@ main.container.mx-auto.py-24.flex.gap-8(
 
 <script setup>
 const { data, pending } = useFetch("/api/blog", { immediate: true });
+const router = useRouter();
 const content = ref("");
 const account = useState("account");
 const editor = ref({
@@ -194,7 +186,6 @@ const onEnter = (event) => {
   return true
 };
 
-
 // 被选中的列表
 const select_items = ref([]);
 
@@ -220,19 +211,13 @@ const __unselect_item = (item) => {
 
 // 点击某项时, 选中或取消选中
 const selectItem = (event, item) => {
-  if (!account.value.online) {
-    return console.log('登录后可以操作')
+  // 如果是按住ctrl键, 则是多选操作(点击已经选中的则取消选中, 点击未选中的则选中)
+  if (event.ctrlKey && account.value.online) {
+    return select_items.value.includes(item) ? __unselect_item(item) : __select_item(item);
   }
-  // 如果已经选中, 则取消选中
-  if (select_items.value.includes(item)) {
-    return __unselect_item(item);
-  }
-  // 如果不是多选, 取消已经选中的(按住ctrl键时为多选)
-  if (!event.ctrlKey) {
-    select_items.value.forEach((item) => __unselect_item(item));
-  }
-  // 并选中当前 item
-  __select_item(item);
+  // 清空多选, 然后打开详情页
+  select_items.value.forEach((item) => __unselect_item(item));
+  router.push(`/blog/${item.id}`);
 };
 
 // 监听键盘事件

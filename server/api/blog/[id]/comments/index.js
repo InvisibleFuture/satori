@@ -19,7 +19,8 @@ export default defineEventHandler(async event => {
             return { success: false, message: '参数错误' }
         }
         const comment = { ...body, id: v4(), createdAt: new Date().toISOString() }
-        await blog.setItem(data.id, { ...data, comments: [comment, ...(data.comments || [])] })
+        const comments = [comment, ...(data.comments || [])]
+        await blog.setItem(data.id, { ...data, comments })
         return comment
     }
 

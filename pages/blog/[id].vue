@@ -22,15 +22,14 @@
         input.bg-gray-100.p-4.outline-none.w-full.border-b.border-dark-500.border-opacity-5(placeholder="邮箱", v-model="comment.email" type="email")
         input.bg-gray-100.p-4.outline-none.w-full.border-b.border-dark-500.border-opacity-5(placeholder="网址", v-model="comment.url" type="text")
       textarea.bg-gray-100.p-4.outline-none.w-full(rows="6" placeholder="评论" v-model="comment.content" @keyup.enter="comment_submit")
-    pre {{ data }}
     .flex.my-12(v-for="item in data.comments", :key="item.id")
-      img.rounded-full.w-16.h-16.mr-4(:src="item.user.avatar")
+      img.rounded-full.w-16.h-16.mr-4(:src="'item.user.avatar'")
       div
         .flex.gap-2.pb-2.font-bold
-          a(:href="item.user.url" target="_blank") {{ item.name }}
+          a(:href="'item.user.url'" target="_blank") {{ item.name }}
           //span.bg-pink-600.text-pink-600.bg-opacity-10.px-2.py-1.rounded-full.text-xs admin
         div {{ item.content }}
-        time.text-rose-300.font-bold.text-sm.my-2  {{ rwdate(item.updatedAt) }}
+        time.text-rose-300.font-bold.text-sm.my-2  {{ rwdate(item.createdAt || item.updatedAt) }}
         div
           button.font-bold.bg-pink-600.px-2.py-1.text-white.rounded-md.text-xs(
             @click="comment_remove(item.id)"
@@ -46,10 +45,6 @@ const { data, pending } = useFetch(`/api/blog/${route.params.id}`, {
   key: "blog" + route.params.id,
 });
 const edit = ref({ show: false });
-
-//const { data: comments, pending: comments_pending } = useFetch(`/api/comment?blog_id=${route.params.id}`, {
-//  key: "comment" + route.params.id,
-//});
 
 const comment = ref({ name:"", email:"", url:"", content: "", blog_id: route.params.id });
 const comment_submit = () => {
@@ -69,11 +64,11 @@ const comment_submit = () => {
 };
 
 const comment_remove = (id) => {
-  fetch(`/api/comment/${id}`, {
+  $fetch(`/api/blog/${data.value.id}/comments/${id}`, {
     method: "DELETE",
   }).then((res) => res.json()).then(item => {
     console.log('delete', item);
-    comments.value = comments.value.filter(item => item.id !== id);
+    data.value.comments = data.value.comments.filter(item => item.id !== id);
   });
 };
 
