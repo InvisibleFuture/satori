@@ -80,8 +80,18 @@ main.container.mx-auto.py-24.flex.gap-8(
     :class="{'opacity-100': dialog.show, 'opacity-0': !dialog.show}"
   )
     div.container.mx-auto.my-12.p-4.transition-all.duration-250(@click.stop)
+      // 主题区
       div(v-html="comments.item.html")
       pre {{ comments.item }}
+      // 评论区
+      // 编辑器
+      textarea.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150.min-h-xl.mb-4(
+        class="focus:outline-none focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50",
+        v-model="comments.editor.content",
+        placeholder="写点什么呢",
+        @keydown.ctrl.enter.prevent="comments.editor.submit()"
+        @click.stop
+      )
 </template>
 
 <script setup>
@@ -124,11 +134,30 @@ const dialogShow = () => {
   }
 }
 
+console.log('data:', data)
+
 // 展示组件
 const comments = ref({
   item: { data: '', blog_id: '' },
-  list: [],
-  editor: {},
+  editor: {
+    content: '',
+    submit() {
+      const blog_id = comments.value.item.id
+      $fetch(`/api/blog/${blog_id}/comments`, {
+        method: "POST",
+        body: JSON.stringify({
+          content: this.content,
+        }),
+        Headers: { "Content-Type": "application/json" }
+      }).then(rest => {
+        console.log('create:', rest);
+        data.value.filter(x=>x.id=rest.id).forEach(x => {
+          x.comments.unshift(rest)
+        })
+        this.content = ''
+      });
+    }
+  },
 })
 const comment_show = (item) => {
   comments.value.item = item
