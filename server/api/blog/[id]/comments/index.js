@@ -14,17 +14,9 @@ export default defineEventHandler(async event => {
     // 发表 BLOG 的评论
     if (event.node.req.method === 'POST') {
         const body = await readBody(event)
-        await blog.setItem(data.id, {
-            ...data,
-            comments: [
-                ...(data.comments || []),
-                {
-                    id: v4(),
-                    ...body,
-                    createdAt: new Date().toISOString(),
-                }
-            ]
-        })
+        const comment = { id: v4(), createdAt: new Date().toISOString(), ...body }
+        await blog.setItem(data.id, { comments: [comment, ...(data.comments || [])], ...data })
+        return comment
     }
 
 })

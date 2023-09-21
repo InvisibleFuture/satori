@@ -28,7 +28,7 @@ main.container.mx-auto.py-24.flex.gap-8(
       div.markdown(v-html="item.html")
       div.flex.gap-4.text-gray-500.text-xs
         time {{ rwdate(item.updatedAt) }} {{ item.createdAt === item.updatedAt ? '创建' : '最后更新' }}
-        button(@click.stop="comment_show(item)") 评论
+        button(@click.stop="comments.show(item.id)") 评论
       //div.flex.flex-col.gap-2
       //  div.flex.gap-2
       //    img.h-8.w-8.rounded-full.object-cover(src="/avatar.jpeg" alt="Last")
@@ -81,15 +81,16 @@ main.container.mx-auto.py-24.flex.gap-8(
   )
     div.container.mx-auto.my-12.p-4.transition-all.duration-250(@click.stop)
       // 主题区
-      div(v-html="comments.item.html")
+      //div(v-html="comments.item.html")
+      div {{ comments }}
       pre {{ comments.item }}
       // 评论区
       // 编辑器
       textarea.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150.min-h-xl.mb-4(
         class="focus:outline-none focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50",
-        v-model="comments.editor.content",
+        v-model="comments.edit.content",
         placeholder="写点什么呢",
-        @keydown.ctrl.enter.prevent="comments.editor.submit()"
+        @keydown.ctrl.enter.prevent="comments.submit()"
         @click.stop
       )
 </template>
@@ -134,35 +135,27 @@ const dialogShow = () => {
   }
 }
 
-console.log('data:', data)
-
 // 展示组件
 const comments = ref({
-  item: { data: '', blog_id: '' },
-  editor: {
-    content: '',
-    submit() {
-      const blog_id = comments.value.item.id
-      $fetch(`/api/blog/${blog_id}/comments`, {
-        method: "POST",
-        body: JSON.stringify({
-          content: this.content,
-        }),
-        Headers: { "Content-Type": "application/json" }
-      }).then(rest => {
-        console.log('create:', rest);
-        data.value.filter(x=>x.id=rest.id).forEach(x => {
-          x.comments.unshift(rest)
-        })
-        this.content = ''
-      });
-    }
+  id: '',
+  item: computed(() => data.value.find(x => x.id === comments.value.id)),
+  edit: { content: '' },
+  async submit() {
+    const id = comments.value.id
+    const rest = await $fetch(`/api/blog/${id}/comments`, {
+      method: "POST",
+      body: JSON.stringify({
+        content: this.content,
+      }),
+      Headers: { "Content-Type": "application/json" }
+    })
+    console.log('create:', rest);
   },
+  async show(id) {
+    comments.value.id = id
+    dialogShow()
+  }
 })
-const comment_show = (item) => {
-  comments.value.item = item
-  dialogShow()
-}
 
 // 转换时间格式
 const rwdate = (utc) => {
