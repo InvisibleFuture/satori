@@ -63,7 +63,7 @@ const comment = ref({
   },
   remove: (comment_id) => {
     $fetch(`/api/blog/${data.value.id}/comments/${comment_id}`, { method: "DELETE" }).then(item => {
-      data.value.comments = data.value.comments.filter(x => x.id !== id);
+      data.value.comments = data.value.comments.filter(x => x.id !== comment_id);
       console.log('delete', item);
     });
   },
