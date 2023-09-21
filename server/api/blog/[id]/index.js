@@ -56,12 +56,11 @@ export default defineEventHandler(async event => {
             event.node.res.statusCode = 403
             return { success: false, message: '没有权限' }
         }
-        console.log('DELETE:', event.context.params.id)
         await blog.removeItem(event.context.params.id)
         return { success: true }
     }
 
-    // 处理 PATCH 请求(body 中的数据覆盖原数据)
+    // 修改 BLOG
     if (event.node.req.method === 'PATCH') {
         const data = await blog.getItem(event.context.params.id)
         if (!data) {
@@ -72,20 +71,18 @@ export default defineEventHandler(async event => {
             event.node.res.statusCode = 403
             return { success: false, message: '没有权限' }
         }
-        const body = await readBody(event) // 获取 body
-        delete body.id                     // 移除禁止修改的字段
-        delete body.user_id                // 移除禁止修改的字段
-        for (const key in body) {          // 合并数据
+        // 合并数据(略过禁止修改的字段)
+        const { id, user_id, comments, updatedAt, createdAt, ...body } = await readBody(event)
+        for (const key in body) {
             data[key] = body[key]
         }
-        data.updatedAt = new Date().toISOString() // 自动修改的字段
         // 正则从 content 中的最后一行提取时间作为 createdAt
         const match = data.content.match(/(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2})/) || data.content.match(/(\d{4}-\d{2}-\d{2})/)
         if (match) {
-            console.log('match:', match[1])
             data.createdAt = new Date(match[1]).getTime()
             data.content = data.content.replace(match[1], '')
         }
+        data.updatedAt = new Date().toISOString() // 自动修改的字段
         await blog.setItem(event.context.params.id, data)
         return {
             ...data,

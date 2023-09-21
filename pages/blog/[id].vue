@@ -22,7 +22,8 @@
         input.bg-gray-100.p-4.outline-none.w-full.border-b.border-dark-500.border-opacity-5(placeholder="邮箱", v-model="comment.email" type="email")
         input.bg-gray-100.p-4.outline-none.w-full.border-b.border-dark-500.border-opacity-5(placeholder="网址", v-model="comment.url" type="text")
       textarea.bg-gray-100.p-4.outline-none.w-full(rows="6" placeholder="评论" v-model="comment.content" @keyup.enter="comment_submit")
-    .flex.my-12(v-for="item in comments", :key="item.id")
+    pre {{ data }}
+    .flex.my-12(v-for="item in data.comments", :key="item.id")
       img.rounded-full.w-16.h-16.mr-4(:src="item.user.avatar")
       div
         .flex.gap-2.pb-2.font-bold
@@ -46,9 +47,9 @@ const { data, pending } = useFetch(`/api/blog/${route.params.id}`, {
 });
 const edit = ref({ show: false });
 
-const { data: comments, pending: comments_pending } = useFetch(`/api/comment?blog_id=${route.params.id}`, {
-  key: "comment" + route.params.id,
-});
+//const { data: comments, pending: comments_pending } = useFetch(`/api/comment?blog_id=${route.params.id}`, {
+//  key: "comment" + route.params.id,
+//});
 
 const comment = ref({ name:"", email:"", url:"", content: "", blog_id: route.params.id });
 const comment_submit = () => {

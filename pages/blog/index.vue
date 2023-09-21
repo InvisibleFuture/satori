@@ -55,7 +55,12 @@ main.container.mx-auto.py-24.flex.gap-8(
           :to="`/blog/${item.id}`"
         ) {{ item.title }}
   // 弹出层编辑器(编辑日志)
-  div.fixed.bg-green-300.top-0.bottom-0.left-0.right-0(v-if="editor.edit_mode" @click="editor.edit_mode = false" @keyup.esc="editor.edit_mode = false")
+  div.fixed.top-0.bottom-0.left-0.right-0.backdrop-filter.backdrop-saturate-150(
+    v-if="editor.edit_mode"
+    @click="editor.edit_mode = false"
+    @keyup.esc="editor.edit_mode = false"
+    class="bg-white bg-opacity-0 transition-all duration-250 backdrop-blur-md"
+  )
     div.container.mx-auto.my-12
       textarea#editor.w-full.rounded-md.border-gray-300.shadow-sm.px-6.py-4.transition-all.duration-150.min-h-xl.mb-4(
         class="focus:outline-none focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50",
