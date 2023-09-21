@@ -19,7 +19,7 @@ main.container.mx-auto.py-24.flex.gap-8(
         button.px-8.py-1.bg-light-blue-100.text-light-blue-400.rounded-lg.transition-all(
           class="hover:bg-light-blue-50"
           v-if="content.length > 0", @click="create"
-        ) 发布
+        ) 发布 (Ctrl+Enter)
     div.flex.flex-col.gap-0.p-6(
       v-for="item in data.filter(x=>x.title.length < 6)", :key="item.id" tabindex="0"
       :class="{'bg-gray-100': select_items.includes(item)}"
