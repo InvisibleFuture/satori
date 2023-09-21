@@ -46,7 +46,7 @@ const { data, pending } = useFetch(`/api/blog/${route.params.id}`, {
 });
 const edit = ref({ show: false });
 
-const comment = ref({ name:"", email:"", url:"", content: "", blog_id: route.params.id });
+const comment = ref({ name: "", email: "", url: "", content: "", blog_id: route.params.id });
 const comment_submit = () => {
   fetch("/api/comment", {
     method: "POST",
@@ -64,18 +64,16 @@ const comment_submit = () => {
 };
 
 const comment_remove = (id) => {
-  $fetch(`/api/blog/${data.value.id}/comments/${id}`, {
-    method: "DELETE",
-  }).then((res) => res.json()).then(item => {
+  $fetch(`/api/blog/${data.value.id}/comments/${id}`, { method: "DELETE" }).then(item => {
+    data.value.comments = data.value.comments.filter(x => x.id !== id);
     console.log('delete', item);
-    data.value.comments = data.value.comments.filter(item => item.id !== id);
   });
 };
 
 // 转换时间格式
 const rwdate = (utc) => {
-    let t = new Date(utc);
-    return t.getMonth() + 1 + "月 " + t.getDate() + ", " + t.getFullYear();
+  let t = new Date(utc);
+  return t.getMonth() + 1 + "月 " + t.getDate() + ", " + t.getFullYear();
 }
 
 // 进入编辑模式
@@ -90,11 +88,11 @@ const editSubmit = () => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ content: data.value.content }),
   }).then((res) => res.json()).then((rest) => {
-      data.value.html = rest.html;
-      data.value.createdAt = rest.createdAt
-      data.value.updatedAt = rest.updatedAt
-      edit.value.show = !edit.value.show;
-    });
+    data.value.html = rest.html;
+    data.value.createdAt = rest.createdAt
+    data.value.updatedAt = rest.updatedAt
+    edit.value.show = !edit.value.show;
+  });
 };
 
 onMounted(() => {
