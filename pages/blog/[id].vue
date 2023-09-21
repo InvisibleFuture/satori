@@ -5,12 +5,11 @@
     div(v-if="!edit.show")
       div.markdown(v-html="data.html")
       div.mb-6.flex.gap-4.text-gray-500.text-xs
-        time {{ rwdate(data.createdAt) }} 创建
-        time(v-if="data.createdAt !== data.updatedAt") {{ rwdate(data.updatedAt) }} 最后更新
+        time {{ rwdate(data.updatedAt || data.createdAt) }} {{ data.updatedAt ? '最后更新' : '创建' }}
     div(v-else)
       textarea.w-full.h-screen.p-8.outline-none.caret-light-blue-700(
         v-model="data.content",
-        @keyup.ctrl.enter="editSubmit"
+        @keyup.ctrl.enter="editSubmit()"
       )
     .text-center
       img.mx-auto.rounded-full.w-64.h-64(src="/avatar.jpeg")
@@ -23,19 +22,23 @@
         input.bg-gray-100.p-4.outline-none.w-full.border-b.border-dark-500.border-opacity-5(placeholder="网址", v-model="comment.url" type="text")
       textarea.bg-gray-100.p-4.outline-none.w-full(rows="6" placeholder="评论" v-model="comment.content" @keyup.enter="comment.submit()")
     .flex.my-12(v-for="item in data.comments", :key="item.id")
-      img.rounded-full.w-16.h-16.mr-4(:src="'item.user.avatar'")
+      img.rounded-full.w-16.h-16.mr-4(:src="item.avatar" v-if="item.avatar")
+      div.rounded-full.w-16.h-16.mr-4.bg-gray-100(v-else)
       div
         .flex.gap-2.pb-2.font-bold
-          a(:href="'item.user.url'" target="_blank") {{ item.name }}
+          a(
+            :href="item.url" target="_blank"
+            :class="{'pointer-events-none':item.url, 'text-gray-200':!item.url}"
+          ) {{ item.name || '匿名' }}
           //span.bg-pink-600.text-pink-600.bg-opacity-10.px-2.py-1.rounded-full.text-xs admin
         div {{ item.content }}
-        time.text-rose-300.font-bold.text-sm.my-2  {{ rwdate(item.createdAt || item.updatedAt) }}
-        div
-          button.font-bold.bg-pink-600.px-2.py-1.text-white.rounded-md.text-xs(
+        div.flex.gap-2.text-gray-500.text-xs.my-2.items-center
+          time.text-rose-300  {{ rwdate(item.createdAt || item.updatedAt) }}
+          button.bg-pink-600.px-2.py-1.text-white.rounded-md.text-xs(
+            class="bg-opacity-5 hover:bg-opacity-100"
             @click="comment.remove(item.id)"
             v-if="account.online"
           ) delete
-
 </template>
 
 <script setup>
