@@ -40,6 +40,10 @@ const navItems = [
     title: "Gallery",
     path: "/gallery",
   },
+  {
+    title: "Status",
+    path: "/status",
+  }
 ];
 
 onMounted(() => {
