@@ -1,5 +1,41 @@
 <template lang="pug">
 .container.mx-auto.pt-32
+  div.h-screen.bg-opacity-50.rounded-lg
+    div.flex.justify-center.items-center.h-full.relative
+      // 太极
+      div(class="rounded-full h-64 w-64 absolute overflow-hidden")
+        div(class="bg-white h-1/1 left-0 w-1/2 absolute")
+        div(class="bg-black h-1/1 right-0 w-1/2 absolute")
+        div(class="bg-white rounded-full h-32 top-0 left-1/4 w-32 absolute flex justify-center items-center")
+          div(class="bg-black rounded-full h-8 w-8")
+        div(class="bg-black rounded-full h-32 bottom-0 right-1/4 w-32 absolute flex justify-center items-center")
+          div(class="bg-white rounded-full h-8 w-8")
+      // 八个卦相
+      div(class="flex h-82 w-82 absolute justify-center items-center overflow-hidden")
+        div(
+          v-for="item, index in ['乾','巽','坎', '艮','坤','震','離','兑']" :key="item"
+          class="flex flex-col h-1/1 w-1/1 absolute items-center"
+          :style="{ transform: `rotate(${index * 45}deg)` }"
+        )
+          span {{ item }}
+      // 六十四卦
+      div(
+        class="flex bg-green-500 bg-opacity-0 h-256 w-256 absolute justify-center items-center overflow-hidden"
+      )
+        div(
+          v-for="item, i in ['坤', '剝', '比', '觀', '豫', '晉', '萃', '否', '謙', '艮', '蹇', '漸', '小過', '旅', '咸', '遯', '師', '蒙', '坎', '渙', '解', '未濟', '困', '訟', '升', '蠱', '井', '巽', '恆', '鼎', '大過', '姤', '復', '頤', '屯', '益', '震', '噬嗑', '隨', '無妄', '明夷', '賁', '既濟', '家人', '豐', '離', '革', '同人', '臨', '損', '節', '中孚', '歸妹', '睽', '兌', '履', '泰', '大畜', '需', '小畜', '大壯', '大有', '夬', '乾']" :key="item"
+          class="flex flex-col h-1/1 w-1/1 absolute items-center"
+          :style="{ transform: `rotate(${i * (360/64)}deg)` }"
+        )
+          span {{ item }}
+          span {{ i % 2 < 1 ? '- -' : '---' }}
+          span {{ i % 4 < 2 ? '- -' : '---' }}
+          span {{ i % 8 < 4 ? '- -' : '---' }}
+          span {{ i % 16 < 8 ? '- -' : '---' }}
+          span {{ i % 32 < 16 ? '- -' : '---' }}
+          span {{ i % 64 < 32 ? '- -' : '---' }}
+
+  // 子元素围绕中心点旋转, 组成64卦
   // 发布页(只含成品作品的发布)
   div
     ul.flex
@@ -7,28 +43,17 @@
         div {{ item.name }}
         ol.list-decimal(start="1")
           li(v-for="i in item.list" :key="i.name") {{ i.name }}
-
-  //// 文章数, 评论数, 活跃状态
-  //div
-  //  h1.text-xl.text-gray-600.font-bold 文章数, 评论数, 活跃状态
-  //  ul
-  //    li 文章数: {{ 0 }}
-  //    li 评论数: {{ 0 }}
-  //    li 活跃状态: {{ 0 }}
-  // 统计(访问量)
   div
     div.rounded-lg.bg-gray-300.bg-opacity-10.p-4.h-80.w-60vw.mx-auto.flex.justify-center
       canvas#myChart(style="width: 100%; height: 100%")
-    //div
-    //  button.bg-light-blue-600.mx-2.text-white.rounded-md(@click="changeDay") 切换为一天的访问量
-    //  button.bg-light-blue-600.mx-2.text-white.rounded-md(@click="changeWeek") 切换为一周的访问量
-    //  button.bg-light-blue-600.mx-2.text-white.rounded-md(@click="changeMonth") 切换为一月的访问量
-
-  //### 远程办公
-  //1. 离开办公室走进咖啡厅, 你缺少什么?
-  //    成本损耗, 效益加成: 咖啡厅显著提高了成本, 但未加成效率
-  //    咖啡厅加成了什么? 状态氛围
-  //2. 为什么缺少? 如何补足?
+      // button.bg-light-blue-600.mx-2.text-white.rounded-md(@click="changeDay") 切换为一天的访问量
+      // button.bg-light-blue-600.mx-2.text-white.rounded-md(@click="changeWeek") 切换为一周的访问量
+      //### 远程办公
+      //1. 离开办公室走进咖啡厅, 你缺少什么?
+      //    成本损耗, 效益加成: 咖啡厅显著提高了成本, 但未加成效率
+      //    咖啡厅加成了什么? 状态氛围
+      //2. 为什么缺少? 如何补足?
+      // 文章数, 评论数, 活跃状态
 </template>
 
 <script setup>
