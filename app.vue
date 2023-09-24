@@ -4,10 +4,10 @@
     :class="{ 'border-b-1': route.path !== '/' && route.path !== '/account/signin' }"
   )
     nav.container.mx-auto.flex.text-gray-400.text-lg.font-bold
-      template(v-for="item in navItems")
+      template(v-for="item in navbar")
         NuxtLink.px-4.py-6.transition-all.duration-150(
           class="hover:text-gray-800",
-          :class="{ 'text-black': route.path === item.path }",
+          :class="{ 'text-black': item.active }",
           :to="item.path"
         ) {{ item.title }}
       NuxtLink.px-4.py-6.ml-auto(v-if="!account.online" to="/account/signin") signin
@@ -27,24 +27,30 @@ const account = useState("account", () => ({
   online: false,
 }));
 
-const navItems = [
-  {
-    title: "Home",
-    path: "/",
-  },
-  {
-    title: "Blog",
-    path: "/blog",
-  },
-  {
-    title: "Gallery",
-    path: "/gallery",
-  },
-  {
-    title: "Status",
-    path: "/status",
-  }
-];
+const navbar = computed(() => {
+  return [
+    {
+      title: "Home",
+      path: "/",
+      active: route.path === "/",
+    },
+    {
+      title: "Blog",
+      path: "/blog",
+      active: route.path.includes("/blog")
+    },
+    {
+      title: "Gallery",
+      path: "/gallery",
+      active: route.path.includes("/gallery")
+    },
+    {
+      title: "Status",
+      path: "/status",
+      active: route.path.includes("/status")
+    }
+  ]
+});
 
 onMounted(() => {
   $fetch("/api/user/self").then((data) => {
