@@ -77,7 +77,7 @@ export default defineEventHandler(async event => {
             return `<code class="${p1} hljs">${hljs.highlightAuto(he.decode(p2)).value}</code>`
         })
         // 提取标题
-        body.title = lexer(body.content).find(x => x.type === 'heading' && item.depth === 1)?.text || ''
+        body.title = lexer(body.content).find(x => x.type === 'heading' && x.depth === 1)?.text || ''
         await blog.setItem(body.id, body)
         return body
         //const { content } = await readBody(event)

@@ -5,21 +5,20 @@
     v-if="!pending",
     :class="{ 'opacity-100': !pending, 'opacity-10': pending }"
   )
-    template(v-for="item in data.list")
-      .absolute.transition-all.duration-700.ease-in-out.left-0.top-0.bg-gray-100(
-        :data-w="item.width",
-        :data-h="item.height",
-        class="hover:bg-gray-200"
+    .absolute.transition-all.duration-700.ease-in-out.left-0.top-0.bg-gray-100(
+      v-for="item in data.list" :key="item.image",
+      :data-w="item.width",
+      :data-h="item.height",
+      class="hover:bg-gray-200"
+    )
+      img.w-full(:src="item.image")
+      .absolute.top-0.left-0.right-0.text-white.overflow-hidden.break-words.pb-4(
+        style="background: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25))"
       )
-        img.w-full(:src="item.image")
-        .absolute.top-0.left-0.right-0.text-white.overflow-hidden.break-words.pb-4(
-          style="background: linear-gradient(to top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25))"
-        )
-          p.p-2 {{ item.width }} x {{ item.height }}
+        p.p-2 {{ item.width }} x {{ item.height }}
 </template>
 
 <script setup>
-const account = useState("account");
 const { data, pending, refresh } = useFetch("/api/gallery?page=1&pageSize=40");
 const PUB = ref(null);
 
@@ -50,9 +49,11 @@ const 屏幕宽高重置 = () => {
     // 加高
     各列高度[列号] += 缩放高 + 间距;
   }
+  // 容器高度
+  let 最高 = Math.max(...各列高度);
+  if (元素集) 元素集.style.height = 最高 + "px";
 };
 
-const english = ref(false); // 英语
 const disabled = ref(false); // 上锁
 const inadvance = ref(400); // 距离
 const page = ref(3); // 页码
