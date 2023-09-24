@@ -71,7 +71,7 @@ export default defineEventHandler(async event => {
         body.user_id = data.user_id
         body.createdAt = new Date().toISOString()
         body.comments = []
-        await blog.setItem(data.id, body)
+        await blog.setItem(body.id, body)
         return body
         //const { content } = await readBody(event)
         //if (!content) {
