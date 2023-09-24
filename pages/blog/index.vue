@@ -21,7 +21,7 @@ main.container.mx-auto.py-24.flex.gap-8(
           v-if="content.length > 0", @click="create"
         ) 发布 (Ctrl+Enter)
     div.flex.flex-col.gap-0.p-6(
-      v-for="item in data.filter(x=>x.title.length < 6)", :key="item.id" tabindex="0"
+      v-for="item in data.filter(x=>x.title?.length < 6)", :key="item.id" tabindex="0"
       :class="{'bg-gray-100': select_items.includes(item)}"
       @click="event => selectItem(event,item)"
     )
@@ -40,7 +40,7 @@ main.container.mx-auto.py-24.flex.gap-8(
         ) {{ item }}
     div.flex.flex-col.gap-2
       span.font-bold # 归档
-      template(v-for="item in data.filter(x=>x.title.length >= 6)" :key="item.id")
+      template(v-for="item in data.filter(x=>x.title?.length >= 6)" :key="item.id")
         NuxtLink.block(
           class="hover:text-pink-500"
           :to="`/blog/${item.id}`"
