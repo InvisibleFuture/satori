@@ -39,6 +39,11 @@ export default defineEventHandler(async event => {
     // 处理 GET 请求
     if (event.node.req.method === 'GET') {
         const data = await blog.getItem(event.context.params.id)
+        if (!data) {
+            console.log('没有找到该博客:', event.context.params.id)
+            event.node.res.statusCode = 404
+            return { success: false, message: '没有找到该博客' }
+        }
         return {
             ...data,
             html: md2html(data.content),
