@@ -69,7 +69,7 @@ export default defineEventHandler(async event => {
         }
         body.id = v4()
         body.user_id = data.user_id
-        body.createdAt = new Date().toISOString()
+        body.createdAt = new Date()
         body.comments = []
         await blog.setItem(body.id, body)
         return body

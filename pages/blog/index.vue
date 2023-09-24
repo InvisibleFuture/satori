@@ -27,7 +27,7 @@ main.container.mx-auto.py-24.flex.gap-8(
     )
       div.markdown(v-html="item.html")
       div.flex.gap-4.text-gray-500.text-xs
-        time {{ rwdate(item.updatedAt) }} {{ item.createdAt === item.updatedAt ? '创建' : '最后更新' }}
+        time {{ rwdate(item.updatedAt || item.createdAt) }} {{ !item.updatedAt ? '创建' : '最后更新' }}
         button(@click.stop="comments.show(item.id)") 评论
   aside.w-64.py-2.flex.flex-col.gap-8(class="<sm:hidden")
     div
