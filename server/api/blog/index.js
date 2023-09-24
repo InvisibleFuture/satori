@@ -23,8 +23,13 @@ export default defineEventHandler(async event => {
     // 处理 GET 请求(读取 markdown 中的 md 文件列表)
     if (event.node.req.method === 'GET') {
         return await blog.getKeys().then(keys => {
-            return Promise.all(keys.map(key => {
+            return Promise.all(keys.map(async key => {
                 return blog.getItem(key).then(data => {
+                    // 检查ID是否一致
+                    if (key !== data.id) {
+                        console.log('ID不一致:', key, data.id)
+                        data.id = key
+                    }
                     if (typeof data === 'string') return null
                     data.html = marked(data.content, { breaks: true }) // 转换为 html
                     const regex = /<code\s+class="(.*)"\s*>([\s\S]*?)<\/code>/g;
