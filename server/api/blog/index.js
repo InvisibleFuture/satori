@@ -71,6 +71,13 @@ export default defineEventHandler(async event => {
         body.user_id = data.user_id
         body.createdAt = new Date()
         body.comments = []
+        // 转换 markdown 为 html, 并为高亮代码设置样式类 hljs
+        const regex = /<code\s+class="(.*)"\s*>([\s\S]*?)<\/code>/g;
+        body.html = marked(body.content, { breaks: true }).replace(regex, (match, p1, p2) => {
+            return `<code class="${p1} hljs">${hljs.highlightAuto(he.decode(p2)).value}</code>`
+        })
+        // 提取标题
+        body.title = lexer(body.content).find(x => x.type === 'heading' && item.depth === 1)?.text || ''
         await blog.setItem(body.id, body)
         return body
         //const { content } = await readBody(event)

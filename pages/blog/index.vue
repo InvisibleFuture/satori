@@ -21,13 +21,13 @@ main.container.mx-auto.py-24.flex.gap-8(
           v-if="content.length > 0", @click="create"
         ) 发布 (Ctrl+Enter)
     div.flex.flex-col.gap-0.p-6(
-      v-for="item in data.filter(x=>x.title?.length < 6)", :key="item.id" tabindex="0"
+      v-for="item in blogList", :key="item.id" tabindex="0"
       :class="{'bg-gray-100': select_items.includes(item)}"
       @click="event => selectItem(event,item)"
     )
       div.markdown(v-html="item.html")
       div.flex.gap-4.text-gray-500.text-xs
-        time {{ rwdate(item.updatedAt || item.createdAt) }} {{ !item.updatedAt ? '创建' : '最后更新' }}
+        time {{ item.date }}
         button(@click.stop="comments.show(item.id)") 评论
   aside.w-64.py-2.flex.flex-col.gap-8(class="<sm:hidden")
     div
@@ -35,13 +35,12 @@ main.container.mx-auto.py-24.flex.gap-8(
       ul.flex.flex-wrap.gap-2.py-1
         li.bg-gray-400.bg-opacity-10.px-2.rounded-md.cursor-pointer.overflow-clip(
           class="hover:text-pink-500"
-          v-for="item in ['vue','react','node']"
-          :key="item"
+          v-for="item in ['vue','react','node']" :key="item"
         ) {{ item }}
     div.flex.flex-col.gap-2
       span.font-bold # 归档
-      template(v-for="item in data.filter(x=>x.title?.length >= 6)" :key="item.id")
-        NuxtLink.block(
+      template(v-for="item in articleList" :key="item.id")
+        NuxtLink.block.truncate(
           class="hover:text-pink-500"
           :to="`/blog/${item.id}`"
         ) {{ item.title }}
@@ -160,6 +159,26 @@ const rwdate = (utc) => {
   let t = new Date(utc);
   return t.getMonth() + 1 + "月 " + t.getDate() + ", " + t.getFullYear();
 }
+
+// 数据整理(博客)
+const blogList = computed(() => {
+  return data.value.filter(x => !x.title || x.title.length < 6).map(item => {
+    return {
+      ...item,
+      date: rwdate(item.updatedAt || item.createdAt) + (!item.updatedAt ? ' 创建' : ' 最后更新'),
+    };
+  });
+});
+
+// 数据整理(文章)
+const articleList = computed(() => {
+  return data.value.filter(x => x.title && x.title.length >= 6).map((item) => {
+    return {
+      ...item,
+      date: rwdate(item.updatedAt || item.createdAt) + (!item.updatedAt ? ' 创建' : ' 最后更新'),
+    };
+  });
+});
 
 const create = (event) => {
   $fetch("/api/blog", {
